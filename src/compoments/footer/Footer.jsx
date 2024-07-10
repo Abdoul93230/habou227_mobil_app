@@ -17,8 +17,8 @@ const Footer = () => {
   return (
       <Animated.View style={[styles.footer, { opacity: fadeAnimFooter }]}>
       <TouchableOpacity style={styles.footerIcon}>
-        <Feather name="home" size={24} color="black" />
-        <Text>Home</Text>
+        <Feather name="home" size={24} color="#FF6A69"  />
+        <Text style={{color:"#FF6A69"}}>Home</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.footerIcon}>
         <Feather name="search" size={24} color="black" />
