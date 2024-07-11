@@ -1,4 +1,4 @@
-import { Button, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { Button, StyleSheet, Text, View, Image, TouchableOpacity,Platform } from 'react-native';
 import React, { useState } from 'react';
 import Profil from "../../image/logo.png";
 import { AntDesign } from '@expo/vector-icons';
@@ -12,7 +12,7 @@ const Categories = () => {
     { id: 4, name: "All", image: require("../../image/IHFt.jpg") },
     { id: 5, name: "Cuisine & Ustensiles", image: require("../../image/IHFt.jpg") },
     { id: 6, name: "Électroménager", image: require("../../image/IHFt.jpg") },
-    // { id: 7, name: "Travel", image: require("../../image/IHFt.jpg") },
+
   ]);
 
   return (
@@ -21,8 +21,20 @@ const Categories = () => {
       <View style={styles.menu}>
         {categories.map((category) => (
           <View key={category.id} style={styles.box__img}>
-            <Image source={category.image} style={styles.categoryImage} />
-            <Text style={styles.categoryText}>{category.name}</Text>
+            {
+              Platform.OS === 'android'?(
+                <View style={styles.box__img1}>
+                  <Image source={category.image} style={styles.categoryImage} />
+                  <Text style={styles.categoryText}>{category.name}</Text>
+                </View>
+              ):Platform.OS === 'ios'?(<>
+                <Image source={category.image} style={styles.categoryImage} />
+                <Text style={styles.categoryText}>{category.name}</Text>
+                </>
+              ):{}
+            }
+            {/* <Image source={category.image} style={styles.categoryImage} /> */}
+            {/* <Text style={styles.categoryText}>{category.name}</Text> */}
           </View>
         ))}
         <TouchableOpacity style={styles.seeAll}>
@@ -50,7 +62,7 @@ const styles = StyleSheet.create({
   menu: {
     flexDirection: "row",
     justifyContent: "space-around",
-    padding: 6,
+    padding: 3,
     flexWrap: 'wrap',
   },
   box__img: {
@@ -62,7 +74,33 @@ const styles = StyleSheet.create({
     shadowColor: "#FF6A69",
     shadowOffset: { width: 0, height: 0.2 },
     shadowOpacity: 0.50,
+
     shadowRadius: 3.84,
+    ...Platform.select({
+      android: {
+        width: 90,
+        height: 90,
+        // backgroundColor:'white',
+        // flex:1,
+        // alignContent:'center',
+
+        borderRadius: 0,
+        // borderRadius: 0,
+
+      },
+      ios: {
+
+      }
+    }),
+  },
+  box__img1: {
+    width: 80,
+    height: 50,
+    backgroundColor:'white',
+    borderRadius: 5,
+    shadowColor: "#FF6A69",
+    shadowRadius: 11, // Android
+    elevation: 7,
   },
   categoryImage: {
     width: 80,
@@ -70,16 +108,52 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     resizeMode: 'cover',
     marginBottom: 10,
+    ...Platform.select({
+      android: {
+        width: "100%",
+        height: "100%",
+        borderRadius: 5,
+
+        elevation: 5, // Android
+        resizeMode: 'contain',
+      },
+      ios: {
+
+      }
+    }),
   },
   categoryText: {
     fontSize: 13,
     fontWeight: 'sans serif',
+    alignContent:"center",
+    textAlign:'center',
+    ...Platform.select({
+      android: {
+        fontSize: 12,
+        fontWeight: 'sans serif',
+        // alignItems:'center'
+      },
+      ios: {
+
+      }
+    }),
+
   },
   seeAll: {
     width: 100,
     height: 110,
     alignItems: 'center',
     justifyContent: 'center',
+    ...Platform.select({
+      android: {
+        // borderWidth:2,
+        // borderColor:'red',
+        marginTop:-17
+      },
+      ios: {
+
+      }
+    }),
   },
   seeAll__icon: {
     width: 80,
@@ -93,9 +167,33 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 0.2 },
     shadowOpacity: 0.30,
     shadowRadius: 3.84,
+    ...Platform.select({
+      android: {
+        // borderWidth:2,
+        // borderColor:'red',
+        width: 80,
+        height: 50,
+        borderRadius: 5,
+        elevation: 5, // Android
+        shadowColor: "#FF6A69",
+    shadowRadius: 11, // Android
+
+      },
+      ios: {
+
+      }
+    }),
   },
   seeAllText: {
     fontSize: 13,
     fontWeight: 'sans serif',
+    ...Platform.select({
+      android: {
+        fontSize: 12,
+      },
+      ios: {
+
+      }
+    }),
   },
 });
