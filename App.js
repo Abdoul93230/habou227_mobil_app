@@ -1,22 +1,25 @@
-// App.js
 import React from "react";
-import { StyleSheet, Text } from "react-native";
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Home from "./src/pages/Home";
+import Search from "./src/pages/Search";
+import Cart from "./src/pages/Cart";
+import Profile from "./src/pages/Profile";
+import More from "./src/pages/More";
 
+const Stack = createNativeStackNavigator();
 
-const Stack = createStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-    <Stack.Navigator>
-      <Stack.Screen name="Home" component={Home}  options={{ headerShown: false }}/>
-      
-    </Stack.Navigator>
-  </NavigationContainer>
-
-  )
+      <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="Search" component={Search} />
+        <Stack.Screen name="Cart" component={Cart} />
+        <Stack.Screen name="Profile" component={Profile} />
+        <Stack.Screen name="More" component={More} />
+      </Stack.Navigator>
+     
+    </NavigationContainer>
+  );
 }
-
-

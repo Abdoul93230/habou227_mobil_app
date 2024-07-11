@@ -1,63 +1,60 @@
-import { StyleSheet, Text,TouchableOpacity, Animated  } from 'react-native'
-import React, { useEffect, useRef } from 'react';
-import { Feather, Entypo } from '@expo/vector-icons';
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useNavigation, useNavigationState } from '@react-navigation/native';
+import { Feather } from '@expo/vector-icons';
 
 const Footer = () => {
-    const fadeAnimFooter = useRef(new Animated.Value(0)).current;
+  const navigation = useNavigation();
+  const currentRouteName = useNavigationState(state => state.routes[state.index].name);
 
-
-    useEffect(() => {
-        Animated.timing(fadeAnimFooter, {
-          toValue: 1,
-          duration: 2000,
-          useNativeDriver: true,
-        }).start();
-      }, [fadeAnimFooter]);
+  const getColor = (routeName) => {
+    return currentRouteName === routeName ? "#FF6A69" : "black";
+  };
 
   return (
-      <Animated.View style={[styles.footer, { opacity: fadeAnimFooter }]}>
-      <TouchableOpacity style={styles.footerIcon}>
-        <Feather name="home" size={24} color="#FF6A69"  />
-        <Text style={{color:"#FF6A69"}}>Home</Text>
+    <View style={styles.footer}>
+      <TouchableOpacity style={styles.footerIcon} onPress={() => navigation.navigate('Home')}>
+        <Feather name="home" size={24} color={getColor('Home')} />
+        <Text style={{ color: getColor('Home') }}>Home</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.footerIcon}>
-        <Feather name="search" size={24} color="black" />
-        <Text>Search</Text>
+      <TouchableOpacity style={styles.footerIcon} onPress={() => navigation.navigate('Search')}>
+        <Feather name="search" size={24} color={getColor('Search')} />
+        <Text style={{ color: getColor('Search') }}>Search</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.footerIcon}>
-        <Feather name="shopping-cart" size={24} color="black" />
-        <Text>Cart</Text>
+      <TouchableOpacity style={styles.footerIcon} onPress={() => navigation.navigate('Cart')}>
+        <Feather name="shopping-cart" size={24} color={getColor('Cart')} />
+        <Text style={{ color: getColor('Cart') }}>Cart</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.footerIcon}>
-        <Feather name="user" size={24} color="black" />
-        <Text>Profile</Text>
+      <TouchableOpacity style={styles.footerIcon} onPress={() => navigation.navigate('Profile')}>
+        <Feather name="user" size={24} color={getColor('Profile')} />
+        <Text style={{ color: getColor('Profile') }}>Profile</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.footerIcon}>
-        <Feather name="menu" size={24} color="black" />
-        <Text>More</Text>
+      <TouchableOpacity style={styles.footerIcon} onPress={() => navigation.navigate('More')}>
+        <Feather name="menu" size={24} color={getColor('More')} />
+        <Text style={{ color: getColor('More') }}>More</Text>
       </TouchableOpacity>
-    </Animated.View>
-  )
-}
+    </View>
+  );
+};
 
 export default Footer;
 
 const styles = StyleSheet.create({
-    footer: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        height: 90,
-        borderTopWidth: 1,
-        borderColor: '#000',
-        backgroundColor: '#DDD',
-        position: 'absolute',
-        bottom: 0,
-        width: '100%',
-      },
-      footerIcon: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-      },
-})
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    height: 90,
+    borderTopWidth: 1,
+    borderColor: '#000',
+    backgroundColor: '#DDD',
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+  },
+  footerIcon: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
