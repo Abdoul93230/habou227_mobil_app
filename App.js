@@ -6,6 +6,9 @@ import Search from "./src/pages/Search";
 import Cart from "./src/pages/Cart";
 import Profile from "./src/pages/Profile";
 import More from "./src/pages/More";
+import ChatMessage from "./src/pages/ChatMessage";
+// import { OptionsProvider } from './src/compoments/chatMessage/OptionsContext';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -18,6 +21,9 @@ export default function App() {
         <Stack.Screen name="Cart" component={Cart} />
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="More" component={More} />
+        <Stack.Screen name="ChatMessage" component={ChatMessage} />
+
+        
       </Stack.Navigator>
      
     </NavigationContainer>
