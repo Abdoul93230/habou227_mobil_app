@@ -5,12 +5,13 @@ const Bienvennue__page = () => {
     const scrollX = useRef(new Animated.Value(0)).current;
     const flatListRef = useRef(null);
     const { width } = Dimensions.get('window');
+    
     const [carousel, setCarousel] = useState([
-        { id: '1', image: require('../../image/ordinateur14.jpg'), color: '#FF0000' },
-        { id: '2', image: require('../../image/ordinateur14.jpg'), color: '#FF0000' },
-        { id: '3', image: require('../../image/ordinateur14.jpg'), color: '#FF0000' },
-        { id: '4', image: require('../../image/ordinateur14.jpg'), color: '#FF0000' },
-        { id: '5', image: require('../../image/ordinateur14.jpg'), color: '#FF0000' },
+        { id: '1', image: require('../../image/ordinateur14.jpg')},
+        { id: '2', image: require('../../image/ordinateur14.jpg')},
+        { id: '3', image: require('../../image/ordinateur14.jpg')},
+        { id: '4', image: require('../../image/ordinateur14.jpg') },
+        { id: '5', image: require('../../image/ordinateur14.jpg')},
     ]);
 
     useEffect(() => {

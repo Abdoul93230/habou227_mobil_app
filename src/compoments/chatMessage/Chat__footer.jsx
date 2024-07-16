@@ -1,14 +1,18 @@
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Modal, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Modal, TouchableWithoutFeedback,Button } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { Ionicons, FontAwesome, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { Audio } from 'expo-av';
+import { CameraView, useCameraPermissions } from 'expo-camera';
 
 const Chat__footer = ({ onSendMessage }) => {
   const [message, setMessage] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const [recording, setRecording] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [permissionResponse, requestPermission] = Audio.usePermissions();
+  const [facing, setFacing] = useState('back');
+  const [permissionC, requestPermissionC] = useCameraPermissions();
 
   useEffect(() => {
     getPermissionAsync();
@@ -54,33 +58,58 @@ const Chat__footer = ({ onSendMessage }) => {
     }
   };
 
-  const handleAudioRecord = async () => {
+
+
+  async function startRecording() {
     try {
-      if (isRecording) {
-        setIsRecording(false);
-        await recording.stopAndUnloadAsync();
-        const uri = recording.getURI();
-        console.log('Recording stopped and stored at', uri);
-      } else {
-        const recording = new Audio.Recording();
-        await Audio.setAudioModeAsync({
-          allowsRecordingIOS: true,
-          interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
-          playsInSilentModeIOS: true,
-          shouldDuckAndroid: true,
-          interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
-          playThroughEarpieceAndroid: false,
-          staysActiveInBackground: true,
-        });
-        await recording.prepareToRecordAsync(Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY);
-        await recording.startAsync();
-        setRecording(recording);
-        setIsRecording(true);
-        console.log('Recording started');
+      if (permissionResponse.status !== 'granted') {
+        console.log('Requesting permission..');
+        await requestPermission();
       }
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: true,
+        playsInSilentModeIOS: true,
+      });
+
+      console.log('Starting recording..');
+      const { recording } = await Audio.Recording.createAsync( Audio.RecordingOptionsPresets.HIGH_QUALITY
+      );
+      setRecording(recording);
+      console.log('Recording started');
     } catch (err) {
-      console.error('Failed to start or stop recording', err);
+      console.error('Failed to start recording', err);
     }
+  }
+
+  async function stopRecording() {
+    console.log('Stopping recording..');
+    setRecording(undefined);
+    await recording.stopAndUnloadAsync();
+    await Audio.setAudioModeAsync(
+      {
+        allowsRecordingIOS: false,
+      }
+    );
+    const uri = recording.getURI();
+    console.log('Recording stopped and stored at', recording);
+  }
+
+
+
+
+
+
+  const handleAudioRecord = async () => {
+    
+      if (isRecording===false) {
+        setIsRecording(true)
+        startRecording()
+        
+      } else {
+        setIsRecording(false);
+        stopRecording()
+      }
+    
   };
 
   const handleSendMessage = () => {
@@ -93,6 +122,34 @@ const Chat__footer = ({ onSendMessage }) => {
   const closeModal = () => {
     setModalVisible(false);
   };
+
+
+
+  if (!permissionC) {
+    // Camera permissions are still loading.
+    return <View />;
+  }
+
+  if (!permissionC.granted) {
+    // Camera permissions are not granted yet.
+    return (
+      <View style={styles.container}>
+        <Text style={{ textAlign: 'center' }}>Nous avons besoin de votre autorisation pour montrer la caméra</Text>
+        <TouchableOpacity onPress={requestPermissionC} style={styles.cancelButton}>
+        <Button style={styles.cancelButtonText} title="grant permission" />
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  function toggleCameraFacing() {
+    setFacing(current => (current === 'back' ? 'front' : 'back'));
+    // console.log('yfuy')
+  }
+
+
+
+
 
   return (
     <KeyboardAvoidingView
@@ -113,7 +170,9 @@ const Chat__footer = ({ onSendMessage }) => {
             multiline
           />
           <TouchableOpacity onPress={handleAudioRecord} style={styles.iconButton}>
-            <MaterialIcons name="keyboard-voice" size={24} />
+            {
+              isRecording ? (<MaterialIcons name="voice-over-off" size={24} />):<MaterialIcons name="keyboard-voice" size={24} />
+            }
           </TouchableOpacity>
           <TouchableOpacity style={styles.sendButton} onPress={handleSendMessage}>
             <Ionicons name="send" size={24} color="white" />

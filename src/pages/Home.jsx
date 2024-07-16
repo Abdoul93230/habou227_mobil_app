@@ -11,7 +11,6 @@ import Ordi from '../image/ordinateur14.jpg';
 import ProductsSli from '../compoments/Slider/Slider__page';
 import Galerie__page from '../galerie/Galerie__page';
 import FooterMain from '../compoments/footerMain/FooterMain';
-import IconFooter from '../compoments/IconVersHautfooter/IconFooter';
 
 const Home = () => {
   const fadeAnimMain = useRef(new Animated.Value(0)).current;
@@ -28,7 +27,7 @@ const Home = () => {
 
   const handleScroll = (event) => {
     const offsetY = event.nativeEvent.contentOffset.y;
-    if (offsetY > 600) {
+    if (offsetY > 500) {
       setShowIcon(true);
     } else {
       setShowIcon(false);
@@ -36,7 +35,7 @@ const Home = () => {
   };
 
   const handleIconPress = () => {
-    scrollViewRef.current.scrollTo({ y: 180, animated: true });
+    scrollViewRef.current.scrollTo({ y: 0, animated: true });
   };
 
   const products = [
@@ -65,14 +64,13 @@ const Home = () => {
 
   return (
     <View style={styles.container}>
-      <IconFooter />
       <Header__page />
       <ScrollView 
         showsVerticalScrollIndicator={false} 
         style={styles.contenu}
         onScroll={handleScroll}
         scrollEventThrottle={16}
-        // ref={scrollViewRef}
+        ref={scrollViewRef}
       >
         <Animated.View style={[styles.main, { opacity: fadeAnimMain }]}>
           <Categories />

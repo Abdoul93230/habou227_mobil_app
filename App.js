@@ -1,19 +1,20 @@
 import React from "react";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Home from "./src/pages/Home";
 import Search from "./src/pages/Search";
 import Cart from "./src/pages/Cart";
 import Profile from "./src/pages/Profile";
 import More from "./src/pages/More";
 import ChatMessage from "./src/pages/ChatMessage";
-// import { OptionsProvider } from './src/compoments/chatMessage/OptionsContext';
-
+import ProductDet from "./src/pages/ProductDet";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Home" component={Home} />
@@ -22,10 +23,10 @@ export default function App() {
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="More" component={More} />
         <Stack.Screen name="ChatMessage" component={ChatMessage} />
-
-        
+        <Stack.Screen name="Détail-Produit" component={ProductDet}/>
       </Stack.Navigator>
      
     </NavigationContainer>
+    </GestureHandlerRootView>
   );
 }

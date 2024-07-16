@@ -1,11 +1,20 @@
 import { StyleSheet, View, ScrollView, Text } from 'react-native';
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { format, formatDistanceToNow } from 'date-fns';
 import MessageCard from './MessageCard';
 
 const Chat__main = ({ messages }) => {
+  const scrollViewRef = useRef();
+
   // Sort messages by date
   const sortedMessages = [...messages].sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  useEffect(() => {
+    // Scroll to the bottom when messages change
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollToEnd({ animated: true });
+    }
+  }, [messages]);
 
   const renderMessages = () => {
     let lastDate = null;
@@ -35,7 +44,11 @@ const Chat__main = ({ messages }) => {
 
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.chatMain}>
+      <ScrollView 
+        style={styles.chatMain}
+        ref={scrollViewRef}
+        onContentSizeChange={() => scrollViewRef.current.scrollToEnd({ animated: true })}
+      >
         {renderMessages()}
       </ScrollView>
     </View>
@@ -50,6 +63,7 @@ const styles = StyleSheet.create({
   },
   chatMain: {
     flex: 1,
+    marginBottom: 30,
   },
   dateSeparator: {
     textAlign: 'center',

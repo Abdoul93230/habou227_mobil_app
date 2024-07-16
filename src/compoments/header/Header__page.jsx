@@ -1,13 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image, Animated } from 'react-native';
 import { Feather, Entypo } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-
 import Profil from "../../image/logo.png";
+import { useNavigation, useNavigationState } from '@react-navigation/native';
 
 const Header__page = () => {
+  const navigation = useNavigation();
     const fadeAnimHeader = useRef(new Animated.Value(0)).current;
-    const navigation = useNavigation();
     useEffect(() => {
         Animated.timing(fadeAnimHeader, {
           toValue: 1,
@@ -19,7 +18,6 @@ const Header__page = () => {
     <Animated.View style={[styles.header, { opacity: fadeAnimHeader }]}>
     <Image source={Profil} style={styles.image} />
     <View style={styles.shoppingIcon}>
-
       <TouchableOpacity style={styles.iconContainer} onPress={() => navigation.navigate('ChatMessage')}>
         <Entypo name='circle' size={24} color="black" />
         <View style={styles.circleBTN}>
@@ -48,9 +46,12 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         paddingHorizontal: 12,
         width: "100%",
-        backgroundColor: '#f0f0f096',
+        backgroundColor: 'white',
+        borderBottomWidth: 1,
+        borderColor: "#000",
         paddingTop: 40, // Ensures adequate space for status bar
         paddingBottom: 10,
+        backgroundColor: "#DDD"
       },
       image: {
         width: 95,

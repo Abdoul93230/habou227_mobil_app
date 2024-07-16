@@ -11,10 +11,7 @@ const Chat__header = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity 
-          onPress={() => navigation.navigate('Home')}
-          style={styles.backIcon}
-        >
+        <TouchableOpacity style={styles.backIcon}  onPress={() => navigation.navigate("Home")}  >
           <AntDesign name="left" size={24} color="#FF6A69"/>
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
@@ -35,9 +32,9 @@ const styles = StyleSheet.create({
   },
   header: {
     width: '100%',
-    height: 120, // Reduced height to better fit typical header sizes
+    height: 120,
     borderBottomWidth: 1,
-    borderColor: '#ccc', // Lighter border color for a subtle effect
+    borderColor: '#ccc',
     backgroundColor: '#F1F1F1',
     flexDirection: 'row',
     alignItems: 'center',
