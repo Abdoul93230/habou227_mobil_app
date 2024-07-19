@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "flex-start",
     flexWrap: "wrap",
+    top: 12,
   },
   box__card: {
     width: "30%",
@@ -72,7 +73,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#DDD",
     marginVertical: 10,
     justifyContent: "flex-end",
-    overflow: "hidden", // Pour s'assurer que l'image ne dépasse pas le cadre
+    overflow: "hidden",
   },
   image: {
     width: "100%",

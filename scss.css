@@ -1,4 +1,157 @@
 body{
-    color: #c1c1c1ad;
+    color: #b9b9bb;
 }
 /* failed to start recording Error:" interruptionModeIOS was set to an invalid value  */
+/* <Modal
+animationType="slide"
+transparent={true}
+visible={modalVisible}
+onRequestClose={() => setModalVisible(false)}>
+<View style={styles.modalContainer}>
+  <View style={styles.modalContent}>
+    <Image source={selectedImageURL} style={styles.selectedImage} />
+    <View style={styles.modalButton}>
+        <Button style={styles.fermerBtn} title="Fermer" onPress={() => setModalVisible(false)}  />
+    </View>
+  </View>
+</View>
+</Modal> */
+modalContainer: {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: 'rgba(0, 0, 0, 0.11)',
+},
+modalContent: {
+  width: "100%",
+  height: "40%",
+  borderRadius: 10,
+  padding: 10,
+  backgroundColor: '#fff',
+  alignItems: 'center',
+},
+modalButton: {
+  padding: 1,
+  borderRadius: 5,
+  backgroundColor: "#FF6A69",
+  position: "absolute",
+  bottom: 0,
+},
+
+fermerBtn: {
+  color: "#FFF"
+},
+selectedImage: {
+  width: '100%',
+  height: '100%',
+  borderRadius: 10,
+},
+
+<View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                      <Image source={selectedImageURL} style={styles.selectedImage} />
+                      <View style={styles.modalButton}>
+                          <Button style={styles.fermerBtn} title="Fermer" onPress={() => setModalVisible(false)}  />
+                      </View>
+                    </View>
+                  </View>
+
+
+                  2222
+
+
+
+
+                  <SafeAreaView style={styles.containerModal}>
+                  <View style={styles.modelContainer}>
+                    <Pressable onPressIn={handlePressIn} onPressOut={handlePressOut}>
+                      <Animated.Image source={require('../../image/macbook cote.png')} style={[styles.MacBook, animatedStyle]} />
+                    </Pressable>
+                  </View>
+                  <View style={styles.bottomContainer}>
+                    <View style={styles.textContainer}>
+                      <Text style={styles.textTitle}>Nom du produit</Text>
+                      <Text style={styles.textPrice}>Prix du produit</Text>
+                      <Text style={styles.text}>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin mattis maximus eros, eu ullamcorper ante ullamcorper a.
+                        Phasellus turpis tellus, tempus at feugiat at, facilisis ac sem.
+                      </Text>
+                    </View>
+                    <View style={styles.buttonContainer}>
+                      <Pressable
+                        style={styles.button}
+                        onPress={() => setModalVisible(false)}>
+                        <Text style={styles.textButton}>Retour</Text>
+                      </Pressable>
+                      <Pressable
+                        style={styles.button}
+                        onPress={() => { }}>
+                        <Text style={styles.textButton}>Acheter maintenant</Text>
+                      </Pressable>
+                    </View>
+                  </View>
+                </SafeAreaView>
+
+
+                
+                  containerModal: {
+                    flex: 1,
+                    backgroundColor: '#F6F7FB',
+                  },
+                  modelContainer: {
+                    flex: 2,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  },
+                  MacBook: {
+                    width: width * 0.9,
+                    height: height * 0.5,
+                  },
+                  bottomContainer: {
+                    flex: 1,
+                    backgroundColor: 'white',
+                    justifyContent: 'space-between',
+                    borderTopLeftRadius: 30,
+                    borderTopRightRadius: 30,
+                  },
+                  textContainer: {
+                    margin: 20,
+                    marginBottom: 0,
+                  },
+                  textTitle: {
+                    fontSize: 28,
+                    color: '#051E47',
+                    fontWeight: 'bold',
+                  },
+                  textPrice: {
+                    fontSize: 28,
+                    color: '#3F6900',
+                    fontWeight: 'bold',
+                  },
+                  text: {
+                    color: 'black',
+                    fontSize: 16,
+                    textAlign: 'justify',
+                    marginVertical: 10,
+                  },
+                  buttonContainer: {
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginHorizontal: 20,
+                    marginBottom: 30,
+                  },
+                  button: {
+                    backgroundColor: '#3F6900',
+                    padding: 10,
+                    width: "45%",
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderRadius: 24,
+                  },
+                  textButton: {
+                    color: 'white',
+                    fontSize: 15,
+                    fontWeight: 'bold',
+                  },
+

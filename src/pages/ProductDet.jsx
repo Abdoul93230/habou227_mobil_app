@@ -16,7 +16,7 @@ const ProductDet = () => {
   return (
     <View style={styles.container}>
       <DetailProduit />
-      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollViewContent}>
         <DetailProduitMain />
       </ScrollView>
       <DetailProduitFooter />

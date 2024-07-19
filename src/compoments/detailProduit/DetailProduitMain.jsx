@@ -1,11 +1,36 @@
-import { StyleSheet, Image, View, Dimensions, FlatList, Text, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, Image,
+   View, Dimensions, FlatList, Text,
+    TouchableOpacity, Modal,
+    PanResponder, Animated, Pressable
+   } from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import React, { useRef, useEffect, useState } from 'react';
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
+import Macbook  from "../../image/macbook cote.png"
 const { width } = Dimensions.get('window'); // Largeur de l'écran pour le carrousel
+
 
 const DetailProduitMain = () => {
   const flatListRef = useRef(null);
   const [selectedImageIds, setSelectedImageIds] = useState([]);
+  const [selectedImageURL, setSelectedImage] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const pan = useRef(new Animated.ValueXY()).current; 
+
+  const [tailleImageB, setTailleImageB] = useState(null);
+  const [tailleImage, setTailleImage] = useState(null);
+  const [tailleNumber, setTailleNumber] = useState(null);
+
+  const handlePress = (index) => {
+    setTailleImageB(index);
+  };
+  const contColor = (nbr)=>{
+    setTailleImage(nbr)
+  }
+  
+  const handlePressTaillle = (size) => {
+    setTailleNumber(size);
+  };
   const [carousel] = useState([
     { id: '1', image: require('../../image/ordinateur14.jpg') },
     { id: '2', image: require('../../image/ordinateur14.jpg') },
@@ -45,7 +70,7 @@ const DetailProduitMain = () => {
     // Alert.alert('Reviews', 'Afficher les avis du produit.');
     // Ajoutez ici le code pour naviguer ou afficher les avis du produit
   };
-  const handleImageClick = (id) => {
+  const handleImageClick = (id, image) => {
     setSelectedImageIds((prevSelectedIds) => {
       if (prevSelectedIds.includes(id)) {
         return prevSelectedIds.filter((selectedId) => selectedId !== id);
@@ -53,9 +78,23 @@ const DetailProduitMain = () => {
         return [...prevSelectedIds, id];
       }
     });
+    setSelectedImage(id);
+    setModalVisible(true);
+    pan.setValue({ x: 0, y: 0 });
   };
+   // PanResponder for handling image movement
+   const panResponder = PanResponder.create({
+    onStartShouldSetPanResponder: () => true,
+    onPanResponderMove: Animated.event(
+      [null, { dx: pan.x, dy: pan.y }],
+      { useNativeDriver: false }
+    ),
+    onPanResponderRelease: () => {
+      // Optionally handle the release event if needed
+    }
+  });
   return (
-    <View style={styles.container}>
+    <View style={styles.container} >
       <View style={styles.box}>
         <FlatList
           ref={flatListRef}
@@ -105,6 +144,50 @@ const DetailProduitMain = () => {
               </View>
             </View>
 
+   
+          
+        <Text>
+          Selectionner la color: {tailleImage !== null && <Text>Color: {tailleImage}</Text>}
+        </Text>
+      <View style={styles.cardTaille}>
+        {[1, 2, 3, 4, 5].map((param, index) => (
+          <TouchableOpacity
+            key={index}
+            style={[
+              styles.boxCard,
+              tailleImageB === index && { borderColor: '#FF6A69', borderWidth: 2 }
+            ]}
+            onPress={() => {
+              handlePress(index);
+              contColor(param);
+            }}>
+            <Image source={Macbook} style={styles.boxTaille} />
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      <Text>Selectionner la taille: {tailleNumber !== null && <Text>Taille: {tailleNumber}</Text>}</Text>
+
+        <View style={styles.cardTaille}>
+      <View style={styles.cardTaille}>
+        {[38, 40, 42, 43, 44].map((size) => (
+          <TouchableOpacity
+            key={size}
+            style={[
+              styles.boxNumber,
+              tailleNumber === size && { borderColor: '#FF6A69', borderWidth: 2 }
+            ]}
+            onPress={() => handlePressTaillle(size)}
+          >
+            <Text>{size}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+       
+       
+
+        </View>
+
             <View>
               <Text style={styles.theiere}>Théière à profil élégant turc marocain arabe avec filtre intégré - GSC038</Text>
               <Text style={styles.title}>Attributs clés:</Text>
@@ -134,18 +217,62 @@ const DetailProduitMain = () => {
             </View>
             
             <Text style={styles.galerie__title}>Galeries</Text>
-              <View style={styles.galerie__box}>
+             
+                <View style={styles.galerie__box}>
+                  {carousel.map((item) => (
+                    <TouchableOpacity
+                      key={item.id}
+                      style={styles.galerie__box__img}
+                      onPress={() => handleImageClick(item.image)}>
+                      <Image source={item.image} style={styles.image} />
+                    </TouchableOpacity>
+                  ))}
+                </View>
+                <Modal
+                  animationType="slide"
+                  transparent={true}
+                  visible={modalVisible}
+                  onRequestClose={() => setModalVisible(false)}>
+               <SafeAreaView style={styles.containerModal}>
+                <View style={styles.modelContainer}>
+                  <View style={styles.card}>
+                    <View style={styles.imageContainer}>
+                      <Image source={Macbook} style={styles.macBook} />
+                    </View>
+                  </View>
+                </View>
 
-                {carousel.map((item) => (
-                  <TouchableOpacity
-                    key={item.id}
-                    style={styles.galerie__box__img}
-                    onPress={() => handleImageClick(item.id)} >
-                    <Image source={item.image} style={styles.image} />
-                  </TouchableOpacity>
-                ))}
-              </View>
-
+      <View style={styles.bottomContainer}>
+        <View style={styles.textContainer}>
+          <Text style={styles.textTitle}>Nom du produit</Text>
+          <Text style={styles.textPrice}>Prix du produit</Text>
+          <Text style={styles.text}>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
+            mattis maximus eros, eu ullamcorper ante ullamcorper a. Phasellus
+            turpis tellus, tempus at feugiat at, facilisis ac sem.
+          </Text>
+        </View>
+        <View style={styles.buttonContainer}>
+          <Pressable
+            style={styles.button}
+            onPress={() => {
+              setModalVisible(false);
+            }}
+          >
+            <Text style={styles.textButton}>Retour</Text>
+          </Pressable>
+          <Pressable
+            style={styles.button}
+            onPress={() => {
+              // navigation.goBack();
+            }}
+          >
+            <Text style={styles.textButton}>Acheter maintenant</Text>
+          </Pressable>
+        </View>
+      </View>
+    </SafeAreaView>
+  </Modal>
           </View>
         ) : (
           <View>
@@ -154,37 +281,33 @@ const DetailProduitMain = () => {
               return(
                 <View key={index} style={styles.reviewsContent}>
             <View style={styles.cardProfil}>
-      <View style={styles.profilName}>
-        <Text style={styles.textName}>A</Text>
-        <Text style={styles.textName}>S</Text>
-      </View>
-      <View style={styles.messageContainer}>
-        <View style={styles.starIcon}>
-        {[1, 2, 3, 4, 5].map((star) => (
-        <AntDesign
-          key={star}
-          name='star'
-          size={18}
-          color={star <= rating[index] ? '#FF6A69' : 'black'} // Couleur des étoiles
-        />
-      ))}
-          
-         
-          
-       
+              <View style={styles.profilName}>
+                <Text style={styles.textName}>A</Text>
+                <Text style={styles.textName}>S</Text>
+              </View>
+              <View style={styles.messageContainer}>
+                <View style={styles.starIcon}>
+                {[1, 2, 3, 4, 5].map((star) => (
+                <AntDesign
+                  key={star}
+                  name='star'
+                  size={18}
+                  color={star <= rating[index] ? '#FF6A69' : 'black'} // Couleur des étoiles
+                />
+              ))}
+                </View>
+                <View>
+                  <Text style={styles.name}>Abassa Soumana</Text>
+                </View>
+              </View>
+              <View style={styles.date}>
+                <Text>12/01/2024</Text>
+              </View>
+            </View>
+        <View style={styles.commantaire}>
+          <Text style={styles.textCommantaire}> Lorem ipsum dolor, sit amet consectetur adipisicing elit. Molestiae sequi architecto excepturi nihil illum reiciendis et, vitae amet assumenda distinctio.
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit</Text>
         </View>
-        <View>
-          <Text style={styles.name}>Abassa Soumana</Text>
-        </View>
-      </View>
-      <View style={styles.date}>
-        <Text>12/01/2024</Text>
-      </View>
-    </View>
-    <View style={styles.commantaire}>
-      <Text style={styles.textCommantaire}> Lorem ipsum dolor, sit amet consectetur adipisicing elit. Molestiae sequi architecto excepturi nihil illum reiciendis et, vitae amet assumenda distinctio.
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit</Text>
-    </View>
           </View>
               )
             })
@@ -314,6 +437,37 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     marginBottom: 10,
   },
+  cardTaille: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    height: 100, // Adjusted to a reasonable height
+  },
+  boxCard: {
+    width: 60,
+    height: 60, 
+    borderRadius: 50
+  },
+  boxTaille: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover', // Ensures the image scales correctly
+    borderRadius: 50,
+  },
+  boxNumber: {
+    width: 60,
+    height: 60,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 50,
+    shadowColor: "#FF6A69",
+    shadowOffset: { width: 0, height: 2},
+    shadowOpacity: 0.8,
+  },
+  
+
   theiere: {
     fontWeight: 'bold',
     fontSize: 19,
@@ -407,5 +561,81 @@ const styles = StyleSheet.create({
   textCommantaire: {
     fontSize: 14,
     color: "#333",
+  },
+  containerModal: {
+    flex: 1,
+    backgroundColor: '#b9b9bb',
+  },
+  modelContainer: {
+    flex: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  card: {
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    padding: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    
+  },
+  imageContainer: {
+    width: '100%',
+    height: 300, // Adjusted to a reasonable height
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  macBook: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+    
+  },
+  bottomContainer: {
+    flex: 1,
+    backgroundColor: 'white',
+    justifyContent: 'space-between',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    padding: 20,
+  },
+  textContainer: {
+    marginBottom: 20,
+  },
+  textTitle: {
+    fontSize: 28,
+    color: '#051E47',
+    fontWeight: 'bold',
+  },
+  textPrice: {
+    fontSize: 28,
+    color: '#FF6A69',
+    fontWeight: 'bold',
+  },
+  text: {
+    color: 'black',
+    fontSize: 16,
+    textAlign: 'justify',
+    marginVertical: 10,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 30,
+  },
+  button: {
+    backgroundColor: '#FF6A69',
+    padding: 10,
+    width: '45%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 24,
+  },
+  textButton: {
+    color: 'white',
+    fontSize: 15,
+    fontWeight: 'bold',
   },
 });
