@@ -1,7 +1,9 @@
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { AntDesign, Feather } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation , useNavigationState} from '@react-navigation/native';
+
+
 
 const DetailProduit = () => {
   const navigation = useNavigation();
@@ -23,7 +25,7 @@ const DetailProduit = () => {
           </View>
         </View>
 
-        <TouchableOpacity style={styles.cartButton}>
+        <TouchableOpacity style={styles.cartButton} onPress={() => navigation.navigate('Cart')}>
           <View style={styles.cartContainer}>
             <Feather name="shopping-cart" size={24} color="#000000c2" />
             <View style={styles.cartBadge}>

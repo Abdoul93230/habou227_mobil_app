@@ -9,6 +9,9 @@ import Profile from "./src/pages/Profile";
 import More from "./src/pages/More";
 import ChatMessage from "./src/pages/ChatMessage";
 import ProductDet from "./src/pages/ProductDet";
+import Checkout from "./src/pages/Checkout";
+import Succes from "./src/compoments/orderSuccesful/Succes";
+
 
 const Stack = createNativeStackNavigator();
 
@@ -18,12 +21,14 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Search" component={Search} />
+        <Stack.Screen name="Search" component={Search}/>
         <Stack.Screen name="Cart" component={Cart} />
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="More" component={More} />
         <Stack.Screen name="ChatMessage" component={ChatMessage} />
         <Stack.Screen name="Détail-Produit" component={ProductDet}/>
+        <Stack.Screen name="Checkout" component={Checkout}/>
+        <Stack.Screen name="Succes" component={Succes} />
       </Stack.Navigator>
      
     </NavigationContainer>

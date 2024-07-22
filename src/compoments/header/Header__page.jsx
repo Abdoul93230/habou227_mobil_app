@@ -25,7 +25,7 @@ const Header__page = () => {
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.iconContainer}>
+      <TouchableOpacity style={styles.iconContainer} onPress={() => navigation.navigate("Cart")}>
         <Feather name="shopping-cart" size={24} color="black" />
         <View style={styles.circleBTN}>
           <Text style={styles.badgeText}>0</Text>

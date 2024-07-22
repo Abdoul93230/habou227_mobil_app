@@ -4,20 +4,22 @@ import Profil from "../../image/ordinateur14.jpg";
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
-
 const Chat__header = () => {
   const navigation = useNavigation();
   
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backIcon}  onPress={() => navigation.navigate("Home")}  >
+        <View style={styles.contenu}>
+        <TouchableOpacity style={styles.backIcon} onPress={() => navigation.goBack()}>
           <AntDesign name="left" size={24} color="#FF6A69"/>
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
+          <Text style={styles.Chat}>Chat</Text>
         
         <View style={styles.centerContainer}>
           <Image source={Profil} style={styles.ChatImage} />
+        </View>
         </View>
       </View>
     </View>
@@ -32,32 +34,37 @@ const styles = StyleSheet.create({
   },
   header: {
     width: '100%',
-    height: 120,
+    height: 110,
     borderBottomWidth: 1,
     borderColor: '#ccc',
     backgroundColor: '#F1F1F1',
+
+  },
+  contenu: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 10,
-    position: 'relative',
+    justifyContent: 'space-between',
+    width: "100%",
+    bottom: 0,
+    position: "absolute"
   },
   backIcon: {
-    position: 'absolute',
-    left: 10,
     flexDirection: 'row',
     alignItems: 'center',
-    bottom: 25
   },
   backText: {
     marginLeft: 5,
     fontSize: 16,
     color: '#FF6A69',
-    
   },
+  Chat: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#FF6A69',
+    marginLeft: 10,
+    },
   centerContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+   marginHorizontal: 12
   },
   ChatImage: {
     width: 60,
@@ -65,6 +72,5 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     borderWidth: 1,
     borderColor: 'black',
-    top: 25,
   },
 });
