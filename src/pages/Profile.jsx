@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ScrollView } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import Footer from '../compoments/footer/Footer'
 import Header__page from '../compoments/header/Header__page'
@@ -8,9 +8,9 @@ const Profile = () => {
   return (
     <View style={styles.container}>
         <Header__page />
-        <ScrollView>
+
           <ProfilePage />
-        </ScrollView>
+   
       
 
       <Footer />

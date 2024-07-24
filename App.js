@@ -11,6 +11,9 @@ import ChatMessage from "./src/pages/ChatMessage";
 import ProductDet from "./src/pages/ProductDet";
 import Checkout from "./src/pages/Checkout";
 import Succes from "./src/compoments/orderSuccesful/Succes";
+import Invite from "./src/compoments/invitéAmi/Invite";
+import ServicePage from "./src/compoments/servicePage/ServicePage";
+import Commande from "./src/compoments/maCommande/Commande";
 
 
 const Stack = createNativeStackNavigator();
@@ -29,6 +32,9 @@ export default function App() {
         <Stack.Screen name="Détail-Produit" component={ProductDet}/>
         <Stack.Screen name="Checkout" component={Checkout}/>
         <Stack.Screen name="Succes" component={Succes} />
+        <Stack.Screen name="Inviter les amis" component={Invite} options={{headerShown: true}} />
+        <Stack.Screen name="Service Page" component={ServicePage} options={{headerShown: true}} />
+        <Stack.Screen name="Commande Page" component={Commande} options={{headerShown: true}} />
       </Stack.Navigator>
      
     </NavigationContainer>

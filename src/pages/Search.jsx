@@ -8,7 +8,6 @@ const Search = () => {
   return (
     <View style={styles.container}>
         <SearchMain />
-
       <Footer />
     </View>
   );
