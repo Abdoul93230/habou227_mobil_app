@@ -2,6 +2,7 @@ import React from "react";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import {ScrollView} from "react-native";
 import Home from "./src/pages/Home";
 import Search from "./src/pages/Search";
 import Cart from "./src/pages/Cart";
@@ -14,7 +15,11 @@ import Succes from "./src/compoments/orderSuccesful/Succes";
 import Invite from "./src/compoments/invitéAmi/Invite";
 import ServicePage from "./src/compoments/servicePage/ServicePage";
 import Commande from "./src/compoments/maCommande/Commande";
-
+import SuggestionPage from "./src/compoments/suggestionPage/SuggestionPage";
+import LivraisonPage from "./src/compoments/livraisonPage/LivraisonPage";
+import PaiementPage from "./src/compoments/paiementPage/PaiementPage";
+import ParaNotification from "./src/compoments/parametreNotification/ParaNotification";
+import Confidentialite from "./src/compoments/AvisConfidentialitePage/Confidentialite";
 
 const Stack = createNativeStackNavigator();
 
@@ -35,9 +40,14 @@ export default function App() {
         <Stack.Screen name="Inviter les amis" component={Invite} options={{headerShown: true}} />
         <Stack.Screen name="Service Page" component={ServicePage} options={{headerShown: true}} />
         <Stack.Screen name="Commande Page" component={Commande} options={{headerShown: true}} />
+        <Stack.Screen name="Suggestion Page" component={SuggestionPage} options={{headerShown: true}} />
+        <Stack.Screen name="Livraison Page" component={LivraisonPage} options={{headerShown: true}} />
+        <Stack.Screen name="Paiement Page" component={PaiementPage} options={{headerShown: true}} />
+        <Stack.Screen name="Paramètre de notification" component={ParaNotification} options={{headerShown: true}} />
+        <Stack.Screen name="Avis de confidentialité" component={Confidentialite} options={{headerShown: true}} />
       </Stack.Navigator>
-     
     </NavigationContainer>
     </GestureHandlerRootView>
   );
 }
+

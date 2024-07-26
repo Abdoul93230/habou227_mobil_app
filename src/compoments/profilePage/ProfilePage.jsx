@@ -61,7 +61,7 @@ const ProfilePage = () => {
           <Text style={styles.title}>Ma commande</Text>
           <AntDesign name='right' size={24} color="black" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.cardRow}>
+        <TouchableOpacity style={styles.cardRow} onPress={() => navigation.navigate('Suggestion Page')}>
           <AntDesign name="plussquareo" size={24} color="black" />
           <Text style={styles.title}>Faire une suggestion</Text>
           <AntDesign name='right' size={24} color="black" />

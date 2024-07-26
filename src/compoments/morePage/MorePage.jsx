@@ -1,28 +1,30 @@
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { AntDesign, Feather, SimpleLineIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 const MorePage = () => {
+  const navigation = useNavigation()
   return (
     <View style={styles.container}>
       <Text style={styles.moreTitle}>More</Text>
       <View style={styles.moreBox}>
-        <TouchableOpacity style={styles.shippingAddress}>
+        <TouchableOpacity style={styles.shippingAddress} onPress={() => navigation.navigate('Livraison Page')}>
           <AntDesign name="home" size={24} color="black" style={styles.icon} />
           <Text style={styles.shippingAddressText}>Adresse de livraison</Text>
           <AntDesign name="right" size={24} color="black" style={styles.iconRight} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.shippingAddress}>
+        <TouchableOpacity style={styles.shippingAddress} onPress={() => navigation.navigate('Paiement Page')}>
           <Feather name="credit-card" size={24} color="black" style={styles.icon}  />
           <Text style={styles.shippingAddressText}>Mode de paiement</Text>
           <AntDesign name="right" size={24} color="black" style={styles.iconRight} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.shippingAddress}>
-          <Feather name="bell" size={24} color="black" style={styles.icon}  />
+        <TouchableOpacity style={styles.shippingAddress} onPress={() => navigation.navigate("Paramètre de notification")}>
+          <Feather name="bell" size={24} color="black" style={styles.icon}/>
           <Text style={styles.shippingAddressText}>Paramètres de notification</Text>
           <AntDesign name="right" size={24} color="black" style={styles.iconRight} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.shippingAddress}>
+        <TouchableOpacity style={styles.shippingAddress}  onPress={() => navigation.navigate('Avis de confidentialité')} >
           <SimpleLineIcons name="lock" size={24} color="black" style={styles.icon}  />
           <Text style={styles.shippingAddressText}>Avis de confidentialité</Text>
           <AntDesign name="right" size={24} color="black" style={styles.iconRight} />

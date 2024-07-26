@@ -1,10 +1,9 @@
-import { StyleSheet, Text, View, TouchableOpacity, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
 import React, { useState } from 'react';
-
 const { width, height } = Dimensions.get('window');
 
 const Commande = () => {
-  const [selectedButton, setSelectedButton] = useState(null); // Initial state as null
+  const [selectedButton, setSelectedButton] = useState('En cours'); // État initial
 
   return (
     <View style={styles.container}>
@@ -24,7 +23,7 @@ const Commande = () => {
           </TouchableOpacity>
           {selectedButton === 'En cours' && (
             <View style={styles.notifi}>
-              <Text style={styles.btnNoti}>99 +</Text>
+              <Text style={styles.btnNoti}>99+</Text>
             </View>
           )}
         </View>
@@ -43,34 +42,62 @@ const Commande = () => {
           </TouchableOpacity>
           {selectedButton === 'Récus' && (
             <View style={styles.notifi}>
-              <Text style={styles.btnNoti}>99 +</Text>
+              <Text style={styles.btnNoti}>99+</Text>
             </View>
           )}
         </View>
       </View>
 
-      {/* Page content */}
-      {selectedButton === 'En cours' && (
-        <View style={styles.pageContent}>
-          <View style={styles.cardNoti}>
-            <View>
-            <Text>Lundi</Text>
-            <Text>NBRS Produit</Text>
-            <Text>1</Text>
-            </View>
-            <View></View>
-            <View></View>
-          </View>
-          
-        </View>
-      )}
+      {/* Contenu de la page */}
+      <ScrollView style={styles.pageContent} showsVerticalScrollIndicator={false}>
+        {selectedButton === 'En cours' && (
+          <>
+            {[...Array(10)].map((_, index) => (
+              <View key={index} style={styles.cardNoti}>
+                <View style={styles.gaucheCard}>
+                  <Text style={styles.jourText}>Lundi</Text>
+                  <View style={styles.produitContent}>
+                    <Text style={styles.ProduitName}>NBRS Produit</Text>
+                    <Text style={styles.ProduitNumber}>1 Produit</Text>
+                  </View>
+                </View>
+                <View style={styles.separator}></View>
+                <View style={styles.droiteCard}>
+                  <Text style={styles.dateText}>22/10/2024</Text>
+                  <View style={styles.produitDroite}>
+                    <Text style={styles.ProduitName}>Prix Total</Text>
+                    <Text style={styles.ProduitNumber}>35000 F CFA</Text>
+                  </View>
+                </View>
+              </View>
+            ))}
+          </>
+        )}
 
-      {selectedButton === 'Récus' && (
-        <View style={styles.pageContent}>
-          <Text style={styles.pageText}>Contenu pour "Récus"</Text>
-          {/* Ajoutez des cartes ou d'autres éléments ici */}
-        </View>
-      )}
+        {selectedButton === 'Récus' && (
+          <>
+            {[...Array(10)].map((_, index) => (
+              <View key={index} style={styles.cardNoti}>
+                <View style={styles.gaucheCard}>
+                  <Text style={styles.jourText}>Mardi</Text>
+                  <View style={styles.produitContent}>
+                    <Text style={styles.ProduitName}>NBRS Produit</Text>
+                    <Text style={styles.ProduitNumber}>1 Produit</Text>
+                  </View>
+                </View>
+                <View style={styles.separator}></View>
+                <View style={styles.droiteCard}>
+                  <Text style={styles.dateText}>22/10/2024</Text>
+                  <View style={styles.produitDroite}>
+                    <Text style={styles.ProduitName}>Prix Total</Text>
+                    <Text style={styles.ProduitNumber}>35000 F CFA</Text>
+                  </View>
+                </View>
+              </View>
+            ))}
+          </>
+        )}
+      </ScrollView>
     </View>
   );
 };
@@ -81,28 +108,27 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F5F6F8',
-    padding: width * 0.03, // Responsive padding
+    padding: width * 0.03, // Padding responsive
   },
   commande: {
-    fontSize: width * 0.065, // Responsive font size
+    fontSize: width * 0.065, // Taille de police responsive
     fontWeight: 'bold',
     color: '#515C70',
-    marginBottom: width * 0.03, // Responsive margin
+    marginBottom: width * 0.03, // Marge responsive
   },
   toucheCommande: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginVertical: height * 0.02, // Responsive margin
+    alignItems: 'center', // Centre les éléments verticalement
+    marginVertical: height * 0.02, // Marge responsive
   },
   buttonContainer: {
-    position: 'relative',
     flex: 1,
-    marginHorizontal: width * 0.02, // Responsive margin
+    marginHorizontal: width * 0.02, // Marge responsive
   },
   btn: {
-    paddingVertical: height * 0.015, // Responsive padding
-    paddingHorizontal: width * 0.04, // Responsive padding
+    paddingVertical: height * 0.015, // Padding responsive
+    paddingHorizontal: width * 0.04, // Padding responsive
     borderRadius: 30,
     backgroundColor: '#D3D3D3',
     alignItems: 'center',
@@ -112,12 +138,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF6A69',
   },
   btnText: {
-    fontSize: width * 0.04, // Responsive font size
+    fontSize: width * 0.04, // Taille de police responsive
     color: '#FFF',
     fontWeight: 'bold',
   },
   countText: {
-    fontSize: width * 0.035, // Responsive font size
+    fontSize: width * 0.035, // Taille de police responsive
     color: '#FFF',
   },
   btnNoti: {
@@ -126,22 +152,18 @@ const styles = StyleSheet.create({
   },
   notifi: {
     position: 'absolute',
-    right: width * -0.02, // Responsive positioning
-    top: height * -0.025, // Responsive positioning
+    right: width * -0.02, // Positionnement responsive
+    top: height * -0.025, // Positionnement responsive
     backgroundColor: '#FF6A69',
     borderRadius: 10,
-    paddingHorizontal: width * 0.015, // Responsive padding
-    paddingVertical: height * 0.005, // Responsive padding
+    paddingHorizontal: width * 0.015, // Padding responsive
+    paddingVertical: height * 0.005, // Padding responsive
     alignItems: 'center',
     justifyContent: 'center',
   },
   pageContent: {
-    position: 'absolute',
-    bottom: height * 0.05, // Responsive positioning
-    left: width * 0.03, // Responsive positioning
-    width: '100%',
-    height: height * 0.70, // Responsive height
-    padding: width * 0.03, // Responsive padding
+    flex: 1,
+    padding: width * 0.02, // Padding responsive
     backgroundColor: '#FFF',
     borderRadius: 10,
     shadowColor: '#000',
@@ -149,17 +171,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 6,
     elevation: 3,
-
-  },
-  pageText: {
-    fontSize: width * 0.045, // Responsive font size
-    color: '#515C70',
+    marginBottom: 15
   },
   cardNoti: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    height: 120, 
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    height: 120,
     backgroundColor: '#FFF',
     borderRadius: 10,
     shadowColor: '#000',
@@ -167,5 +185,54 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 6,
     elevation: 3,
-  }
+    padding: width * 0.02,
+    marginVertical: 5,
+    alignItems: 'center', // Centre les éléments verticalement
+  },
+  gaucheCard: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  produitContent: {
+    marginTop: 10, // Ajuste l'espacement
+    marginHorizontal: 20,
+  },
+  droiteCard: {
+    flex: 1, // Prend l'autre moitié de la largeur de la carte
+    alignItems: 'flex-end', 
+    justifyContent: 'center', // Centre le contenu verticalement
+    padding: width * 0.02,
+  },
+  produitDroite: {
+    marginTop: 20,
+    width: '100%',
+  },
+  jourText: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: '#515C70',
+    bottom: 20
+  },
+  dateText: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: '#515C70',
+    bottom: 20
+
+  },
+  ProduitName: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#515C70',
+  },
+  ProduitNumber: {
+    fontSize: 12,
+    color: '#515C70',
+  },
+  separator: {
+    width: 1,
+    backgroundColor: '#555',
+    height: '100%', // Ajuste la hauteur pour bien s'adapter à la carte
+    marginHorizontal: width * 0.02,
+  },
 });
