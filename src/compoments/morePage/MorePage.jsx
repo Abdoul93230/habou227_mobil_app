@@ -29,12 +29,12 @@ const MorePage = () => {
           <Text style={styles.shippingAddressText}>Avis de confidentialité</Text>
           <AntDesign name="right" size={24} color="black" style={styles.iconRight} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.shippingAddress}>
+        <TouchableOpacity style={styles.shippingAddress} onPress={() => navigation.navigate('Question Page')}>
           <AntDesign name="questioncircleo" size={24} color="black" style={styles.icon}  />
           <Text style={styles.shippingAddressText}>Questions fréquemment posées</Text>
           <AntDesign name="right" size={24} color="black" style={styles.iconRight} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.shippingAddress}>
+        <TouchableOpacity style={styles.shippingAddress} onPress={() => navigation.navigate("Information Page")}>
           <AntDesign name="infocirlceo" size={24} color="black" style={styles.icon}  />
           <Text style={styles.shippingAddressText}>Legal information</Text>
           <AntDesign name="right" size={24} color="black" style={styles.iconRight} />

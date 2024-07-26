@@ -20,7 +20,8 @@ import LivraisonPage from "./src/compoments/livraisonPage/LivraisonPage";
 import PaiementPage from "./src/compoments/paiementPage/PaiementPage";
 import ParaNotification from "./src/compoments/parametreNotification/ParaNotification";
 import Confidentialite from "./src/compoments/AvisConfidentialitePage/Confidentialite";
-
+import QuestionPage from "./src/compoments/questionFrequementposePage/QuestionPage";
+import InformationPage from "./src/compoments/legalInformationPage/InformationPage";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -45,6 +46,8 @@ export default function App() {
         <Stack.Screen name="Paiement Page" component={PaiementPage} options={{headerShown: true}} />
         <Stack.Screen name="Paramètre de notification" component={ParaNotification} options={{headerShown: true}} />
         <Stack.Screen name="Avis de confidentialité" component={Confidentialite} options={{headerShown: true}} />
+        <Stack.Screen name="Question Page" component={QuestionPage} options={{headerShown: true}} />
+        <Stack.Screen name="Information Page" component={InformationPage} options={{headerShown: true}} />
       </Stack.Navigator>
     </NavigationContainer>
     </GestureHandlerRootView>
