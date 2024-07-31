@@ -1,22 +1,35 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity,Animated } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import React from 'react';
+import React,{useRef, useEffect} from 'react';
 
 const FooterMain = () => {
+  const fadeAnimMain = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    Animated.timing(fadeAnimMain, {
+      toValue: 1,
+      duration: 2000,
+      useNativeDriver: true,
+    }).start();
+  }, [fadeAnimMain]);
   // Fonction de gestion des clics sur les textes
   const handlePress = (text) => {
     console.log(`${text} pressed`);
     // Ici vous pouvez ajouter la logique pour chaque texte
   };
+  const scrollViewRef = useRef(null);
+
+  const handleIconPress = () => {
+    scrollViewRef.current.scrollTo({ y: 0, animated: true });
+  };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} ref={scrollViewRef}>
       {/* First Footer */}
       <View style={styles.footerMain}>
-        <TouchableOpacity style={styles.footerButton}>
+        {/* <TouchableOpacity style={styles.footerButton} onPress={handleIconPress}>
           <AntDesign name="up" size={24} color="#FFF" />
           <Text style={styles.footerText}>BACK TO TOP</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       {/* Second Footer */}

@@ -2,8 +2,10 @@ import React, { useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image, Animated } from 'react-native';
 import { Feather, Entypo } from '@expo/vector-icons';
 import Profil from "../../image/logo.png";
+import { useNavigation, useNavigationState } from '@react-navigation/native';
 
 const Header__page = () => {
+  const navigation = useNavigation();
     const fadeAnimHeader = useRef(new Animated.Value(0)).current;
     useEffect(() => {
         Animated.timing(fadeAnimHeader, {
@@ -16,14 +18,14 @@ const Header__page = () => {
     <Animated.View style={[styles.header, { opacity: fadeAnimHeader }]}>
     <Image source={Profil} style={styles.image} />
     <View style={styles.shoppingIcon}>
-      <TouchableOpacity style={styles.iconContainer}>
+      <TouchableOpacity style={styles.iconContainer} onPress={() => navigation.navigate('ChatMessage')}>
         <Entypo name='circle' size={24} color="black" />
         <View style={styles.circleBTN}>
           <Text style={styles.badgeText}>0</Text>
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.iconContainer}>
+      <TouchableOpacity style={styles.iconContainer} onPress={() => navigation.navigate("Cart")}>
         <Feather name="shopping-cart" size={24} color="black" />
         <View style={styles.circleBTN}>
           <Text style={styles.badgeText}>0</Text>
