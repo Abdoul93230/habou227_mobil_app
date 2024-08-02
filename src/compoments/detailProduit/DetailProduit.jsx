@@ -5,7 +5,7 @@ import { useNavigation , useNavigationState} from '@react-navigation/native';
 
 
 
-const DetailProduit = () => {
+const DetailProduit = ({produit}) => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
@@ -15,9 +15,12 @@ const DetailProduit = () => {
         </TouchableOpacity>
 
         <View style={styles.headerContent}>
-          <Text style={styles.headerText}>Refroidisseur d'ordinateur portable</Text>
+          <Text style={styles.headerText}>{produit?.name}</Text>
           <View style={styles.ratingContainer}>
-            <Text style={styles.CFAText}>CFA 15000</Text>
+            {
+              // produit?.prixPromo > 0 ?<Text style={styles.CFAText}>CFA {produit.prix}</Text>:<Text style={styles.CFAText}>CFA {produit.prixPromo}</Text>
+            }
+
             <View style={styles.staro}>
               <AntDesign name="staro" size={15} color="#FFF" />
               <Text style={styles.ratingText}>4.9</Text>

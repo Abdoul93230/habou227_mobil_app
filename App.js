@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Provider } from "react-redux";
 import {ScrollView} from "react-native";
 import Home from "./src/pages/Home";
 import Search from "./src/pages/Search";
@@ -22,10 +23,32 @@ import ParaNotification from "./src/compoments/parametreNotification/ParaNotific
 import Confidentialite from "./src/compoments/AvisConfidentialitePage/Confidentialite";
 import QuestionPage from "./src/compoments/questionFrequementposePage/QuestionPage";
 import InformationPage from "./src/compoments/legalInformationPage/InformationPage";
+import store from "./src/redux/store";
+import {
+  getCategories,
+  getProducts,
+  getProducts_Commentes,
+  getProducts_Pubs,
+  getTypes,
+} from "./src/redux/ProductsActions";
 const Stack = createNativeStackNavigator();
 
+
+const BackendUrl = process.env.REACT_APP_Backend_Url;
+
 export default function App() {
+
+  useEffect(() => {
+    store.dispatch(getProducts());
+    store.dispatch(getTypes());
+    store.dispatch(getCategories());
+    store.dispatch(getProducts_Pubs());
+    store.dispatch(getProducts_Commentes());
+
+
+  }, []);
   return (
+    <Provider store={store}>
     <GestureHandlerRootView style={{ flex: 1 }}>
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
@@ -51,6 +74,7 @@ export default function App() {
       </Stack.Navigator>
     </NavigationContainer>
     </GestureHandlerRootView>
+    </Provider>
   );
 }
 

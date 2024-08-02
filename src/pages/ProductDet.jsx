@@ -1,25 +1,54 @@
 import { StyleSheet, View, ScrollView, SafeAreaView, Text, TouchableOpacity, Modal, TextInput, Button  } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DetailProduit from "../compoments/detailProduit/DetailProduit";
 import DetailProduitFooter from '../compoments/detailProduit/DetailProduitFooter';
 import DetailProduitMain from '../compoments/detailProduit/DetailProduitMain';
+import LoadingIndicator from './LoadingIndicator';
+import axios from 'axios';
 import {AntDesign} from '@expo/vector-icons';
+import { useRoute } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 const ProductDet = () => {
+  const route = useRoute();
+  const { id } = route.params;
   const [isCommentBoxVisible, setIsCommentBoxVisible] = useState(false);
+  const [allCategories, setAllCategories] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
   const [rating, setRating] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [VP, setVp] = useState(null);
+  const DATA_Types = useSelector((state) => state.products.types);
+  const DATA_Categories = useSelector((state) => state.products.categories);
+  const DATA_Products = useSelector((state) => state.products.data);
   const handleRating = (rate) => {
     setRating(rate);
   };
   const handleCommentBoxToggle = () => {
     setIsCommentBoxVisible(!isCommentBoxVisible);
   };
+  useEffect(() => {
+    axios
+      .get(`https://chagona.onrender.com/Product/${id}`)
+      .then((res) => {
+        setVp(res.data.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setLoading(false);
+        console.log(error);
+      });
+
+    setAllCategories(DATA_Categories);
+
+    setAllProducts(DATA_Products);
+  }, []);
   return (
     <View style={styles.container}>
-      <DetailProduit />
+      <DetailProduit produit = {VP} />
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollViewContent}>
-        <DetailProduitMain />
+        <DetailProduitMain produit = {VP} />
       </ScrollView>
-      <DetailProduitFooter />
+      <DetailProduitFooter/>
 
 
       <TouchableOpacity style={styles.commenteBox} onPress={handleCommentBoxToggle}>
@@ -39,7 +68,7 @@ const ProductDet = () => {
           />
           <View style={styles.note}>
             <Text style={styles.noteProduit}>Notez ce produit</Text>
-            
+
             <View style={styles.satrIcon}>
           {[1, 2, 3, 4, 5].map((star) => (
             <TouchableOpacity key={star} onPress={() => handleRating(star)}>
@@ -52,12 +81,12 @@ const ProductDet = () => {
             <Button title="Envoyer" onPress={() => { /* Ajoutez votre logique d'envoi de commentaire ici */ }} />
             <Button title="Fermer" onPress={handleCommentBoxToggle} />
           </View>
-          
+
         </View>
       </View>
 </Modal>
     </View>
-    
+
   );
 };
 

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, View, Animated, ScrollView, TouchableOpacity } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import Profil from "../image/logo.png";
-import Header__page from '../compoments/header/Header__page'; 
+import Header__page from '../compoments/header/Header__page';
 import Footer from '../compoments/footer/Footer';
 import Categories from '../compoments/categories/Categories';
 import Bienvennue__page from '../compoments/bienvennuePlateforme/Bienvennue__page';
@@ -11,11 +11,36 @@ import Ordi from '../image/ordinateur14.jpg';
 import ProductsSli from '../compoments/Slider/Slider__page';
 import Galerie__page from '../galerie/Galerie__page';
 import FooterMain from '../compoments/footerMain/FooterMain';
+import { useSelector } from "react-redux";
+import { shuffle } from "lodash";
 
+
+const BackendUrl = process.env.REACT_APP_Backend_Url;
 const Home = () => {
   const fadeAnimMain = useRef(new Animated.Value(0)).current;
   const [showIcon, setShowIcon] = useState(false);
   const scrollViewRef = useRef(null);
+  const DATA_Products = useSelector((state) => state.products.data);
+  const DATA_Types = useSelector((state) => state.products.types);
+  const DATA_Categories = useSelector((state) => state.products.categories);
+  console.log(DATA_Products.length)
+  const clefElectronique = DATA_Categories
+  ? DATA_Categories.find((item) => item.name === "électroniques")
+  : null;
+
+
+  function getRandomElementss(array, nbr) {
+    const shuffledArray = shuffle(array);
+    return shuffledArray.slice(0, nbr);
+  }
+  function getRandomElementsSix(array) {
+    const shuffledArray = shuffle(array);
+    return shuffledArray.slice(0, 6);
+  }
+    function getRandomElements(array) {
+    const shuffledArray = shuffle(array);
+    return shuffledArray.slice(0, 10);
+  }
 
   useEffect(() => {
     Animated.timing(fadeAnimMain, {
@@ -65,26 +90,90 @@ const Home = () => {
   return (
     <View style={styles.container}>
       <Header__page />
-      <ScrollView 
-        showsVerticalScrollIndicator={false} 
+      <ScrollView
+        showsVerticalScrollIndicator={false}
         style={styles.contenu}
         onScroll={handleScroll}
         scrollEventThrottle={16}
         ref={scrollViewRef}
       >
         <Animated.View style={[styles.main, { opacity: fadeAnimMain }]}>
-          <Categories />
-          <Bienvennue__page />
-          <Produits titre="Produits"/>
-          <Produits titre="Electroniques" />
-          <ProductsSli products={products} name="Électroniques" />
-          <Galerie__page />
-          <Produits titre="Homme" />
+          <Categories  categories={DATA_Categories} />
+          <Bienvennue__page categories={DATA_Categories} />
+          <Produits products={getRandomElementss(DATA_Products, 6)}  name={""}/>
+          <Produits
+          products={getRandomElementsSix(
+            DATA_Products.filter((item) =>
+              DATA_Types.some(
+                (type) =>
+                  type.clefCategories === clefElectronique?._id &&
+                  item.ClefType === type._id
+              )
+            )
+          )}
+          name={"électroniques"}
+          />
+          <ProductsSli
+          products={getRandomElements(
+            DATA_Products.filter((item) =>
+              DATA_Types.some(
+                (type) =>
+                  type.clefCategories === clefElectronique?._id &&
+                  item.ClefType === type._id
+              )
+            )
+          )}
+          name={"électroniques"}
+          />
+          <Galerie__page products={DATA_Products} />
+
+          {DATA_Categories.map((param, index) => {
+          if (
+            getRandomElements(
+              DATA_Products.filter(
+                (item) =>
+                  item.ClefType ===
+                  DATA_Types.find((i) => i.clefCategories === param._id)?._id
+              )
+            ).length > 0 &&
+            param._id !== clefElectronique?._id
+          )
+            return (
+              <View key={index}>
+                <Produits
+                  products={getRandomElementsSix(
+                    DATA_Products.filter((item) =>
+                      DATA_Types.some(
+                        (type) =>
+                          type.clefCategories === param?._id &&
+                          item.ClefType === type._id
+                      )
+                    )
+                  )}
+                  name={param.name}
+                />
+                <ProductsSli
+                  products={getRandomElements(
+                    DATA_Products.filter((item) =>
+                      DATA_Types.some(
+                        (type) =>
+                          type.clefCategories === param?._id &&
+                          item.ClefType === type._id
+                      )
+                    )
+                  )}
+                  name={param.name}
+                />
+              </View>
+            );
+          else return null;
+        })}
+          {/* <Produits titre="Homme" />
           <ProductsSli products={products} name="Homme" />
           <Produits titre="Cuisine & Ustensiles" />
           <ProductsSli products={products} name="Cuisine & Ustensiles" />
           <Produits titre="Électroménager" />
-          <ProductsSli products={products} name="Électroménager" />
+          <ProductsSli products={products} name="Électroménager" /> */}
           <FooterMain />
         </Animated.View>
       </ScrollView>

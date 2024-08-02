@@ -10,12 +10,12 @@ import Macbook  from "../../image/macbook cote.png"
 const { width } = Dimensions.get('window'); // Largeur de l'écran pour le carrousel
 
 
-const DetailProduitMain = () => {
+const DetailProduitMain = ({produit}) => {
   const flatListRef = useRef(null);
   const [selectedImageIds, setSelectedImageIds] = useState([]);
   const [selectedImageURL, setSelectedImage] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const pan = useRef(new Animated.ValueXY()).current; 
+  const pan = useRef(new Animated.ValueXY()).current;
 
   const [tailleImageB, setTailleImageB] = useState(null);
   const [tailleImage, setTailleImage] = useState(null);
@@ -27,7 +27,7 @@ const DetailProduitMain = () => {
   const contColor = (nbr)=>{
     setTailleImage(nbr)
   }
-  
+
   const handlePressTaillle = (size) => {
     setTailleNumber(size);
   };
@@ -39,14 +39,21 @@ const DetailProduitMain = () => {
     { id: '5', image: require('../../image/ordinateur14.jpg') },
     { id: '6', image: require('../../image/ordinateur14.jpg') },
   ]);
+  const productImages = produit?.image1? [
+    produit.image1,
+    produit.image2,
+    produit.image3,
+  ]:[];
   const [activeButton, setActiveButton] = useState('details');
 
   useEffect(() => {
     let currentIndex = 0;
+    // const totalItems = productImages.length; // Assurez-vous que la longueur est correcte
+    const totalItems = 3; // Assurez-vous que la longueur est correcte
 
     const scrollInterval = setInterval(() => {
       if (flatListRef.current) {
-        currentIndex = (currentIndex + 1) % carousel.length;
+        currentIndex = (currentIndex + 1) % totalItems;
         flatListRef.current.scrollToIndex({
           index: currentIndex,
           animated: true,
@@ -56,7 +63,8 @@ const DetailProduitMain = () => {
     }, 3000); // Défilement toutes les 3 secondes
 
     return () => clearInterval(scrollInterval); // Nettoyage de l'intervalle à la désactivation du composant
-  }, [carousel]);
+  }, [produit]);
+
 
   const handleDetailsPress = () => {
     setActiveButton('details'); // Met à jour l'état du bouton actif
@@ -98,14 +106,14 @@ const DetailProduitMain = () => {
       <View style={styles.box}>
         <FlatList
           ref={flatListRef}
-          data={carousel}
+          data={[produit?.image1,produit?.image2,produit?.image3]}
           horizontal
           pagingEnabled
           showsHorizontalScrollIndicator={false}
-          keyExtractor={(item) => item.id}
+          // keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <View style={styles.carouselItem}>
-              <Image source={item.image} style={styles.image} />
+              <Image source={{uri:item}} style={styles.image} />
             </View>
           )}
         />
@@ -144,8 +152,8 @@ const DetailProduitMain = () => {
               </View>
             </View>
 
-   
-          
+
+
         <Text>
           Selectionner la color: {tailleImage !== null && <Text>Color: {tailleImage}</Text>}
         </Text>
@@ -183,8 +191,8 @@ const DetailProduitMain = () => {
           </TouchableOpacity>
         ))}
       </View>
-       
-       
+
+
 
         </View>
 
@@ -215,9 +223,9 @@ const DetailProduitMain = () => {
               <Text style={styles.para}>• Utilisé pour: Principalement utilisée comme une Stainless Steel Tea Pot, soulignant la polyvalence du produit.</Text>
               <Text style={styles.para}>• Matériel type: Fabriquée en acier inoxydable de type 201 - garantissant qualité et durabilité.</Text>
             </View>
-            
+
             <Text style={styles.galerie__title}>Galeries</Text>
-             
+
                 <View style={styles.galerie__box}>
                   {carousel.map((item) => (
                     <TouchableOpacity
@@ -446,7 +454,7 @@ const styles = StyleSheet.create({
   },
   boxCard: {
     width: 60,
-    height: 60, 
+    height: 60,
     borderRadius: 50
   },
   boxTaille: {
@@ -466,7 +474,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2},
     shadowOpacity: 0.8,
   },
-  
+
 
   theiere: {
     fontWeight: 'bold',
@@ -475,7 +483,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   detailsContentPara: {
-    
+
   },
 
   galerie__title: {
@@ -578,7 +586,7 @@ const styles = StyleSheet.create({
     padding: 8,
     justifyContent: "center",
     alignItems: "center",
-    
+
   },
   imageContainer: {
     width: '100%',
@@ -590,7 +598,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     resizeMode: 'cover',
-    
+
   },
   bottomContainer: {
     flex: 1,

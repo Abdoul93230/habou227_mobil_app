@@ -3,9 +3,9 @@ import React, { useState } from 'react';
 import Profil from "../../image/logo.png";
 import { AntDesign } from '@expo/vector-icons';
 
-const Categories = () => {
+const Categories = ({categories} ) => {
   const titre = "Categories";
-  const [categories, setCategories] = useState([
+  const [Categories, setCategories] = useState([
     { id: 1, name: "Homme", image: require("../../image/IHFt.jpg") },
     { id: 2, name: "Électroniques", image: require("../../image/IHFt.jpg") },
     { id: 3, name: "Bauté", image: require("../../image/IHFt.jpg") },
@@ -19,12 +19,19 @@ const Categories = () => {
     <View style={styles.container}>
       <Text style={styles.titre__img}>{titre}</Text>
       <View style={styles.menu}>
-        {categories.map((category) => (
-          <View key={category.id} style={styles.box__img}>
-            <Image source={category.image} style={styles.categoryImage} />
+        {categories.map((category,index) => {
+          if(index<6 && category.name !== "all"){
+            return  <View key={index} style={styles.box__img}>
+            <Image source={{uri:category.image}} style={styles.categoryImage} />
             <Text style={styles.categoryText}>{category.name}</Text>
           </View>
-        ))}
+          }else{
+            return null;
+          }
+        }
+
+
+        )}
         <TouchableOpacity style={styles.seeAll}>
           <View style={styles.seeAll__icon}>
             <AntDesign name='right' size={24} color="#FF6A69" />
