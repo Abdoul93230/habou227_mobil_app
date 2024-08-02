@@ -1,10 +1,12 @@
-import { Button, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { Button, StyleSheet, Text, View, Image, TouchableOpacity,Dimensions } from 'react-native';
 import React, { useState } from 'react';
 import Profil from "../../image/logo.png";
 import { AntDesign } from '@expo/vector-icons';
 
+const { width, height } = Dimensions.get('window');
 const Categories = () => {
   const titre = "Categories";
+  // Obtenez les dimensions de l'écran
   const [categories, setCategories] = useState([
     { id: 1, name: "Homme", image: require("../../image/IHFt.jpg") },
     { id: 2, name: "Électroniques", image: require("../../image/IHFt.jpg") },
@@ -42,6 +44,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFF00',
+    marginBottom:10,
   },
   titre__img: {
     padding: 12,
@@ -54,15 +57,16 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   box__img: {
-    width: 96,
-    height: 96,
+    width: width * 0.20, // Largeur relative
+    height: width * 0.20, // Hauteur relative pour garder le carré
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 30,
     borderRadius: 50,
     shadowColor: "#FF6A69",
     shadowOffset: { width: 0, height: 0.2 },
     shadowOpacity: 0.50,
     shadowRadius: 3.84,
+    
   },
   categoryImage: {
     width: 80,
@@ -72,7 +76,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   categoryText: {
-    fontSize: 13,
+    fontSize: width * 0.026,
     fontWeight: 'sans serif',
   },
   seeAll: {
