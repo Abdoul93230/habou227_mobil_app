@@ -23,7 +23,6 @@ const Home = () => {
   const DATA_Products = useSelector((state) => state.products.data);
   const DATA_Types = useSelector((state) => state.products.types);
   const DATA_Categories = useSelector((state) => state.products.categories);
-  console.log(DATA_Products.length)
   const clefElectronique = DATA_Categories
   ? DATA_Categories.find((item) => item.name === "électroniques")
   : null;
@@ -39,7 +38,7 @@ const Home = () => {
   }
     function getRandomElements(array) {
     const shuffledArray = shuffle(array);
-    return shuffledArray.slice(0, 10);
+    return shuffledArray.slice(0, 12);
   }
 
   useEffect(() => {
@@ -62,6 +61,7 @@ const Home = () => {
   const handleIconPress = () => {
     scrollViewRef.current.scrollTo({ y: 0, animated: true });
   };
+
 
   const products = [
     { _id: '1', name: 'Laptop A', prix: 1000, prixPromo: 900, image1: Ordi, },

@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import Toast from 'react-native-toast-message';
 import { Provider } from "react-redux";
 import {ScrollView} from "react-native";
 import Home from "./src/pages/Home";
@@ -23,6 +24,7 @@ import ParaNotification from "./src/compoments/parametreNotification/ParaNotific
 import Confidentialite from "./src/compoments/AvisConfidentialitePage/Confidentialite";
 import QuestionPage from "./src/compoments/questionFrequementposePage/QuestionPage";
 import InformationPage from "./src/compoments/legalInformationPage/InformationPage";
+import toastConfig from "./src/pages/toastConfig";
 import store from "./src/redux/store";
 import {
   getCategories,
@@ -72,6 +74,7 @@ export default function App() {
         <Stack.Screen name="Question Page" component={QuestionPage} options={{headerShown: true}} />
         <Stack.Screen name="Information Page" component={InformationPage} options={{headerShown: true}} />
       </Stack.Navigator>
+      <Toast config={toastConfig} ref={(ref) => Toast.setRef(ref)} />
     </NavigationContainer>
     </GestureHandlerRootView>
     </Provider>
