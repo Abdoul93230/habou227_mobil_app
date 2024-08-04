@@ -3,31 +3,88 @@ import { StyleSheet, Image,
     TouchableOpacity, Modal,
     PanResponder, Animated, Pressable
    } from 'react-native';
+   import RenderHtml from 'react-native-render-html';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import React, { useRef, useEffect, useState } from 'react';
+import Toast from 'react-native-toast-message';
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import Macbook  from "../../image/macbook cote.png"
+import { useSelector } from 'react-redux';
+import { shuffle } from "lodash";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Alert } from 'react-native';
+import axios from 'axios';
 const { width } = Dimensions.get('window'); // Largeur de l'écran pour le carrousel
 
 
-const DetailProduitMain = () => {
+// Fonction de mélange (shuffle) des éléments
+function shufflee(array) {
+  let shuffled = array.slice(); // Crée une copie du tableau original
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+const DetailProduitMain = ({produit,chgColor, chgTail,id}) => {
   const flatListRef = useRef(null);
   const [selectedImageIds, setSelectedImageIds] = useState([]);
   const [selectedImageURL, setSelectedImage] = useState(null);
+  const [allCategories, setAllCategories] = useState([]);
+  const [allTypes, setAllTypes] = useState(null);
+  const [allProducts, setAllProducts] = useState([]);
+  const [idClicked, setIdClicked] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const pan = useRef(new Animated.ValueXY()).current; 
-
   const [tailleImageB, setTailleImageB] = useState(null);
   const [tailleImage, setTailleImage] = useState(null);
   const [tailleNumber, setTailleNumber] = useState(null);
+  const [products, setProducts] = useState([]);
+  const [produitsL, setProduitsL] = useState(0);
+  const [color, setColor] = useState(null);
+  const [taille, setTaille] = useState(null);
+  const [nbrCol, setNbrCol] = useState(null);
+  const [commente, setCommente] = useState("");
+  const [Allcommente, setAllCommente] = useState([]);
+  const pan = useRef(new Animated.ValueXY()).current;
+  const DATA_Types = useSelector((state) => state.products.types);
+  const DATA_Categories = useSelector((state) => state.products.categories);
+  const DATA_Products = useSelector((state) => state.products.data);
+  const contentWidth = Dimensions.get('window').width;
+  const navigation = useNavigation()
 
+
+
+
+  const CVCate = DATA_Types
+    ? DATA_Types?.find((item) => item?._id === produit?.ClefType)?.clefCategories
+    : null;
+  const Categorie = DATA_Categories
+    ? DATA_Categories?.find((item) => item?._id === CVCate)?.name
+    : null;
   const handlePress = (index) => {
     setTailleImageB(index);
   };
   const contColor = (nbr)=>{
     setTailleImage(nbr)
   }
-  
+
+  useEffect(() => {
+    // Filtrer les produits basés sur la condition donnée
+    const filteredProducts = DATA_Products.filter(item =>
+      item.ClefType === produit?.ClefType
+    );
+
+    // Obtenir les éléments aléatoires à partir du tableau filtré
+    const getRandomElements = (array, nbr) => {
+      const shuffledArray = shuffle(array);
+      return shuffledArray.slice(0, nbr);
+    };
+
+    // Définir les produits aléatoires dans l'état
+    setProducts(getRandomElements(filteredProducts, 6));
+  }, [DATA_Products, produit]);
+
   const handlePressTaillle = (size) => {
     setTailleNumber(size);
   };
@@ -39,14 +96,21 @@ const DetailProduitMain = () => {
     { id: '5', image: require('../../image/ordinateur14.jpg') },
     { id: '6', image: require('../../image/ordinateur14.jpg') },
   ]);
+  const productImages = produit?.image1? [
+    produit.image1,
+    produit.image2,
+    produit.image3,
+  ]:[];
   const [activeButton, setActiveButton] = useState('details');
 
   useEffect(() => {
     let currentIndex = 0;
+    // const totalItems = productImages.length; // Assurez-vous que la longueur est correcte
+    const totalItems = 3; // Assurez-vous que la longueur est correcte
 
     const scrollInterval = setInterval(() => {
       if (flatListRef.current) {
-        currentIndex = (currentIndex + 1) % carousel.length;
+        currentIndex = (currentIndex + 1) % totalItems;
         flatListRef.current.scrollToIndex({
           index: currentIndex,
           animated: true,
@@ -56,7 +120,38 @@ const DetailProduitMain = () => {
     }, 3000); // Défilement toutes les 3 secondes
 
     return () => clearInterval(scrollInterval); // Nettoyage de l'intervalle à la désactivation du composant
-  }, [carousel]);
+    setAllTypes (DATA_Types);
+    setAllCategories(DATA_Categories);
+    setAllProducts(DATA_Products);
+  }, [produit]);
+
+
+  useEffect(() => {
+
+
+    axios
+      .get(`https://chagona.onrender.com/getAllCommenteProduitById/${id}`)
+      .then((coments) => {
+        setAllCommente(coments.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+
+  const selectRandomComments = (comments, maxCount) => {
+    // Vérifie si le nombre de commentaires disponibles est inférieur ou égal à maxCount
+    if (comments.length <= maxCount) {
+      return comments; // Retourne tous les commentaires disponibles
+    }
+
+    const shuffled = comments.sort(() => 0.5 - Math.random()); // Mélange les commentaires de manière aléatoire
+    return shuffled.slice(0, maxCount); // Sélectionne les premiers maxCount commentaires
+  };
+
+  // Utilise la fonction selectRandomComments pour obtenir une liste de commentaires aléatoires
+  const randomComments = selectRandomComments(Allcommente, 10);
 
   const handleDetailsPress = () => {
     setActiveButton('details'); // Met à jour l'état du bouton actif
@@ -70,7 +165,8 @@ const DetailProduitMain = () => {
     // Alert.alert('Reviews', 'Afficher les avis du produit.');
     // Ajoutez ici le code pour naviguer ou afficher les avis du produit
   };
-  const handleImageClick = (id, image) => {
+  const handleImageClick = (id) => {
+    setIdClicked(id)
     setSelectedImageIds((prevSelectedIds) => {
       if (prevSelectedIds.includes(id)) {
         return prevSelectedIds.filter((selectedId) => selectedId !== id);
@@ -93,19 +189,134 @@ const DetailProduitMain = () => {
       // Optionally handle the release event if needed
     }
   });
+  const customRenderers = {
+    img: () => <Text style={styles.alternateText}>[Image non affichée]</Text>, // Texte alternatif pour les images
+    video: () => <Text style={styles.alternateText}>[Vidéo non affichée]</Text>, // Texte alternatif pour les vidéos
+    iframe: () => <Text style={styles.alternateText}>[Vidéo non affichée]</Text>, // Texte alternatif pour les iframes
+  };
+
+  const handleAlert = (message) => {
+    Toast.show({
+      type: 'success',
+      text1: message,
+      position: 'top',
+      visibilityTime: 3000,
+      autoHide: true,
+      bottomOffset: 40,
+    });
+  };
+
+  const handleAlertwar = (message) => {
+    Toast.show({
+      type: 'error',
+      text1: message,
+      position: 'top',
+      visibilityTime: 3000,
+      autoHide: true,
+      bottomOffset: 40,
+    });
+  };
+
+
+  const AddProduct = async () => {
+    try {
+      const existingProductsJson = await AsyncStorage.getItem('panier');
+      const existingProducts = existingProductsJson ? JSON.parse(existingProductsJson) : [];
+
+      const isProductInCart = existingProducts.some((p) => p.id === params.id);
+
+      if (isProductInCart) {
+        const updatedProducts = existingProducts.map((p) => {
+          if (p.id === params.id) {
+            const updatedColors = [...p.colors, color]; // Ajouter la nouvelle couleur
+            const updatedSizes = [...p.sizes, taille]; // Ajouter la nouvelle taille
+
+            return {
+              ...p,
+              colors: updatedColors,
+              sizes: updatedSizes,
+              quantity: p.quantity + 1,
+              id: params.id,
+            };
+          }
+          return p;
+        });
+
+        await AsyncStorage.setItem('panier', JSON.stringify(updatedProducts));
+        handleAlert("La quantité du produit a été incrémentée dans le panier !");
+        const local = await AsyncStorage.getItem('panier');
+        setProduitsL(local ? JSON.parse(local) : []);
+        return;
+      }
+
+      if (produit?.couleur[0].split(",").length >= 2 && !color) {
+        if (produit.pictures.length >= 2) {
+          handleAlertwar(
+            `Veuillez choisir un modèle parmi les ${produit?.pictures.length}`
+          );
+        } else {
+          handleAlertwar(
+            `Veuillez choisir une couleur parmi les ${produit?.couleur[0].split(",").length}`
+          );
+        }
+        // chgOption("Details", 0);
+        return;
+      }
+
+      if (produit?.taille[0].split(",").length >= 2 && !taille) {
+        handleAlertwar(
+          `Veuillez choisir une taille parmi les ${produit?.taille[0].split(",").length}`
+        );
+        // chgOption("Details", 0);
+        return;
+      }
+
+      const updatedProducts = [
+        ...existingProducts,
+        {
+          ...produit,
+          colors: [color], // Ajouter la couleur sélectionnée comme tableau
+          sizes: [taille], // Ajouter la taille sélectionnée comme tableau
+          quantity: 1,
+          id: params.id,
+        },
+      ];
+
+      await AsyncStorage.setItem('panier', JSON.stringify(updatedProducts));
+      handleAlert("Produit ajouté au panier !");
+      const local = await AsyncStorage.getItem('panier');
+      setProduitsL(local ? JSON.parse(local) : []);
+    } catch (error) {
+      console.error('Erreur lors de l\'ajout du produit au panier', error);
+      // Vous pouvez également afficher une alerte ou un message d'erreur ici si nécessaire
+    }
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    return `${year}/${month}/${day}`;
+  };
+
+
+
+
+
   return (
     <View style={styles.container} >
       <View style={styles.box}>
         <FlatList
           ref={flatListRef}
-          data={carousel}
+          data={[produit?.image1,produit?.image2,produit?.image3]}
           horizontal
           pagingEnabled
           showsHorizontalScrollIndicator={false}
-          keyExtractor={(item) => item.id}
+          // keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <View style={styles.carouselItem}>
-              <Image source={item.image} style={styles.image} />
+              <Image source={{uri:item}} style={styles.image} />
             </View>
           )}
         />
@@ -131,25 +342,83 @@ const DetailProduitMain = () => {
             <View style={styles.detailsContent}>
               <View style={styles.brand}>
                 <Text style={styles.title}>Brand</Text>
-                <Text style={styles.para}>Inconnu</Text>
+                <Text style={styles.para}>{produit?.marque}</Text>
                 <Text style={styles.title}>Livraison</Text>
                 <Text style={styles.para}>Offerte (Niamey)</Text>
               </View>
 
               <View style={styles.category}>
                 <Text style={styles.title2}>Category</Text>
-                <Text style={styles.para2}>Électroniques</Text>
+                <Text style={styles.para2}>{Categorie}</Text>
                 <Text style={styles.title2}>Fitting</Text>
                 <Text style={styles.para2}>True to size</Text>
               </View>
             </View>
 
-   
-          
-        <Text>
+
+          {
+            produit?.couleur[0].split(",").length >= 2 ?<>
+              {
+                produit?.pictures.length !== 0 ?<>
+                <Text style={{width:'100%',display:'flex',justifyContent:'flex-start'}}>
+          Selectionner la color: {tailleImage !== null && <Text>Color: {tailleImage}</Text>}
+        </Text>
+        <View style={styles.cardTaille}>
+        {produit?.pictures.map((param, index) => (
+          <TouchableOpacity
+            key={index}
+            style={[
+              styles.boxCard,
+              tailleImageB === index && { borderColor: '#FF6A69', borderWidth: 2 }
+            ]}
+            onPress={() => {
+              handlePress(index);
+              contColor(+index+1);
+              chgColor(param)
+            }}>
+            <Image source={{uri:param}} style={styles.boxTaille} />
+
+          </TouchableOpacity>
+        ))}
+        </View>
+                </>:<>
+
+                <Text style={{width:'100%',display:'flex',justifyContent:'flex-start'}}>
+          Selectionner la color: {tailleImage !== null && <Text>Color: {tailleImage}</Text>}
+        </Text>
+        <View style={styles.cardTaille}>
+        {produit?.pictures.map((param, index) => (
+          <TouchableOpacity
+            key={index}
+            style={[
+              styles.boxCard,
+              tailleImageB === index && { borderColor: '#FF6A69', borderWidth: 2 }
+            ]}
+            onPress={() => {
+              handlePress(index);
+              contColor(+index+1);
+              chgColor(param)
+            }}>
+            <View style={{ width: '100%',
+    height: '100%',
+    borderRadius: 50,
+    backgroundColor:param
+    }}></View>
+          </TouchableOpacity>
+        ))}
+        </View>
+
+
+                </>
+              }
+
+            </>:<></>
+          }
+        {/* <Text>
           Selectionner la color: {tailleImage !== null && <Text>Color: {tailleImage}</Text>}
         </Text>
       <View style={styles.cardTaille}>
+
         {[1, 2, 3, 4, 5].map((param, index) => (
           <TouchableOpacity
             key={index}
@@ -164,67 +433,51 @@ const DetailProduitMain = () => {
             <Image source={Macbook} style={styles.boxTaille} />
           </TouchableOpacity>
         ))}
-      </View>
+      </View> */}
 
-      <Text>Selectionner la taille: {tailleNumber !== null && <Text>Taille: {tailleNumber}</Text>}</Text>
-
-        <View style={styles.cardTaille}>
-      <View style={styles.cardTaille}>
-        {[38, 40, 42, 43, 44].map((size) => (
+      {
+          produit?.taille[0].split(",").length >= 2 ?<>
+          <Text style={{width:'100%',display:'flex',justifyContent:'flex-start'}}>Selectionner la taille: {tailleNumber !== null && <Text>Taille: {tailleNumber}</Text>}</Text>
+          <View style={styles.cardTaille}>
+          {produit?.taille[0].split(",").map((size) => (
           <TouchableOpacity
             key={size}
             style={[
               styles.boxNumber,
               tailleNumber === size && { borderColor: '#FF6A69', borderWidth: 2 }
             ]}
-            onPress={() => handlePressTaillle(size)}
+            onPress={() => {
+              handlePressTaillle(size)
+              chgTail(size)
+            }}
           >
             <Text>{size}</Text>
           </TouchableOpacity>
         ))}
-      </View>
-       
-       
-
         </View>
+          </>:<></>
+      }
 
             <View>
-              <Text style={styles.theiere}>Théière à profil élégant turc marocain arabe avec filtre intégré - GSC038</Text>
-              <Text style={styles.title}>Attributs clés:</Text>
-              <Text style={styles.para}>• Dispositif: Cette théière est équipée d'un couvercle, assurant ainsi une durabilité accrue. Le couvercle permet également de conserver la chaleur du liquide à l'intérieur, préservant ainsi la saveur de votre boisson préférée.</Text>
-              <Text style={styles.para}>• Type: Un accessoire essentiel pour les amateurs de café et de thé. Cette théière combine une esthétique turque marocaine avec une fonctionnalité moderne.</Text>
-              <Text style={styles.para}>• Matériel: Fabriquée en métal de haute qualité, cette théière offre une durabilité exceptionnelle et résiste à l'usure quotidienne.</Text>
-              <Text style={styles.para}>• Style de conception: Son design moderne ajoute une touche élégante à n'importe quelle cuisine ou espace de dégustation.</Text>
-              <Text style={styles.para}>• Point d'origine: Fabriquée en Chine, dans la région de Guangdong.</Text>
-              <Text style={styles.para}>• Marque nom: Aucune marque spécifique associée, mettant en avant la qualité du produit.</Text>
-              <Text style={styles.para}>• Numéro de Type: GSC038 - un identifiant unique pour cette théière.</Text>
-              <Text style={styles.para}>• Type en plastique: Aucun composant en plastique, soulignant la construction en métal de qualité.</Text>
-              <Text style={styles.para}>• Type d'outils de café et de thé: Cette théière appartient à la catégorie des percolateurs, offrant une méthode traditionnelle pour préparer le café et le thé.</Text>
-              <Text style={styles.para}>• Type des Outils de Boisson: Conçue spécialement pour préparer des lots de café & thé.</Text>
-              <Text style={styles.para}>• Type en métal: Fabriquée en acier inoxydable, un matériau durable et facile à entretenir.</Text>
-              <Text style={styles.para}>• Personnes applicables: Idéale pour les amateurs de café et de thé, cette théière s'adresse à ceux qui apprécient la préparation traditionnelle des boissons.</Text>
-              <Text style={styles.para}>• Performance d'isolation thermique: Peut maintenir la chaleur de la boisson pendant 0 à 6 heures, garantissant une expérience de dégustation agréable.</Text>
-              <Text style={styles.para}>• Type de bouteille: Conception de bouteille normale pour faciliter le versement.</Text>
-              <Text style={styles.para}>• Forme: Avec une forme ronde, cette théière combine élégance et praticité.</Text>
-              <Text style={styles.para}>• Production: Un pot à café bien conçu adapté à la fabrication de café.</Text>
-              <Text style={styles.para}>• Nom du produit: Dallah Arabic Turkish - Un nom évoquant les influences arabes et turques dans le design.</Text>
-              <Text style={styles.para}>• Fonction: Parfait pour préparer du café, cette théière est un incontournable pour les amateurs de caféine.</Text>
-              <Text style={styles.para}>• Usage: Convient pour un usage domestique, dans les hôtels, les restaurants et les bureaux. Polyvalente et adaptable à divers environnements.</Text>
-              <Text style={styles.para}>• Couleur: Personnalisable selon les préférences individuelles ou le thème de la cuisine.</Text>
-              <Text style={styles.para}>• OEM&ODM: La personnalisation est hautement accueillie, offrant la possibilité d'ajouter une touche personnelle.</Text>
-              <Text style={styles.para}>• Utilisé pour: Principalement utilisée comme une Stainless Steel Tea Pot, soulignant la polyvalence du produit.</Text>
-              <Text style={styles.para}>• Matériel type: Fabriquée en acier inoxydable de type 201 - garantissant qualité et durabilité.</Text>
+
+      <RenderHtml
+        source={{ html: produit?.description }}
+        contentWidth={width}
+        renderers={customRenderers}
+        ignoredDomTags={['iframe']} // Ignore les iframes si non géré par customRenderers
+        containerStyle={styles.htmlContainer}
+      />
             </View>
-            
+
             <Text style={styles.galerie__title}>Galeries</Text>
-             
+
                 <View style={styles.galerie__box}>
-                  {carousel.map((item) => (
+                  {products?.map((item) => (
                     <TouchableOpacity
-                      key={item.id}
+                      key={item._id}
                       style={styles.galerie__box__img}
-                      onPress={() => handleImageClick(item.image)}>
-                      <Image source={item.image} style={styles.image} />
+                      onPress={() => handleImageClick(item._id,)}>
+                      <Image source={{uri:item.image1}} style={styles.image} />
                     </TouchableOpacity>
                   ))}
                 </View>
@@ -237,20 +490,30 @@ const DetailProduitMain = () => {
                 <View style={styles.modelContainer}>
                   <View style={styles.card}>
                     <View style={styles.imageContainer}>
-                      <Image source={Macbook} style={styles.macBook} />
+                      <Image source={{uri:products?.find(item=>item._id===idClicked)?.image1}} style={styles.macBook} />
+                        {/* {console.log(products?.find(item=>item._id===idClicked)?.image1)} */}
                     </View>
                   </View>
                 </View>
 
       <View style={styles.bottomContainer}>
         <View style={styles.textContainer}>
-          <Text style={styles.textTitle}>Nom du produit</Text>
+          <Text style={styles.textTitle}>{products?.find(item=>item._id===idClicked)?.name.slice(0,20)} ...</Text>
           <Text style={styles.textPrice}>Prix du produit</Text>
+          {/* {
+              products?.find(item=>item._id===idClicked)?.prixPromo <= 0 ?<Text style={styles.CFAText}>CFA {products?.find(item=>item._id===idClicked)?.prix}</Text>:<Text style={styles.CFAText}>CFA {products?.find(item=>item._id===idClicked)?.prixPromo}</Text>
+            } */}
+            {
+              products?.find(item=>item._id===idClicked)?.prixPromo <= 0 ?<Text style={styles.CFAText}>CFA {products?.find(item=>item._id===idClicked)?.prix}</Text>
+              :<View>
+                <Text style={styles.CFAText2}>CFA {products?.find(item=>item._id===idClicked)?.prix}</Text>
+                <Text style={styles.CFAText}>CFA {products?.find(item=>item._id===idClicked)?.prixPromo}</Text>
+              </View>
+            }
           <Text style={styles.text}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
-            mattis maximus eros, eu ullamcorper ante ullamcorper a. Phasellus
-            turpis tellus, tempus at feugiat at, facilisis ac sem.
-          </Text>
+  Découvrez un produit alliant qualité et élégance. Conçu avec soin, il offre une
+  expérience exceptionnelle, que ce soit pour enrichir votre quotidien ou comme cadeau parfait.
+</Text>
         </View>
         <View style={styles.buttonContainer}>
           <Pressable
@@ -263,11 +526,15 @@ const DetailProduitMain = () => {
           </Pressable>
           <Pressable
             style={styles.button}
-            onPress={() => {
-              // navigation.goBack();
-            }}
+
+              onPress={() => {
+                setModalVisible(false);
+                navigation.navigate("Détail-Produit",{ id: products?.find(item=>item._id===idClicked)?._id })
+              }
+              }
+
           >
-            <Text style={styles.textButton}>Acheter maintenant</Text>
+            <Text style={styles.textButton} >Ajouter au panier</Text>
           </Pressable>
         </View>
       </View>
@@ -276,42 +543,51 @@ const DetailProduitMain = () => {
           </View>
         ) : (
           <View>
-          {
-            [1,2,3,4,5].map((param,index)=>{
-              return(
-                <View key={index} style={styles.reviewsContent}>
-            <View style={styles.cardProfil}>
-              <View style={styles.profilName}>
-                <Text style={styles.textName}>A</Text>
-                <Text style={styles.textName}>S</Text>
-              </View>
-              <View style={styles.messageContainer}>
-                <View style={styles.starIcon}>
-                {[1, 2, 3, 4, 5].map((star) => (
-                <AntDesign
-                  key={star}
-                  name='star'
-                  size={18}
-                  color={star <= rating[index] ? '#FF6A69' : 'black'} // Couleur des étoiles
-                />
-              ))}
-                </View>
-                <View>
-                  <Text style={styles.name}>Abassa Soumana</Text>
-                </View>
-              </View>
-              <View style={styles.date}>
-                <Text>12/01/2024</Text>
-              </View>
-            </View>
-        <View style={styles.commantaire}>
-          <Text style={styles.textCommantaire}> Lorem ipsum dolor, sit amet consectetur adipisicing elit. Molestiae sequi architecto excepturi nihil illum reiciendis et, vitae amet assumenda distinctio.
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit</Text>
+{
+  randomComments.length>0?(
+
+    randomComments.map((param,index)=>{
+        return(
+          <View key={index} style={styles.reviewsContent}>
+      <View style={styles.cardProfil}>
+        <View style={styles.profilName}>
+          <Text style={styles.textName}>
+          {param.userName
+                      ?.split(" ")
+                      .map((word) => word.charAt(0))
+                      .join("")}
+          </Text>
         </View>
+        <View style={styles.messageContainer}>
+          <View style={styles.starIcon}>
+          {[1, 2, 3, 4, 5].map((star) => (
+          <AntDesign
+            key={star}
+            name='star'
+            size={18}
+            color={star <= rating[index] ? '#FF6A69' : 'black'} // Couleur des étoiles
+          />
+        ))}
           </View>
-              )
-            })
-          }
+          <View>
+            <Text style={styles.name}>{param.userName}</Text>
+          </View>
+        </View>
+        <View style={styles.date}>
+          <Text>{formatDate(param.date)}</Text>
+        </View>
+      </View>
+  <View style={styles.commantaire}>
+    <Text style={styles.textCommantaire}> {param.description}</Text>
+  </View>
+    </View>
+        )
+      })
+
+  ):(
+    <Text>Aucun commentaire disponible pour ce produit pour le moment.</Text>
+  )
+}
           </View>
         )}
       </View>
@@ -322,6 +598,15 @@ const DetailProduitMain = () => {
 export default DetailProduitMain;
 
 const styles = StyleSheet.create({
+  htmlContainer: {
+    padding: 5,
+    width:"100%"
+
+  },
+  alternateText: {
+    color: 'red',
+    fontStyle: 'italic',
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',
@@ -330,6 +615,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     marginTop: 10,
     paddingBottom: 100,
+  },
+  CFAText2: {
+    color: '#000',
+    fontSize: 12,
+    fontWeight: 'bold',
+    textDecorationLine:'line-through'
+  },
+  CFAText: {
+    color: '#000',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
   box: {
     width: '100%',
@@ -378,13 +674,14 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#515C70',
+
   },
   additionalDetails: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
+    justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    paddingHorizontal: 10,
+    paddingHorizontal: 12,
     marginTop: 20,
   },
   detailsContent: {
@@ -446,7 +743,7 @@ const styles = StyleSheet.create({
   },
   boxCard: {
     width: 60,
-    height: 60, 
+    height: 60,
     borderRadius: 50
   },
   boxTaille: {
@@ -466,7 +763,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2},
     shadowOpacity: 0.8,
   },
-  
+
 
   theiere: {
     fontWeight: 'bold',
@@ -475,10 +772,17 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   detailsContentPara: {
-    
+    borderColor:"red",
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
   },
 
   galerie__title: {
+    width:'100%',
+    display:'flex',
+    justifyContent:'flex-start',
     fontSize: 20,
     letterSpacing: 1,
     color: '#000',
@@ -578,7 +882,7 @@ const styles = StyleSheet.create({
     padding: 8,
     justifyContent: "center",
     alignItems: "center",
-    
+
   },
   imageContainer: {
     width: '100%',
@@ -590,7 +894,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     resizeMode: 'cover',
-    
+
   },
   bottomContainer: {
     flex: 1,

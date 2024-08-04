@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StyleSheet, Text, View, TouchableOpacity, Image, Animated } from 'react-native';
 import { Feather, Entypo } from '@expo/vector-icons';
 import Profil from "../../image/logo.png";
@@ -6,14 +7,31 @@ import { useNavigation, useNavigationState } from '@react-navigation/native';
 
 const Header__page = () => {
   const navigation = useNavigation();
-    const fadeAnimHeader = useRef(new Animated.Value(0)).current;
-    useEffect(() => {
-        Animated.timing(fadeAnimHeader, {
-          toValue: 1,
-          duration: 2000,
-          useNativeDriver: true,
-        }).start();
-    }, [fadeAnimHeader]);
+  const fadeAnimHeader = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    Animated.timing(fadeAnimHeader, {
+      toValue: 1,
+      duration: 2000,
+      useNativeDriver: true,
+    }).start();
+  }, [fadeAnimHeader]);
+  const [produits, setProduits] = useState(0);
+  useEffect(() => {
+    const getPanier = async () => {
+      try {
+        const local = await AsyncStorage.getItem("panier");
+        if (local) {
+          setProduits(JSON.parse(local));
+        } else {
+          setProduits([]);
+        }
+      } catch (error) {
+        console.error("Error fetching panier from AsyncStorage", error);
+      }
+    };
+
+    getPanier();
+  }, []);
   return (
     <Animated.View style={[styles.header, { opacity: fadeAnimHeader }]}>
     <Image source={Profil} style={styles.image} />
@@ -28,12 +46,12 @@ const Header__page = () => {
       <TouchableOpacity style={styles.iconContainer} onPress={() => navigation.navigate("Cart")}>
         <Feather name="shopping-cart" size={24} color="black" />
         <View style={styles.circleBTN}>
-          <Text style={styles.badgeText}>0</Text>
+          <Text style={styles.badgeText}>{produits ? produits.length : 0}</Text>
         </View>
       </TouchableOpacity>
     </View>
   </Animated.View>
-    
+
   )
 }
 

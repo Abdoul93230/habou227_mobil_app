@@ -1,9 +1,19 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
+import { shuffle } from "lodash";
 import Ordi from '../image/Vnike2.jpg';
 
-const Galerie__page = () => {
+const Galerie__page = ({ products }) => {
   const [selectedImageIds, setSelectedImageIds] = useState([]);
+  function getRandomElements(array) {
+    const shuffledArray = shuffle(array);
+    return shuffledArray.slice(0, 6);
+  }
+
+  const prod1 = ["one", "two", "three", "four", "five", "six"];
+
+  const produits = getRandomElements(products);
+
 
   const Table__Galerie = [
     { id: 1, image: Ordi, text: 'Text for image 1' },
@@ -28,16 +38,16 @@ const Galerie__page = () => {
     <View style={styles.container}>
       <Text style={styles.galerie__title}>Galeries</Text>
       <View style={styles.galerie__box}>
-        {Table__Galerie.map((item) => (
+        {produits.map((item) => (
           <TouchableOpacity
-            key={item.id}
+            key={item._id}
             style={styles.galerie__box__img}
-            onPress={() => handleImageClick(item.id)}
+            onPress={() => handleImageClick(item._id)}
           >
-            <Image source={item.image} style={styles.image} />
-            {selectedImageIds.includes(item.id) && (
+            <Image source={{uri:item.image1}} style={styles.image} />
+            {selectedImageIds.includes(item._id) && (
               <View style={styles.overlay}>
-                <Text style={styles.imageText}>{item.text}</Text>
+                <Text style={styles.imageText}>{item?.name.substring(0, 20)}</Text>
               </View>
             )}
           </TouchableOpacity>

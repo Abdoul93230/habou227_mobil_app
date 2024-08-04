@@ -1,20 +1,26 @@
 import { StyleSheet, Text, View, ScrollView } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import Footer from '../compoments/footer/Footer'
 import Header__page from '../compoments/header/Header__page'
 import Paniermain from '../compoments/panier/Paniermain'
 import PanierFooter from '../compoments/panier/PanierFooter'
 
 const Cart = () => {
+  const [total,setTotal] = useState(0)
+  const chgTotal = (t)=>{
+    setTotal(t)
+  }
   return (
     <View style={styles.container}>
         <Header__page />
         <ScrollView showsVerticalScrollIndicator={false}>
-          <Paniermain />
+          <Paniermain chgTotal={chgTotal} />
         </ScrollView>
-        <PanierFooter />
+        {
+          total>0?<PanierFooter total={total} />:<></>
+        }
       <Footer />
-    
+
     </View>
   )
 }
@@ -25,5 +31,5 @@ const styles = StyleSheet.create({
       flex: 1,
       backgroundColor: '#FFF',
     },
-    
+
   });

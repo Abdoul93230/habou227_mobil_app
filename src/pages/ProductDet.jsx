@@ -1,25 +1,152 @@
-import { StyleSheet, View, ScrollView, SafeAreaView, Text, TouchableOpacity, Modal, TextInput, Button  } from 'react-native';
-import React, { useState } from 'react';
+import { StyleSheet, View, ScrollView, ActivityIndicator, Text, TouchableOpacity, Modal, TextInput, Button  } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
 import DetailProduit from "../compoments/detailProduit/DetailProduit";
 import DetailProduitFooter from '../compoments/detailProduit/DetailProduitFooter';
 import DetailProduitMain from '../compoments/detailProduit/DetailProduitMain';
+import LoadingIndicator from './LoadingIndicator';
+import axios from 'axios';
 import {AntDesign} from '@expo/vector-icons';
+import { useRoute } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
+import Toast from 'react-native-toast-message';
 const ProductDet = () => {
+  const route = useRoute();
+  const { id } = route.params;
   const [isCommentBoxVisible, setIsCommentBoxVisible] = useState(false);
+  const [allCategories, setAllCategories] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
   const [rating, setRating] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [VP, setVp] = useState(null);
+  const [color, setColor] = useState(null);
+  const [taille, setTaille] = useState(null);
+  const [nbrCol, setNbrCol] = useState(null);
+  const [commente, setCommente] = useState("");
+  const DATA_Types = useSelector((state) => state.products.types);
+  const DATA_Categories = useSelector((state) => state.products.categories);
+  const DATA_Products = useSelector((state) => state.products.data);
+  const scrollViewRef = useRef(null);
   const handleRating = (rate) => {
     setRating(rate);
   };
   const handleCommentBoxToggle = () => {
     setIsCommentBoxVisible(!isCommentBoxVisible);
   };
+  const chgColor = (couleur)=>{
+    setColor(couleur)
+
+  }
+  const chgTail = (tail)=>{
+    setTaille(tail)
+
+  }
+  useEffect(() => {
+    setLoading(true);
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(`https://chagona.onrender.com/Product/${id}`);
+        setVp(res.data.data);
+        setLoading(false);
+        // Défilement vers le haut lorsque les données sont chargées
+        if (scrollViewRef.current) {
+          scrollViewRef.current.scrollTo({ y: 0, animated: true });
+        }
+      } catch (error) {
+        setLoading(false);
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, [id]); // Dépendance sur `id` pour déclencher l'effet
+
+
+  const handleAlert = (message) => {
+    Toast.show({
+      type: 'success',
+      text1: message,
+      position: 'top',
+      visibilityTime: 3000,
+      autoHide: true,
+      bottomOffset: 40,
+    });
+  };
+
+  const handleAlertwar = (message) => {
+    Toast.show({
+      type: 'error',
+      text1: message,
+      position: 'top',
+      visibilityTime: 3000,
+      autoHide: true,
+      bottomOffset: 40,
+    });
+  };
+
+
+  const envoyer = () => {
+    const regexNumber = /^[0-5]$/;
+    if (commente.trim().length < 3) {
+      handleAlertwar("votre commentaire doit contenire au moin 3 carracteres.");
+      return;
+    }
+    if (!rating) {
+      handleAlertwar("veuiller noter ce produit s'il vous plait.");
+      return;
+    }
+    if (!regexNumber.test(rating.toString())) {
+      handleAlertwar("forma non valid de 1 a 5 s'il vous plait!");
+      return;
+    }
+    axios
+      .post(`https://chagona.onrender.com/createCommenteProduit`, {
+        description: commente,
+        clefProduct: VP?._id,
+        clefType: VP?.ClefType,
+        etoil: etoil,
+        userName: user.name,
+      })
+      .then((resp) => {
+        alert(resp.data.message);
+        setPoppup(false);
+        setEtoil(null);
+        setCommente("");
+
+        axios
+          .get(`https://chagona.onrender.com/getAllCommenteProduitById/${params.id}`)
+          .then((coments) => {
+            setAllCommente(coments.data);
+            // console.log(coments.data);
+          })
+          .catch((error) => {
+            alert(error.response.data);
+            console.log(error);
+          });
+      })
+      .catch((error) => {
+        alert(error.response.data);
+        console.log(error);
+      });
+  };
+
+
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#FF6A69" />
+        <Text style={styles.loadingText}>Chargement...</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
-      <DetailProduit />
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollViewContent}>
-        <DetailProduitMain />
+      <DetailProduit produit = {VP} />
+      <ScrollView ref={scrollViewRef} showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollViewContent}>
+        <DetailProduitMain chgColor={chgColor} chgTail={chgTail} produit = {VP} id={id} />
       </ScrollView>
-      <DetailProduitFooter />
+      <DetailProduitFooter produit = {VP} color={color} taille={taille} id={id} />
 
 
       <TouchableOpacity style={styles.commenteBox} onPress={handleCommentBoxToggle}>
@@ -35,11 +162,13 @@ const ProductDet = () => {
           <TextInput
             style={styles.textInput}
             multiline
+            value={commente}
+            onChangeText={e=>setCommente(e)}
             placeholder="Écrire un commentaire..."
           />
           <View style={styles.note}>
             <Text style={styles.noteProduit}>Notez ce produit</Text>
-            
+
             <View style={styles.satrIcon}>
           {[1, 2, 3, 4, 5].map((star) => (
             <TouchableOpacity key={star} onPress={() => handleRating(star)}>
@@ -49,15 +178,15 @@ const ProductDet = () => {
         </View>
           </View>
           <View style={styles.btn}>
-            <Button title="Envoyer" onPress={() => { /* Ajoutez votre logique d'envoi de commentaire ici */ }} />
+            <Button title="Envoyer" onPress={ envoyer} />
             <Button title="Fermer" onPress={handleCommentBoxToggle} />
           </View>
-          
+
         </View>
       </View>
 </Modal>
     </View>
-    
+
   );
 };
 
@@ -138,7 +267,13 @@ btn: {
   flexDirection: "row",
   justifyContent: "space-between",
   alignItems: "center"
-}
+},
+loadingContainer: {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: '#f5f5f5', // Fond de la page de chargement
+},
 });
 
 

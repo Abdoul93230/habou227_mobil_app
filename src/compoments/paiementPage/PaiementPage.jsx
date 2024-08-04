@@ -42,7 +42,7 @@ const PaiementPage = () => {
               <Text style={styles.masterText}>Master Carte</Text>
             </View>
             <Text style={styles.numeroText}>Numéro de carte</Text>
-            <TextInput 
+            <TextInput
             placeholder='Entrez votre numéro de carte'
             style={styles.input}
             />
@@ -71,7 +71,7 @@ const PaiementPage = () => {
             <Text style={styles.masterText}>Visa</Text>
           </View>
           <Text style={styles.numeroText}>Numéro de carte</Text>
-          <TextInput 
+          <TextInput
           placeholder='Entrez votre numéro de carte'
           style={styles.input}
           />
@@ -97,7 +97,7 @@ const PaiementPage = () => {
           <View style={styles.pageContent}>
 
           <View style={styles.domicileBox}>
-          <ImageBackground 
+          <ImageBackground
             source={require('./paiementPhoto/background.jpg')}
             // source={{uri:'https://static.vecteezy.com/system/resources/thumbnails/000/616/494/small/home-06.jpg'}}
 
@@ -106,11 +106,11 @@ const PaiementPage = () => {
             <Text style={styles.DomicileText}>Paiement à domicile</Text>
           </ImageBackground>
           </View>
-        
+
             <TouchableOpacity style={styles.btnSoumettreDome}>
               <Text style={styles.soumettreText}>Soumettre</Text>
             </TouchableOpacity>
-        
+
           </View>
         );
       case 'MobileMoney':
@@ -142,18 +142,18 @@ const PaiementPage = () => {
                       onValueChange={itemValue => setService(itemValue)}>
                       <Select.Item label="+227" value="Niamey" />
                       <Select.Item label="+229" value="Maradi" />
-                
+
                     </Select>
                   </Box>
                 </Center>
                 <View style={styles.dropdownInput}>
-                <TextInput 
+                <TextInput
                   placeholder='Entrez votre numéro'
                   placeholderTextColor='#a9a9a9'
                   style={{marginHorizontal: 3, height: 40,}}
                 />
                 </View>
-                
+
               </View>
 
               <View style={styles.expirationDate}>
@@ -394,7 +394,7 @@ const styles = StyleSheet.create({
   DomicileText: {
     fontSize: 15,
     fontWeight: "bold",
-    color: "#fff",   
+    color: "#fff",
   },
   btnSoumettreDome: {
     padding: 12,
@@ -443,7 +443,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     overflow: "scroll"
-    
+
   },
   dropdownInput: {
     width: '100%',
