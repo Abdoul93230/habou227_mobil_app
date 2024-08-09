@@ -2,9 +2,11 @@ import { Button, StyleSheet, Text, View, Image, TouchableOpacity,Dimensions } fr
 import React, { useState } from 'react';
 import Profil from "../../image/logo.png";
 import { AntDesign } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('window');
 const Categories = ({categories} ) => {
+  const navigation = useNavigation()
   const titre = "Categories";
   const [Categories, setCategories] = useState([
     { id: 1, name: "Homme", image: require("../../image/IHFt.jpg") },
@@ -22,7 +24,8 @@ const Categories = ({categories} ) => {
       <View style={styles.menu}>
         {categories.map((category,index) => {
           if(index<6 && category.name !== "all"){
-            return  <View key={index} style={styles.box__img}>
+            return  <View key={index} style={styles.box__img} 
+            onPress={() => navigation.navigate('CategoriDetailPage')}>
             <Image source={{uri:category.image}} style={styles.categoryImage} />
             <Text style={styles.categoryText}>{category.name}</Text>
           </View>

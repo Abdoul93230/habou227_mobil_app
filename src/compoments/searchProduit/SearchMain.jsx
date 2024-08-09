@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, ScrollView, Platform } from 'react-native';
 import React, { useState } from 'react';
 import Ordi from '../../image/Vnike2.jpg';
 import { AntDesign,Ionicons } from '@expo/vector-icons';
@@ -24,7 +24,7 @@ const SearchMain = () => {
 
   return (
     <View style={styles.container}>
-          <View style={styles.headerContainer}>
+      <View style={styles.headerContainer}>
       <View style={styles.contenu}>
         <TouchableOpacity onPress={() => navigation.navigate("Home")} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color="#FF6A69" />
@@ -105,7 +105,7 @@ export default SearchMain;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginHorizontal: 6,
+    marginHorizontal: Platform.OS === 'ios' ?  6 : 3,
   },
   galerie__title: {
     fontSize: 20,
@@ -185,6 +185,7 @@ const styles = StyleSheet.create({
     headerContainer: {
       paddingHorizontal: 10,
       backgroundColor: '#DDD',
+      width: "100%",
       height: 180,
       justifyContent: 'center',
       shadowColor: "#000",

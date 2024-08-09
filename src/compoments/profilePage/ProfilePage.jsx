@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TextInput, View, Image, TouchableOpacity, Modal, TouchableWithoutFeedback, Animated } from 'react-native';
+import { StyleSheet, Text, TextInput, View, Image, TouchableOpacity, Modal, TouchableWithoutFeedback, Animated, Platform } from 'react-native';
 import React, { useState, useRef } from 'react';
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import Profile from '../../image/macbook profil.png';
@@ -79,11 +79,11 @@ const ProfilePage = () => {
               <Text style={styles.modalInstruction}>Click me to select image (max 4MB)</Text>
               <View style={styles.inputContainer}>
                 <Text style={styles.inputLabel}>Nom:</Text>
-                <TextInput style={styles.input} placeholder='Name' />
+                <TextInput style={Platform.OS === 'ios' ? styles.input : styles.inputAndroid} placeholder='Name' />
                 <Text style={styles.inputLabel}>Email:</Text>
-                <TextInput style={styles.input} placeholder='Email' />
+                <TextInput style={Platform.OS === 'ios' ? styles.input : styles.inputAndroid} placeholder='Email' />
                 <Text style={styles.inputLabel}>Téléphone:</Text>
-                <TextInput style={styles.input} placeholder='Téléphone' />
+                <TextInput style={Platform.OS === 'ios' ? styles.input : styles.inputAndroid} placeholder='Téléphone' />
                 <TouchableOpacity>
                   <Text style={styles.inputLabel}>Changer le mot de passe ?</Text>
 
@@ -252,6 +252,21 @@ const styles = StyleSheet.create({
     elevation: 5,
 
   },
+  inputAndroid: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    marginBottom: 15,
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    fontSize: 16,
+    borderRadius: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0,  height: 2, },
+    shadowOpacity: 0.5,
+    shadowRadius: 3.4,
+    elevation: 0,
+
+  },
   submit: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -267,7 +282,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#C9CDD4',
   },
   buttonSubmit: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#FF6A69',
   },
   buttonText: {
     color: '#fff',

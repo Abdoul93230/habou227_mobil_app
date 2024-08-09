@@ -26,6 +26,7 @@ import QuestionPage from "./src/compoments/questionFrequementposePage/QuestionPa
 import InformationPage from "./src/compoments/legalInformationPage/InformationPage";
 import toastConfig from "./src/pages/toastConfig";
 import store from "./src/redux/store";
+import CategoriDetailPage from "./src/pages/CategoriDetailPage";
 import {
   getCategories,
   getProducts,
@@ -55,6 +56,8 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="CategoriDetailPage" component={CategoriDetailPage} />
+
         <Stack.Screen name="Search" component={Search}/>
         <Stack.Screen name="Cart" component={Cart} />
         <Stack.Screen name="Profile" component={Profile} />

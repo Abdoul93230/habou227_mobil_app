@@ -8,11 +8,7 @@ const Profile = () => {
   return (
     <View style={styles.container}>
         <Header__page />
-
           <ProfilePage />
-   
-      
-
       <Footer />
     </View>
   )
