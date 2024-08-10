@@ -10,7 +10,7 @@ const DetailProduit = ({produit}) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.navigate("Home")} style={styles.backButton}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
           <AntDesign name="left" size={24} color="#FF6A69" />
         </TouchableOpacity>
 

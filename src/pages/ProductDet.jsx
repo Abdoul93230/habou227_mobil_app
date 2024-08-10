@@ -22,6 +22,7 @@ const ProductDet = () => {
   const [taille, setTaille] = useState(null);
   const [nbrCol, setNbrCol] = useState(null);
   const [commente, setCommente] = useState("");
+  const [Allcommente, setAllCommente] = useState([]);
   const DATA_Types = useSelector((state) => state.products.types);
   const DATA_Categories = useSelector((state) => state.products.categories);
   const DATA_Products = useSelector((state) => state.products.data);

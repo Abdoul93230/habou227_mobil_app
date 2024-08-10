@@ -166,7 +166,7 @@ const DetailProduitFooter = ({produit,color,taille,id}) => {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
-    </View>
+      </View>
   );
 };
 
