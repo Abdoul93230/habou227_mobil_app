@@ -7,7 +7,7 @@ import CheckoutFooter from '../compoments/checkoutPage/CheckoutFooter'
 const Checkout = () => {
   return (
     <View style={styles.CheckoutContainer}>
-      <View ></View>
+      <View></View>
       <CheckoutHeader />
       <ScrollView style={styles.contenu} showsVerticalScrollIndicator={false}>
         <CheckoutMain />

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Alert, Image, Modal, TextInput, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Alert, Image, Modal, TextInput, TouchableWithoutFeedback, Platform } from 'react-native';
 import { Feather, EvilIcons, Ionicons } from '@expo/vector-icons';
 import Items from "../../image/macbook cote.png";
 
@@ -48,8 +48,8 @@ const CheckoutMain = () => {
           <View style={styles.cardMoney}>
             <Feather name="credit-card" size={24} color="#FF6A69" />
             <Text style={styles.paraMoney}>Mobile Money<Text> +227 85822480</Text></Text>
-            <View style={styles.IconCircle}>
-              <EvilIcons name="arrow-right" size={30} color="#FFF" />
+            <View style={Platform.OS === 'ios' ? styles.IconCircle : styles.IconCircle2}>
+              <EvilIcons name="arrow-right" size={30} color="#fff" style={Platform.OS === 'ios' ? styles.iOS : styles.android} />
             </View>
           </View>
         </TouchableOpacity>
@@ -68,11 +68,11 @@ const CheckoutMain = () => {
        
               <View style={styles.quantityContainer}>
                 <TouchableOpacity style={styles.IconCircle}>
-                  <EvilIcons name="plus" size={30} color="#FFF" />
+                  <EvilIcons name="plus" size={30} color="#FFF" style={Platform.OS === 'ios' ? styles.iOS : styles.android} />
                 </TouchableOpacity>
                 <Text style={styles.quantityText}>1</Text>
                 <TouchableOpacity style={styles.IconCircle}>
-                  <EvilIcons name="minus" size={24} color="#fff" />
+                  <EvilIcons name="minus" size={30} color="#fff" style={Platform.OS === 'ios' ? styles.iOS : styles.android}/>
                 </TouchableOpacity>
               </View>
           
@@ -86,7 +86,7 @@ const CheckoutMain = () => {
           <Feather name="credit-card" size={24} color="#FF6A69" />
           <Text style={styles.paraMoney}>Ajouter un code promotionnel</Text>
           <View style={styles.IconCircle}>
-            <EvilIcons name="arrow-right" size={30} color="#FFF" />
+            <EvilIcons name="arrow-right" size={30} color="#FFF" style={Platform.OS === 'ios' ? styles.iOS : styles.android}/>
           </View>
         </View>
       </TouchableOpacity>
@@ -189,15 +189,16 @@ const styles = StyleSheet.create({
   cardMoney: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 10,
     paddingHorizontal: 15,
     backgroundColor: "#FFF",
     borderRadius: 10,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.15,
+    shadowOffset: { width: 0, height: Platform.OS == 'ios' ? 1 : 1 },
+    shadowOpacity: 0.1,
     shadowRadius: 2.5,
-    elevation: 2,
+    elevation: Platform.OS === 'ios' ?  2 : 1,
   },
   paraMoney: {
     fontSize: 16,
@@ -212,6 +213,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#FF6A69",
     borderRadius: 15,
+  },
+  IconCircle2: {
+    width: 30,
+    height: 30,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#FF6A69",
+    borderRadius: 15,
+    position: 'relative',
+  },
+  android: {
+    bottom: 6,
+    position: "absolute"
   },
   cardItem: {
     backgroundColor: '#FFFF',

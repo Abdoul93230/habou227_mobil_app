@@ -1,7 +1,7 @@
 import { StyleSheet, Image,
    View, Dimensions, FlatList, Text,
     TouchableOpacity, Modal,
-    PanResponder, Animated, Pressable
+    PanResponder, Animated, Pressable, Platform
    } from 'react-native';
    import RenderHtml from 'react-native-render-html';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -744,7 +744,12 @@ const styles = StyleSheet.create({
   boxCard: {
     width: 60,
     height: 60,
-    borderRadius: 50
+    borderRadius: 50,
+    shadowColor: Platform.OS === 'ios' ? "#FF6A69" : "#FF6A69",
+    shadowOffset: { width: 0, height: Platform.OS === 'ios' ? 2 : 2},
+    shadowOpacity: 0.8,
+    elevation: Platform.OS === 'android' ? 5 : 5,
+
   },
   boxTaille: {
     width: '100%',
@@ -755,14 +760,16 @@ const styles = StyleSheet.create({
   boxNumber: {
     width: 60,
     height: 60,
-    backgroundColor: '#fff',
+    backgroundColor: Platform.OS === 'ios' ? '#fff' : "#FFF",
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 50,
-    shadowColor: "#FF6A69",
-    shadowOffset: { width: 0, height: 2},
+    shadowColor: Platform.OS === 'ios' ? "#FF6A69" : "#FF6A69",
+    shadowOffset: { width: 0, height: Platform.OS === 'ios' ? 2 : 2},
     shadowOpacity: 0.8,
+    elevation: Platform.OS === 'android' ? 5 : 0,
   },
+
 
 
   theiere: {
@@ -804,6 +811,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     overflow: 'hidden',
     position: 'relative',
+    borderWidth: 1,
+    borderColor: '#ddd',
   },
   image: {
     width: '100%',

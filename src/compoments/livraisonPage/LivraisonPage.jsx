@@ -1,42 +1,45 @@
-import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Platform, ScrollView } from 'react-native';
 import React, { useState } from 'react';
 import { NativeBaseProvider, Box, Select, CheckIcon, Center } from 'native-base';
 
 const LivraisonPage = () => {
   const [service, setService] = useState("");
-
+  const platformStyles = Platform.select({
+    ios: { minWidth: 370, minHeight: 40 }, // Ajustez selon vos besoins pour iOS
+    android: { minWidth: 340, minHeight: 50 }, // Ajustez selon vos besoins pour Android
+  });
   return (
     <NativeBaseProvider>
+      <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.container}>
         <Text style={styles.title}>Adresse de livraison</Text>
         <View style={styles.cardAddress}>
 
-          <View style={styles.formGroup}>
-            <Text style={styles.text}>Région: <Text style={styles.regionText}>{service || 'Votre région va apparaître ici...'}</Text></Text>
-            <Center>
-              <Box style={styles.dropdown}>
-                <Select
-                  selectedValue={service}
-                  minWidth="370"
-                  minHeight="10"
-                  accessibilityLabel="Choisir une région"
-                  placeholder="Choisir une région"
-               
-                  mt={0}
-                  onValueChange={itemValue => setService(itemValue)}
-                >
-                  <Select.Item label="Niamey" value="Niamey" />
-                  <Select.Item label="Maradi" value="Maradi" />
-                  <Select.Item label="Dosso" value="Dosso" />
-                  <Select.Item label="Zinder" value="Zinder" />
-                  <Select.Item label="Agadez" value="Agadez" />
-                  <Select.Item label="Diffa" value="Diffa" />
-                  <Select.Item label="Tillaberi" value="Tillaberi" />
-                  <Select.Item label="Tahoua" value="Tahoua" />
-                </Select>
-              </Box>
-            </Center>
-          </View>
+        <View style={styles.formGroup}>
+      <Text style={styles.text}>
+        Région: <Text style={styles.regionText}>{service || 'Votre région va apparaître ici...'}</Text>
+      </Text>
+      <Center>
+        <Box style={[styles.dropdown, platformStyles]}>
+          <Select
+            selectedValue={service}
+            accessibilityLabel="Choisir une région"
+            placeholder="Choisir une région"
+            mt={0}
+            onValueChange={itemValue => setService(itemValue)}
+          >
+            <Select.Item label="Niamey" value="Niamey" />
+            <Select.Item label="Maradi" value="Maradi" />
+            <Select.Item label="Dosso" value="Dosso" />
+            <Select.Item label="Zinder" value="Zinder" />
+            <Select.Item label="Agadez" value="Agadez" />
+            <Select.Item label="Diffa" value="Diffa" />
+            <Select.Item label="Tillaberi" value="Tillaberi" />
+            <Select.Item label="Tahoua" value="Tahoua" />
+          </Select>
+        </Box>
+      </Center>
+    </View>
 
           <View style={styles.formGroup}>
             <Text style={styles.text} >Quartier</Text>
@@ -73,6 +76,7 @@ const LivraisonPage = () => {
           </TouchableOpacity>
         </View>
       </View>
+      </ScrollView>
     </NativeBaseProvider>
   );
 }

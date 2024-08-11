@@ -134,9 +134,11 @@ const Chat__footer = ({ onSendMessage }) => {
     // Camera permissions are not granted yet.
     return (
       <View style={styles.container}>
-        <Text style={{ textAlign: 'center' }}>Nous avons besoin de votre autorisation pour montrer la caméra</Text>
+        <Text style={styles.autorisationText}>
+          Nous avons besoin de votre autorisation pour montrer la caméra
+        </Text>
         <TouchableOpacity onPress={requestPermissionC} style={styles.cancelButton}>
-        <Button style={styles.cancelButtonText} title="grant permission" />
+          <Text style={styles.cancelButtonText}>Autoriser la canera et le micro</Text>
         </TouchableOpacity>
       </View>
     );
@@ -199,7 +201,7 @@ const Chat__footer = ({ onSendMessage }) => {
                     <Text>Open Gallery</Text>
                   </TouchableOpacity>
                 </View>
-                <TouchableOpacity onPress={closeModal} style={styles.cancelButton}>
+                <TouchableOpacity onPress={closeModal} style={ Platform.OS === "ios" ? styles.cancelButton : styles.cancelButtonAndroid}>
                   <Text style={styles.cancelButtonText}>Cancel</Text>
                 </TouchableOpacity>
               </View>
@@ -285,13 +287,29 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     margin: 8,
     marginVertical: 5,
+
+  },
+  autorisationText: {
+    textAlign: 'center',
+    bottom: Platform.OS === 'ios' ? 0 : 40, 
   },
   cancelButton: {
-    width: '97%',
+    width: Platform.OS === 'ios' ?  '10%' : "100%",
     padding: 15,
     backgroundColor: '#FF6A69',
     borderRadius: 25,
     alignItems: 'center',
+    // bottom: Platform.OS === 'ios' ? 0 : 30,
+    margin: "auto",
+  },
+  cancelButtonAndroid: {
+    width: Platform.OS === 'ios' ?  '10%' : "100%",
+    padding: 15,
+    backgroundColor: '#FF6A69',
+    borderRadius: 25,
+    alignItems: 'center',
+    bottom: Platform.OS === 'ios' ? 0 : 0,
+    margin: "auto",
   },
   cancelButtonText: {
     color: '#fff',

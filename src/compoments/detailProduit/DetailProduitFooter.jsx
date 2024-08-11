@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity, Modal, TextInput, TouchableWithoutFeedback } from 'react-native';
+import { Platform,StyleSheet, Text, View, TouchableOpacity, Modal, TextInput, TouchableWithoutFeedback } from 'react-native';
 import React, { useState } from 'react';
 import { FontAwesome, Ionicons, Entypo, Feather } from '@expo/vector-icons';
 import Toast from 'react-native-toast-message';
@@ -116,7 +116,7 @@ const DetailProduitFooter = ({produit,color,taille,id}) => {
   };
 
   return (
-    <View style={styles.containerFooter}>
+    <View style={Platform.OS === 'ios' ?styles.containerFooter: styles.containerFooter2}>
       <TouchableOpacity style={styles.button} onPress={toggleModal}>
         <Entypo name="share" size={20} color="#FF6A69" />
         <Text style={styles.buttonText}>Partagez ceci</Text>
@@ -166,7 +166,7 @@ const DetailProduitFooter = ({produit,color,taille,id}) => {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
-    </View>
+      </View>
   );
 };
 
@@ -232,10 +232,12 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginTop: 10,
     marginBottom: 20,
+    width: 100,
   },
   closeButtonText: {
     color: '#fff',
     fontSize: 14,
+    textAlign: "center"
   },
   containerFooter: {
     position: 'absolute',
@@ -246,12 +248,26 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     height: 100,
-    backgroundColor: 'transparent',
     paddingHorizontal: 10,
     borderColor: "#ccc",
     borderTopWidth: 1,
     elevation: 5,
     backgroundColor: "#c1c1c1ad",
+  },
+  containerFooter2: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    height: 100,
+    paddingHorizontal: 10,
+    borderColor: "#ccc",
+    borderTopWidth: 1,
+    elevation: 5,
+    backgroundColor: "#DDDDDD",
   },
   button: {
     backgroundColor: "#FFFFFF",
