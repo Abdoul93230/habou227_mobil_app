@@ -104,7 +104,7 @@ export default function App() {
               <Text>En cours de vérification...</Text>
             </View>
           )}
-          <Toast config={toastConfig} ref={(ref) => Toast.setRef(ref)} />
+          <Toast config={toastConfig}  ref={(ref) => Toast.setRef(ref)} />
         </NavigationContainer>
       </GestureHandlerRootView>
     </Provider>
