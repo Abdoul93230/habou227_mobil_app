@@ -1,13 +1,87 @@
-import { StyleSheet, Text, TextInput, View, Image, TouchableOpacity, Modal, TouchableWithoutFeedback, Animated } from 'react-native';
-import React, { useState, useRef } from 'react';
+import { StyleSheet, Text, TextInput, View, Image, TouchableOpacity, Modal, TouchableWithoutFeedback, Animated, Platform } from 'react-native';
+import React, { useState, useRef,useEffect } from 'react';
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Profile from '../../image/macbook profil.png';
 import Invite from '../invitéAmi/Invite';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 const ProfilePage = () => {
   const navigation = useNavigation()
   const [modalVisible, setModalVisible] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
+  const [imageP, setImageP] = useState(null);
   const [scaleValue] = useState(new Animated.Value(0));
+  const [phone, setPhone] = useState("");
+  const [nom, setNom] = useState("");
+  const [email, setEmail] = useState("");
+
+
+
+
+
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const jsonValue = await AsyncStorage.getItem('userEcomme');
+        const userData = jsonValue != null ? JSON.parse(jsonValue) : null;
+        setUser(userData);
+        if (userData) {
+          axios
+            .get(`https://chagona.onrender.com/user`, {
+              params: {
+                id: userData.id,
+              },
+            })
+            .then((response) => {
+              const data = response.data.user;
+              setNom(data.name);
+              setEmail(data.email);
+              setPhone(data?.phoneNumber ? data?.phoneNumber : "");
+            })
+            .catch((error) => {
+              console.log(error.response.data.message);
+            });
+
+          axios
+            .get(`https://chagona.onrender.com/getUserProfile`, {
+              params: {
+                id: userData.id,
+              },
+            })
+            .then((Profiler) => {
+              setLoading(false);
+              // console.log(Profiler);
+              if (
+                Profiler.data.data.image &&
+                Profiler.data.data.image !==
+                  `https://chagona.onrender.com/images/image-1688253105925-0.jpeg`
+              ) {
+                setImageP(Profiler.data.data.image);
+                // console.log(Profiler.data.data);
+              }
+              // if (Profiler.data.data.numero) {
+              //   if (phone.length <= 0) {
+              //     setPhone(Profiler.data.data.numero);
+              //   }
+              // }
+            })
+            .catch((erro) => {
+              setLoading(false);
+              // if (erro.response.status === 404)
+              //   console.log(erro.response.data.message);
+              // console.log(erro.response);
+            });
+        }
+      } catch (e) {
+        console.error('Failed to load user data:', e);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const handleProfile = () => {
     setModalVisible(true);
@@ -34,11 +108,11 @@ const ProfilePage = () => {
     <View style={styles.container}>
       <View style={styles.profile}>
         <View style={styles.imgProfile}>
-          <Image source={Profile} style={styles.image} />
+          <Image source={imageP?{uri:imageP} : Profile} style={styles.image} />
         </View>
         <View style={styles.textProfile}>
-          <Text style={styles.name}>Rizky</Text>
-          <Text style={styles.email}>rizky@gmail.com</Text>
+          <Text style={styles.name}>{nom}</Text>
+          <Text style={styles.email}>{email}</Text>
           <TouchableOpacity style={styles.BtnEdit} onPress={handleProfile}>
             <Text style={styles.editText}>Editer le profil</Text>
           </TouchableOpacity>
@@ -74,22 +148,22 @@ const ProfilePage = () => {
           <View style={styles.modalOverlay}>
             <Animated.View style={[styles.modalContainer, { transform: [{ scale: scaleValue }] }]}>
               <View style={styles.imgProfile} onPress={changeImg}>
-                <Image source={Profile} style={styles.image} />
+              <Image source={imageP?{uri:imageP} : Profile} style={styles.image} />
               </View>
               <Text style={styles.modalInstruction}>Click me to select image (max 4MB)</Text>
               <View style={styles.inputContainer}>
                 <Text style={styles.inputLabel}>Nom:</Text>
-                <TextInput style={styles.input} placeholder='Name' />
+                <TextInput style={Platform.OS === 'ios' ? styles.input : styles.inputAndroid} placeholder='Name' defaultValue={nom} />
                 <Text style={styles.inputLabel}>Email:</Text>
-                <TextInput style={styles.input} placeholder='Email' />
+                <TextInput style={Platform.OS === 'ios' ? styles.input : styles.inputAndroid} placeholder='Email' defaultValue={email} />
                 <Text style={styles.inputLabel}>Téléphone:</Text>
-                <TextInput style={styles.input} placeholder='Téléphone' />
+                <TextInput style={Platform.OS === 'ios' ? styles.input : styles.inputAndroid} placeholder='Téléphone' defaultValue={phone} />
                 <TouchableOpacity>
                   <Text style={styles.inputLabel}>Changer le mot de passe ?</Text>
 
                 </TouchableOpacity>
               </View>
-              
+
               <View style={styles.submit}>
                 <TouchableOpacity onPress={closeModal} style={[styles.button, styles.buttonCancel]}>
                   <Text style={styles.buttonText}>Retour</Text>
@@ -100,7 +174,7 @@ const ProfilePage = () => {
               </View>
             </Animated.View>
           </View>
-       
+
       </Modal>
     </View>
   );
@@ -252,6 +326,21 @@ const styles = StyleSheet.create({
     elevation: 5,
 
   },
+  inputAndroid: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    marginBottom: 15,
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    fontSize: 16,
+    borderRadius: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0,  height: 2, },
+    shadowOpacity: 0.5,
+    shadowRadius: 3.4,
+    elevation: 0,
+
+  },
   submit: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -267,7 +356,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#C9CDD4',
   },
   buttonSubmit: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#FF6A69',
   },
   buttonText: {
     color: '#fff',

@@ -1,4 +1,4 @@
-import { StyleSheet, View, ScrollView, ActivityIndicator, Text, TouchableOpacity, Modal, TextInput, Button  } from 'react-native';
+import {Platform, StyleSheet, View, ScrollView, ActivityIndicator, Text, TouchableOpacity, Modal, TextInput, Button  } from 'react-native';
 import React, { useEffect, useState, useRef } from 'react';
 import DetailProduit from "../compoments/detailProduit/DetailProduit";
 import DetailProduitFooter from '../compoments/detailProduit/DetailProduitFooter';
@@ -214,10 +214,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     textAlign: "center",
     shadowColor: "#000",
-    shadowOffset: {  width: 2, height: 2, },
+    shadowOffset: {  width: 2, height: Platform.OS ===  'ios' ? 2 : 2, },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5,
+    elevation: Platform.OS === 'android' ?  5 : 0,
   },
   modalContainer: {
     flex: 1,

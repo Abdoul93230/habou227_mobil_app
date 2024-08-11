@@ -1,10 +1,20 @@
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { AntDesign, Feather, SimpleLineIcons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 
 const MorePage = () => {
   const navigation = useNavigation()
+
+  const clearStorage = async () => {
+    try {
+      await AsyncStorage.clear();
+      navigation.navigate('Login')
+    } catch (error) {
+      console.error('Erreur lors de la suppression des données :', error);
+    }
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.moreTitle}>More</Text>
@@ -40,7 +50,7 @@ const MorePage = () => {
           <AntDesign name="right" size={24} color="black" style={styles.iconRight} />
         </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.deconnecter}>
+      <TouchableOpacity style={styles.deconnecter} onPress={clearStorage}>
         <Text style={styles.deconnecterText}>Se déconnecter</Text>
       </TouchableOpacity>
     </View>
@@ -53,7 +63,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingHorizontal: 10, 
+    paddingHorizontal: 10,
   },
   moreTitle: {
     color: '#FF6A69',

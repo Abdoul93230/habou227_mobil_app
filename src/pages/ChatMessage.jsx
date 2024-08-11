@@ -10,7 +10,7 @@ const ChatMessage = () => {
     { text: 'I am fine, thank you!', sender: 'other', date: null },
     { text: 'What about you?', sender: 'user', date: null },
     { text: 'I am doing great, thanks!', sender: 'other', date: '2024-07-11' },
-    // Add more messages with appropriate dates
+
   ]);
 
   const sendMessage = (messageText, sender) => {
@@ -23,7 +23,7 @@ const ChatMessage = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} >
       <Chat__header />
       <ScrollView showsVerticalScrollIndicator={false} style={styles.contenu}>
         <Chat__main messages={messages} />

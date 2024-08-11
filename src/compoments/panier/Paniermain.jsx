@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Platform } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Macbook from "../../image/macbook cote.png";
 import { EvilIcons, Ionicons } from '@expo/vector-icons';
@@ -161,11 +161,11 @@ const Paniermain = ({chgTotal}) => {
 
               <View style={styles.countNumber}>
                 <TouchableOpacity onPress={() => incrementQuantity(index)}>
-                  <EvilIcons name="plus" size={24} color="black" />
+                  <EvilIcons name="plus" size={24} color="black" style={Platform.OS === 'ios' ? styles.iOS : styles.android} />
                 </TouchableOpacity>
                 <Text style={styles.countNumberText}>{card.quantity}</Text>
                 <TouchableOpacity onPress={() => decrementQuantity(index)}>
-                  <EvilIcons name="minus" size={24} color="black" />
+                  <EvilIcons name="minus" size={24} color="black" style={Platform.OS === 'ios' ? styles.iOS : styles.android} />
                 </TouchableOpacity>
               </View>
               <View style={styles.result}>
@@ -249,11 +249,11 @@ const styles = StyleSheet.create({
   countNumber: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: 80,
-    height: 30,
+    width: 85,
+    height: Platform.OS === 'ios' ?  40 : 30,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#000',
+    borderColor: '#ccc',
     marginVertical: 10,
     justifyContent: 'space-between',
     paddingHorizontal: 5,
@@ -261,6 +261,11 @@ const styles = StyleSheet.create({
   countNumberText: {
     fontSize: 18,
     fontWeight: 'bold',
+    textAlign: "center"
+  },
+  android: {
+    bottom: 2,
+    // position: "absolute"
   },
   result: {
     marginTop: 10,
