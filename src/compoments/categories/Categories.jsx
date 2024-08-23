@@ -15,7 +15,6 @@ const Categories = ({categories} ) => {
     { id: 4, name: "All", image: require("../../image/IHFt.jpg") },
     { id: 5, name: "Cuisine & Ustensiles", image: require("../../image/IHFt.jpg") },
     { id: 6, name: "Électroménager", image: require("../../image/IHFt.jpg") },
-    // { id: 7, name: "Travel", image: require("../../image/IHFt.jpg") },
   ]);
 
   return (
@@ -24,11 +23,12 @@ const Categories = ({categories} ) => {
       <View style={styles.menu}>
         {categories.map((category,index) => {
           if(index<6 && category.name !== "all"){
-            return  <View key={index} style={styles.box__img} 
-            onPress={() => navigation.navigate('CategoriDetailPage')}>
+            return  <TouchableOpacity key={index} style={styles.box__img} 
+            onPress={() =>{ navigation.navigate('CategoriDetailPage');
+            }}>
             <Image source={{uri:category.image}} style={styles.categoryImage} />
             <Text style={styles.categoryText}>{category.name}</Text>
-          </View>
+          </TouchableOpacity>
           }else{
             return null;
           }
