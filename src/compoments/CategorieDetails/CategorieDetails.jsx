@@ -4,7 +4,7 @@ import React from 'react'
 const CategorieDetails = () => {
   return (
     <View>
-      <Text>CategorieDetailshghdjjhfjth</Text>
+      <Text>CategorieDetails</Text>
     </View>
   )
 }
