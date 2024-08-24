@@ -5,7 +5,7 @@ import SeeAll from '../compoments/SeeAllPage/SeeAll'
 
 const SeePage = () => {
   return (
-    <View>
+    <View style={styles.container}>
       <SeeAll />
     </View>
   )
@@ -13,4 +13,9 @@ const SeePage = () => {
 
 export default SeePage
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginBottom: 90,
+  }
+})

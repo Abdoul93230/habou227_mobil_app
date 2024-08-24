@@ -1,46 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Image, FlatList } from 'react-native';
 import { EvilIcons, AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
 const SeeAll = () => {
     const navigation = useNavigation();
-
+    const [expandedCard, setExpandedCard] = useState(1);
+    const toggleCard = (id) => {
+        setExpandedCard(expandedCard === id ? null : id);
+    };
     const cards = [
         {
-            id: '1',
+            id: 1,
             title: 'Homme',
-            description: 'MacBook',
-            items: ['Ordinateur', 'Ordinateur'],
+            description: 'homme',
+            items: ['Baskette', 'Chaussures'],
             image: require("../../image/macbook profil.png")
         },
          {
-            id: 1,
-            title: 'Homme',
-            description: 'MacBook',
-            items: [
-                'Ordinateur',
-                'Ordinateur'
-            ],
-            image: require("../../image/macbook profil.png")
-        },
-        {
             id: 2,
-            title: 'Homme',
-            description: 'MacBook',
+            title: 'électroniques',
+            description: 'électroniques',
             items: [
                 'Ordinateur',
-                'Ordinateur'
+                'accessories'
             ],
             image: require("../../image/macbook profil.png")
         },
         {
             id: 3,
-            title: 'Homme',
-            description: 'MacBook',
+            title: 'Beauté',
+            description: 'Beauté',
             items: [
-                'Ordinateur',
-                'Ordinateur'
+                'Accessories_Beauté',
+                'Accessories'
             ],
             image: require("../../image/macbook profil.png")
         },
@@ -48,57 +41,65 @@ const SeeAll = () => {
             id: 4,
             title: 'Tous',
             description: 'Tous',
-            items: [],
+            items: [
+              
+            ],
             image: require("../../image/macbook profil.png")
         },
         {
             id: 5,
-            title: 'Cuisine & ustensiles',
-            description: 'Tous',
+            title: 'cuisine & ustensiles',
+            description: 'cuisine & ustensiles',
             items: [
-                'Ordinateur'
+                'Contenants Isolants'
             ],
             image: require("../../image/macbook profil.png")
         },
         {
             id: 6,
             title: 'Électroménager',
-            description: 'Tous',
+            description: 'Électroménager',
             items: [
-                'Ordinateur'
+                'Appareils de Cuisine'
             ],
             image: require("../../image/macbook profil.png")
-        }
+        },
     ];
 
     const renderCard = ({ item }) => (
-        <View style={styles.cardMain}>
-            <View>
-                <Image 
-                    source={item.image} 
-                    style={styles.cardImage}
-                    resizeMode="cover"
-                />
-                <View style={styles.cardTitleContainer}>
-                    <Text style={styles.cardTitle}>{item.title}</Text>
-                </View>
-            </View>
-            <View style={styles.cardContent}>
+        <TouchableOpacity style={styles.cardMain}  onPress={() => toggleCard(item.id)}>
+
+        <View style={styles.cardMainHeader}>
+            <Image 
+                source={item.image} 
+                style={styles.cardImage}
+                resizeMode="cover"
+            />
+
+            {expandedCard === item.id && (
+                <View style={styles.cardContent}>
                 <Text style={styles.cardTitle}>{item.description}</Text>
                 {item.items.map((subItem, index) => (
                     <TouchableOpacity 
-                        key={index} 
-                        style={styles.cardLigne} 
-                        onPress={() => console.log(`Voir plus pressed for ${subItem}`)}
+                    key={index} 
+                    style={styles.cardLigne} 
+                    onPress={() => console.log(`Voir plus pressed for ${subItem}`)}
                     >
                         <Text style={styles.cardLink}>{subItem}</Text>
                         <View style={styles.cardIcon}>
-                            <AntDesign name="right" size={20} color="white" />
+                            <AntDesign name="right" size={10} color="white" />
                         </View>
                     </TouchableOpacity>
                 ))}
             </View>
+            )}
+            
         </View>
+        <View style={styles.cardTitleContainer}>
+            <Text style={styles.cardTitle}>{item.title}</Text>
+        </View>
+
+        </TouchableOpacity>
     );
 
     return (
@@ -142,8 +143,6 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     cardMain: {
-        flexDirection: 'row',
-        alignItems: 'center',
         padding: 5,
         backgroundColor: '#fff',
         borderRadius: 10,
@@ -154,16 +153,23 @@ const styles = StyleSheet.create({
         elevation: 5, 
         marginBottom: 15,
     },
-    cardImage: {
-        width: 100,
-        height: 100,
+    cardMainHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#fff',
         borderRadius: 10,
+    },
+    cardImage: {
+        width: 80,
+        height: 80,
+        borderRadius: 50,
         marginRight: 15,
+        resizeMode: 'cover',
     },
     cardTitleContainer: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '85%',
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start',
+        width: '100%',
         marginTop: 5,
     },
     cardContent: {
@@ -171,6 +177,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#F5F6F8',
         padding: 10,
         borderRadius: 12,
+        height: 100
     },
     cardTitle: {
         fontSize: 16,
@@ -183,7 +190,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         borderBottomColor: "#e0e0e0",
         borderBottomWidth: 1,
-        paddingVertical: 8,
+        paddingVertical: 4,
+        height: 'auto'
     },
     cardLink: {
         fontSize: 14,
@@ -193,6 +201,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#515C70',
         padding: 5,
         borderRadius: 50,
+        height: 20,width: 20,
     }
 });
 

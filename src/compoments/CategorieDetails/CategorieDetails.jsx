@@ -135,7 +135,7 @@ const CategorieDetails = () => {
           style={activeSection === 'Homme' ? styles.activeButton : styles.button} 
           onPress={() => setActiveSection('Homme')}
         >
-          <Text style={activeSection === 'Homme' ? styles.activeButtonText : styles.buttonText}>Homme</Text>
+          <Text style={activeSection === 'Homme' ? styles.activeButtonText : styles.buttonText}>Home</Text>
         </TouchableOpacity>
         <TouchableOpacity 
           style={activeSection === 'Products' ? styles.activeButton : styles.button} 
