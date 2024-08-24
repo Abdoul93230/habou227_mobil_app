@@ -32,6 +32,7 @@ import LogIn from "./src/pages/login";
 import SignUp from "./src/pages/signup";
 import axios from "axios";
 import { getCategories, getProducts, getProducts_Commentes, getProducts_Pubs, getTypes } from "./src/redux/ProductsActions";
+import SeePage from "./src/pages/SeePage";
 
 const Stack = createNativeStackNavigator();
 
@@ -79,6 +80,7 @@ export default function App() {
               <Stack.Screen name="Signup" component={SignUp} />
               <Stack.Screen name="Home" component={Home} />
               <Stack.Screen name="CategoriDetailPage" component={CategoriDetailPage} />
+              <Stack.Screen name="Voir tous" component={SeePage} />
               <Stack.Screen name="Search" component={Search} />
               <Stack.Screen name="Cart" component={Cart} />
               <Stack.Screen name="Profile" component={Profile} />

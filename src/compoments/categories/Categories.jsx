@@ -36,7 +36,7 @@ const Categories = ({categories} ) => {
 
 
         )}
-        <TouchableOpacity style={styles.seeAll}>
+        <TouchableOpacity style={styles.seeAll} onPress={() => navigation.navigate('Voir tous')}>
           <View style={styles.seeAll__icon}>
             <AntDesign name='right' size={24} color="#FF6A69" />
           </View>
