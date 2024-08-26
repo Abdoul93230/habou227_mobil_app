@@ -6,8 +6,11 @@ import Profile from '../../image/macbook profil.png';
 import Invite from '../invitéAmi/Invite';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
+import Toast from 'react-native-toast-message';
 const ProfilePage = () => {
   const navigation = useNavigation()
+  const regexMail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const regexPhone = /^[0-9]{8,}$/;
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
@@ -16,6 +19,110 @@ const ProfilePage = () => {
   const [phone, setPhone] = useState("");
   const [nom, setNom] = useState("");
   const [email, setEmail] = useState("");
+
+  const handleAlert = (message) => {
+    Toast.show({
+      type: 'success',
+      text1: 'success',
+      text2: message,
+      position: 'top',
+      visibilityTime: 5000,
+      autoHide: true,
+      bottomOffset: 40,
+
+    });
+  };
+
+  const handleAlertwar = (message) => {
+    Toast.show({
+      type: 'error',
+      text1: 'error',
+      text2: message,
+      position: 'top',
+      visibilityTime: 5000,
+      autoHide: true,
+      bottomOffset: 40,
+
+    });
+  };
+
+
+  const onSub = (e) => {
+    e.preventDefault();
+    if (nom.trim().length < 3) {
+      return handleAlertwar(
+        "Votre nom doit etre superieur ou inferieur a 3 caracteres"
+      );
+    } else if (!regexMail.test(email)) {
+      return handleAlertwar("forma du mail non valid!");
+    } else if (!regexPhone.test(phone.toString())) {
+      return handleAlertwar("forma du numero non valid!");
+    }
+    const allowedImageTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/gif",
+      "image/webp",
+    ];
+
+      const formData = new FormData();
+      formData.append("name", nom);
+      formData.append("email", email);
+      formData.append("phone", Number(phone));
+
+      formData.append("id", user.id);
+
+      setLoading(true);
+      axios
+        .post(`https://chagona.onrender.com/createProfile`, formData)
+        .then((Profile) => {
+          if (Profile.status === 200) {
+            handleAlert(Profile.data.message);
+
+            axios
+              .get(`https://chagona.onrender.com/getUserProfile`, {
+                params: {
+                  id: user.id,
+                },
+              })
+              .then((Profiler) => {
+                // console.log(Profiler);
+                setLoading(false);
+                closeModal()
+                if (Profiler.data.data.numero) {
+                  if (phone.length <= 0) {
+                    setPhone(Profiler.data.data.numero);
+                  }
+                }
+              })
+              .catch((erro) => {
+                setLoading(false);
+                if (erro.response.status === 404)
+                  setMessageEr(erro.response.data.message);
+                console.log(erro.response);
+              });
+          } else {
+            console.log({ err: Profile.data });
+          }
+        })
+        .catch((error) => {
+          setLoading(false);
+          if (error.response.status === 402) {
+            handleAlertwar(error.response.data.message);
+
+          }
+          if (error.response.data.data?.keyPattern?.email) {
+            handleAlertwar("Un utilisateur avec le même email existe déjà ");
+          }
+          if (error.response.data.data?.keyPattern?.phoneNumber) {
+            handleAlertwar("Un utilisateur avec le même Numero existe déjà ");
+          }
+          console.log(error.response);
+          closeModal()
+        });
+
+
+  };
 
 
 
@@ -153,11 +260,11 @@ const ProfilePage = () => {
               <Text style={styles.modalInstruction}>Click me to select image (max 4MB)</Text>
               <View style={styles.inputContainer}>
                 <Text style={styles.inputLabel}>Nom:</Text>
-                <TextInput style={Platform.OS === 'ios' ? styles.input : styles.inputAndroid} placeholder='Name' defaultValue={nom} />
+                <TextInput style={Platform.OS === 'ios' ? styles.input : styles.inputAndroid} placeholder='Name' onChangeText={(text=>setNom(text))} value={nom} />
                 <Text style={styles.inputLabel}>Email:</Text>
-                <TextInput style={Platform.OS === 'ios' ? styles.input : styles.inputAndroid} placeholder='Email' defaultValue={email} />
+                <TextInput style={Platform.OS === 'ios' ? styles.input : styles.inputAndroid} placeholder='Email' onChangeText={(text=>setEmail(text))} value={email} />
                 <Text style={styles.inputLabel}>Téléphone:</Text>
-                <TextInput style={Platform.OS === 'ios' ? styles.input : styles.inputAndroid} placeholder='Téléphone' defaultValue={phone} />
+                <TextInput style={Platform.OS === 'ios' ? styles.input : styles.inputAndroid} keyboardType="numeric" placeholder='Téléphone' onChangeText={(text=>setPhone(text))} value={phone.toString()} />
                 <TouchableOpacity>
                   <Text style={styles.inputLabel}>Changer le mot de passe ?</Text>
 
@@ -168,7 +275,7 @@ const ProfilePage = () => {
                 <TouchableOpacity onPress={closeModal} style={[styles.button, styles.buttonCancel]}>
                   <Text style={styles.buttonText}>Retour</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.button, styles.buttonSubmit]}>
+                <TouchableOpacity style={[styles.button, styles.buttonSubmit]} onPress={onSub}>
                   <Text style={styles.buttonText}>Soumettre</Text>
                 </TouchableOpacity>
               </View>

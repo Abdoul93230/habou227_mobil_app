@@ -14,6 +14,8 @@ const SearchMain = ( allCategories,allProducts) => {
   const DATA_Types = useSelector((state) => state.products.types);
 
 
+
+
   const [searchName, setSearchName] = useState("");
   const divRef = useRef(null);
   const scrollViewRef = useRef(null);
@@ -76,6 +78,9 @@ const SearchMain = ( allCategories,allProducts) => {
       setShow(DATA_Categories[0]);
     }
   }, [show]);
+
+
+
 
   const searchProductByName = () => {
     if (searchName.length <= 1) {

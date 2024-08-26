@@ -1,18 +1,21 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import CategorieDetails from '../compoments/CategorieDetails/CategorieDetails'
-const CategoriDetailPage = () => {
+import SeeAll from '../compoments/SeeAllPage/SeeAll'
+
+
+const SeePage = () => {
   return (
     <View style={styles.container}>
-      <CategorieDetails />
+      <SeeAll />
     </View>
   )
 }
 
-export default CategoriDetailPage
+export default SeePage
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginBottom: 90,
   }
 })
