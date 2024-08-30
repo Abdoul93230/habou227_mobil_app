@@ -1,12 +1,19 @@
 import React, { useEffect, useRef, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { StyleSheet, Text, View, TouchableOpacity, Image, Animated } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image, Animated,Platform } from 'react-native';
 import { Feather, Entypo } from '@expo/vector-icons';
 import Profil from "../../image/logo.png";
+import io from "socket.io-client";
 import { useNavigation, useNavigationState } from '@react-navigation/native';
+import axios from 'axios';
 
+const BackendUrl = 'https://chagona.onrender.com';
+const socket = io(BackendUrl);
 const Header__page = () => {
   const navigation = useNavigation();
+  const [allMessage, setAllMessage] = useState([]);
+  const [user, setUser] = useState([]);
+  const [nbr, setNbr] = useState(0);
   const fadeAnimHeader = useRef(new Animated.Value(0)).current;
   useEffect(() => {
     Animated.timing(fadeAnimHeader, {
@@ -32,14 +39,93 @@ const Header__page = () => {
 
     getPanier();
   }, []);
+
+  useEffect(() => {
+
+
+    const fetchData = async()=>{
+      const jsonValue = await AsyncStorage.getItem('userEcomme');
+        const userData = jsonValue != null ? JSON.parse(jsonValue) : null;
+        setUser(userData);
+        // console.log(userData)
+        // setName(userData.name)
+      if (userData) {
+        axios
+          .get(`https://chagona.onrender.com/getUserMessagesByClefUser/${userData.id}`)
+          .then((response) => {
+            setNbr(
+              response.data.filter(
+                (item) => item.lusUser === false && item.provenance === false
+              )?.length
+            );
+            setAllMessage(
+              response.data.filter(
+                (item) => item.lusUser === false && item.provenance === false
+              )
+            );
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+
+      }
+    }
+     fetchData()
+
+
+
+},[]);
+useEffect(() => {
+
+
+    const fetchData = async()=>{
+      const jsonValue = await AsyncStorage.getItem('userEcomme');
+        const userData = jsonValue != null ? JSON.parse(jsonValue) : null;
+        setUser(userData);
+        // console.log(userData)
+        // setName(userData.name)
+      if (userData) {
+        axios
+          .get(`https://chagona.onrender.com/getUserMessagesByClefUser/${userData.id}`)
+          .then((response) => {
+            setNbr(
+              response.data.filter(
+                (item) => item.lusUser === false && item.provenance === false
+              )?.length
+            );
+            setAllMessage(
+              response.data.filter(
+                (item) => item.lusUser === false && item.provenance === false
+              )
+            );
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    }
+    socket.on("new_message_user", fetchData);
+
+  return () => {
+    // Nettoyer l'écouteur du socket lors du démontage du composant
+    socket.off("new_message_user");
+  };
+
+
+},[socket]);
+
+
+
+
+
   return (
-    <Animated.View style={[styles.header, { opacity: fadeAnimHeader }]}>
+    <Animated.View style={[styles.header, { opacity: fadeAnimHeader,paddingTop:Platform.OS==="ios"?40:20 }]}>
     <Image source={Profil} style={styles.image} />
     <View style={styles.shoppingIcon}>
       <TouchableOpacity style={styles.iconContainer} onPress={() => navigation.navigate('ChatMessage')}>
         <Entypo name='circle' size={24} color="black" />
         <View style={styles.circleBTN}>
-          <Text style={styles.badgeText}>0</Text>
+          <Text style={styles.badgeText}>{nbr > 0 ? allMessage.length : 0}</Text>
         </View>
       </TouchableOpacity>
 
@@ -67,7 +153,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderBottomWidth: 1,
         borderColor: "#000",
-        paddingTop: 40, // Ensures adequate space for status bar
         paddingBottom: 10,
         backgroundColor: "#DDD"
       },

@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "5dbc3a72-0944-475e-b9d5-1269dd1098b4"
+      }
+    },
+    "android": {
+      "package": "com.abdoulrazak.habou227_mob_app"
+    }
+  }
+}

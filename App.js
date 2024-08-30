@@ -32,6 +32,7 @@ import LogIn from "./src/pages/login";
 import SignUp from "./src/pages/signup";
 import axios from "axios";
 import { getCategories, getProducts, getProducts_Commentes, getProducts_Pubs, getTypes } from "./src/redux/ProductsActions";
+import ForgotPassword from "./src/pages/forgotPassword";
 
 const Stack = createNativeStackNavigator();
 
@@ -97,6 +98,9 @@ export default function App() {
               <Stack.Screen name="Avis de confidentialité" component={Confidentialite} options={{ headerShown: true }} />
               <Stack.Screen name="Question Page" component={QuestionPage} options={{ headerShown: true }} />
               <Stack.Screen name="Information Page" component={InformationPage} options={{ headerShown: true }} />
+              <Stack.Screen name="forgotPassword" component={ForgotPassword}
+              options={{ headerShown: true }}
+               />
             </Stack.Navigator>
           ) : (
             <View style={styles.container}>

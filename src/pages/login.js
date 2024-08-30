@@ -165,6 +165,12 @@ function LogIn({ chg, creer }) {
               />
             </View>
           </View>
+          <View style={styles.buttonFD}>
+
+          {/* <TouchableOpacity style={styles.buttonF}> */}
+          <Text style={styles.buttonFT} onPress={()=>navigation.navigate('forgotPassword')}>Forgot Password ?</Text>
+          {/* </TouchableOpacity> */}
+          </View>
           <TouchableOpacity style={styles.button} onPress={connect}>
             <Text style={styles.buttonText}>Log In</Text>
             <View style={styles.buttonIcon}>
@@ -173,7 +179,7 @@ function LogIn({ chg, creer }) {
           </TouchableOpacity>
           <Text style={styles.signUpText}>
             Don't have an account? Swipe right to{" "}
-            <Text style={styles.signUpLink} onPress={() => navigation.navigate("Singup")}>
+            <Text style={styles.signUpLink} onPress={() => navigation.navigate("Signup")}>
               create a new account
             </Text>
           </Text>
@@ -281,6 +287,20 @@ const styles = StyleSheet.create({
       fontSize: 18,
       color: "#515C6F",
     },
+    buttonFD:{
+      width:"100%",
+      display:'flex',
+      justifyContent:"flex-start"
+    },
+    buttonF:{
+      textAlign:"left",
+      borderBlockColor:'red',
+      borderWidth:3
+    },
+    buttonFT:{
+      textAlign:"left",
+      width:"150px"
+    }
   });
 
 export default LogIn;

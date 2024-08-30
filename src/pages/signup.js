@@ -83,6 +83,16 @@ const SignUp = () => {
         })
         .then(async(user) => {
           if (user.status === 200) {
+            const dateActuelle = new Date();
+            const options = {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            };
+            const dateInscription = dateActuelle.toLocaleDateString(
+              "fr-FR",
+              options
+            );
             const message = `<h1>Nouvel Utilisateur Inscrit sur Habou227</h1>
                 <p>Cher(e)Habou227,</p>
                 <p>Nous avons le plaisir de vous informer qu'un nouvel utilisateur s'est inscrit sur Habou227. Voici les détails de l'utilisateur :</p>
@@ -110,8 +120,8 @@ const SignUp = () => {
                     console.error("Erreur lors de la requête email:", error);
                   });
             handleAlert(user.data.message);
-            setIsloading(false);
             navigation.navigate("Home");
+            setIsloading(false);
             const jsonValue = JSON.stringify(user.data);
             // Stocker les données
             await AsyncStorage.setItem('userEcomme', jsonValue);
@@ -121,6 +131,7 @@ const SignUp = () => {
         })
         .catch((error) => {
           setIsloading(false);
+          console.log(error)
           if (error.response.status === 400) {
             handleAlertwar(error.response.data.message);
           } else {
