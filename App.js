@@ -33,6 +33,13 @@ import SignUp from "./src/pages/signup";
 import axios from "axios";
 import { getCategories, getProducts, getProducts_Commentes, getProducts_Pubs, getTypes } from "./src/redux/ProductsActions";
 import ForgotPassword from "./src/pages/forgotPassword";
+import SeePage from "./src/pages/SeePage";
+import SuivreCommande from "./src/pages/SuivreCommande";
+import ConnexionPage from "./src/pages/ConnexionPage";
+import InscriptionPage from "./src/pages/InscriptionPage";
+import OTPPage from "./src/pages/OTPPage";
+import VerificationNumPage from "./src/pages/VerificationNumPage";
+import ChangePassword from "./src/pages/ChangePassword";
 
 const Stack = createNativeStackNavigator();
 
@@ -69,17 +76,18 @@ export default function App() {
 
     fetchUserData();
   }, []);
-
+  // initialRouteName={isAuthenticated ? 'Home' : 'Login'}
   return (
     <Provider store={store}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <NavigationContainer>
           {isAuthChecked ? (
-            <Stack.Navigator initialRouteName={isAuthenticated ? 'Home' : 'Login'} screenOptions={{ headerShown: false }}>
+            <Stack.Navigator initialRouteName="Home"  screenOptions={{ headerShown: false }}>
               <Stack.Screen name="Login" component={LogIn} />
               <Stack.Screen name="Signup" component={SignUp} />
               <Stack.Screen name="Home" component={Home} />
               <Stack.Screen name="CategoriDetailPage" component={CategoriDetailPage} />
+              <Stack.Screen name="Voir tous" component={SeePage} />
               <Stack.Screen name="Search" component={Search} />
               <Stack.Screen name="Cart" component={Cart} />
               <Stack.Screen name="Profile" component={Profile} />
@@ -91,6 +99,7 @@ export default function App() {
               <Stack.Screen name="Inviter les amis" component={Invite} options={{ headerShown: true }} />
               <Stack.Screen name="Service Page" component={ServicePage} options={{ headerShown: true }} />
               <Stack.Screen name="Commande Page" component={Commande} options={{ headerShown: true }} />
+              <Stack.Screen name="Suivre la commande" component={SuivreCommande}/>
               <Stack.Screen name="Suggestion Page" component={SuggestionPage} options={{ headerShown: true }} />
               <Stack.Screen name="Livraison Page" component={LivraisonPage} options={{ headerShown: true }} />
               <Stack.Screen name="Paiement Page" component={PaiementPage} options={{ headerShown: true }} />
@@ -101,6 +110,13 @@ export default function App() {
               <Stack.Screen name="forgotPassword" component={ForgotPassword}
               options={{ headerShown: true }}
                />
+              <Stack.Screen name="Connexion" component={ConnexionPage} />
+              <Stack.Screen name="Inscription" component={InscriptionPage} />
+              <Stack.Screen name="OTP" component={OTPPage} />
+              <Stack.Screen name="Vérifier votre numéro de téléphone" component={VerificationNumPage} />
+              <Stack.Screen name="Changez votre mot de passe" component={ChangePassword} />
+
+
             </Stack.Navigator>
           ) : (
             <View style={styles.container}>

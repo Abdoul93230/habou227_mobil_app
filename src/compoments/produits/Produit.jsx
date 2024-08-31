@@ -6,7 +6,6 @@ import { useNavigation } from '@react-navigation/native';
 
 const Produits = ({ products, name }) => {
     const navigation = useNavigation()
-    const [produits,setProduits] = useState([1,2,3,4,5,6])
   return (
     <View style={styles.container}>
       <View style={styles.product__page}>
@@ -19,7 +18,7 @@ const Produits = ({ products, name }) => {
         {
           products?.map((item,index) => {
 
-            return  <TouchableOpacity key={index} onPress={() => navigation.navigate("Détail-Produit",{ id: item._id })} style={styles.box__card}>
+            return <TouchableOpacity key={index} onPress={() => navigation.navigate("Détail-Produit",{ id: item._id })} style={styles.box__card}>
           <Image source={{uri:item.image1}} style={styles.image} resizeMode="cover" />
           <View style={styles.footer}>
             <Text style={styles.footerText}>{item.name.slice(0, 20)}...</Text>

@@ -511,8 +511,8 @@ const DetailProduitMain = ({produit,chgColor, chgTail,id}) => {
               </View>
             }
           <Text style={styles.text}>
-  Découvrez un produit alliant qualité et élégance. Conçu avec soin, il offre une
-  expérience exceptionnelle, que ce soit pour enrichir votre quotidien ou comme cadeau parfait.
+            Découvrez un produit alliant qualité et élégance. Conçu avec soin, il offre une
+            expérience exceptionnelle, que ce soit pour enrichir votre quotidien ou comme cadeau parfait.
 </Text>
         </View>
         <View style={styles.buttonContainer}>

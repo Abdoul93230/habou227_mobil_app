@@ -2,9 +2,11 @@ import { StyleSheet, Text, View, TouchableOpacity, Dimensions, ScrollView } from
 import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { useNavigation } from '@react-navigation/native';
 const { width, height } = Dimensions.get('window');
 
 const Commande = () => {
+  const navigation = useNavigation()
   const [myAllComande, setMyAllCommandes] = useState(null);
   const [rond, setRond] = useState(false);
   const [selectedButton, setSelectedButton] = useState('En cours'); // État initial
@@ -102,7 +104,7 @@ const Commande = () => {
             { myAllComande
                 ?.filter((param) => param.statusLivraison === "en cours")
                 .reverse()?.map((param, index) => (
-              <View key={index} style={styles.cardNoti}>
+              <TouchableOpacity key={index} style={styles.cardNoti} onPress={() => navigation.navigate('Suivre la commande')}>
                 <View style={styles.gaucheCard}>
                   <Text style={styles.jourText}>{getFormattedDay(new Date(param.date))}</Text>
                   <View style={styles.produitContent}>
@@ -118,7 +120,7 @@ const Commande = () => {
                     <Text style={styles.ProduitNumber}>{param.prix} F CFA</Text>
                   </View>
                 </View>
-              </View>
+              </TouchableOpacity>
             ))}
           </>
         )}

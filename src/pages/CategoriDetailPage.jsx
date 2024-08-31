@@ -3,7 +3,7 @@ import React from 'react'
 import CategorieDetails from '../compoments/CategorieDetails/CategorieDetails'
 const CategoriDetailPage = () => {
   return (
-    <View>
+    <View style={styles.container}>
       <CategorieDetails />
     </View>
   )
@@ -11,4 +11,8 @@ const CategoriDetailPage = () => {
 
 export default CategoriDetailPage
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  }
+})
