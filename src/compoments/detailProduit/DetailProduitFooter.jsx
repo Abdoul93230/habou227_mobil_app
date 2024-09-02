@@ -1,16 +1,122 @@
-import { StyleSheet, Text, View, TouchableOpacity, Modal, TextInput, TouchableWithoutFeedback } from 'react-native';
+import { Platform,StyleSheet, Text, View, TouchableOpacity, Modal, TextInput, TouchableWithoutFeedback } from 'react-native';
 import React, { useState } from 'react';
 import { FontAwesome, Ionicons, Entypo, Feather } from '@expo/vector-icons';
+import Toast from 'react-native-toast-message';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Alert } from 'react-native';
 
-const DetailProduitFooter = () => {
+const DetailProduitFooter = ({produit,color,taille,id}) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [produitsL, setProduitsL] = useState(0);
+  const [nbrCol, setNbrCol] = useState(null);
+
+
+  const handleAlert = (message) => {
+    Toast.show({
+      type: 'success',
+      text1: message,
+      position: 'top',
+      visibilityTime: 3000,
+      autoHide: true,
+      bottomOffset: 40,
+    });
+  };
+
+  const handleAlertwar = (message) => {
+    Toast.show({
+      type: 'error',
+      text1: message,
+      position: 'top',
+      visibilityTime: 3000,
+      autoHide: true,
+      bottomOffset: 40,
+    });
+  };
+
+
+
+  const AddProduct = async () => {
+    try {
+      const existingProductsJson = await AsyncStorage.getItem('panier');
+      const existingProducts = existingProductsJson ? JSON.parse(existingProductsJson) : [];
+
+      const isProductInCart = existingProducts.some((p) => p.id === id);
+
+      if (isProductInCart) {
+        const updatedProducts = existingProducts.map((p) => {
+          if (p.id === id) {
+            const updatedColors = [...p.colors, color]; // Ajouter la nouvelle couleur
+            const updatedSizes = [...p.sizes, taille]; // Ajouter la nouvelle taille
+
+            return {
+              ...p,
+              colors: updatedColors,
+              sizes: updatedSizes,
+              quantity: p.quantity + 1,
+              id: id,
+            };
+          }
+          return p;
+        });
+
+        await AsyncStorage.setItem('panier', JSON.stringify(updatedProducts));
+        handleAlert("La quantité du produit a été incrémentée dans le panier !");
+        const local = await AsyncStorage.getItem('panier');
+        setProduitsL(local ? JSON.parse(local) : []);
+        return;
+      }
+
+      if (produit?.couleur[0].split(",").length >= 2 && (!color || color===null)) {
+        if (produit?.pictures.length >= 2) {
+          handleAlertwar(
+            `Veuillez choisir un modèle parmi les ${produit?.pictures.length}`
+          );
+        } else {
+          handleAlertwar(
+            `Veuillez choisir une couleur parmi les ${produit?.couleur[0].split(",").length}`
+          );
+        }
+        // chgOption("Details", 0);
+        return;
+      }
+
+      if (produit?.taille[0].split(",").length >= 2 && (!taille || taille===null)) {
+        handleAlertwar(
+          `Veuillez choisir une taille parmi les ${produit?.taille[0].split(",").length}`
+        );
+        // chgOption("Details", 0);
+        return;
+      }
+
+
+      const updatedProducts = [
+        ...existingProducts,
+        {
+          ...produit,
+          colors: [color], // Ajouter la couleur sélectionnée comme tableau
+          sizes: [taille], // Ajouter la taille sélectionnée comme tableau
+          quantity: 1,
+          id: id,
+        },
+      ];
+
+      await AsyncStorage.setItem('panier', JSON.stringify(updatedProducts));
+      handleAlert("Produit ajouté au panier !");
+      const local = await AsyncStorage.getItem('panier');
+      setProduitsL(local ? JSON.parse(local) : []);
+    } catch (error) {
+      console.error('Erreur lors de l\'ajout du produit au panier', error);
+      // Vous pouvez également afficher une alerte ou un message d'erreur ici si nécessaire
+    }
+  };
+
 
   const toggleModal = () => {
     setModalVisible(!modalVisible);
   };
 
   return (
-    <View style={styles.containerFooter}>
+    <View style={Platform.OS === 'ios' ?styles.containerFooter: styles.containerFooter2}>
       <TouchableOpacity style={styles.button} onPress={toggleModal}>
         <Entypo name="share" size={20} color="#FF6A69" />
         <Text style={styles.buttonText}>Partagez ceci</Text>
@@ -21,7 +127,7 @@ const DetailProduitFooter = () => {
         <Text style={styles.buttonTextAddWhatsp}>Discuter</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.buttonAddWhatsp}>
+      <TouchableOpacity style={styles.buttonAddWhatsp} onPress={AddProduct}>
         <FontAwesome name="shopping-cart" size={20} color="#F0F0F0" />
         <Text style={styles.buttonTextAddWhatsp}>Ajouter au panier</Text>
       </TouchableOpacity>
@@ -40,10 +146,10 @@ const DetailProduitFooter = () => {
                     <Feather name='copy' size={20} />
                     <Text style={styles.optionText}>Copier</Text>
                   </View>
-                  <TextInput 
-                    value='https://chatgpt.com/c/5d656f1d-b488-4705-9fa8-e415ffef9719' 
-                    style={styles.textInput} 
-                    placeholder="Votre texte ici" 
+                  <TextInput
+                    value='https://chatgpt.com/c/5d656f1d-b488-4705-9fa8-e415ffef9719'
+                    style={styles.textInput}
+                    placeholder="Votre texte ici"
                   />
 
                   <View style={styles.optionRow2}>
@@ -51,7 +157,7 @@ const DetailProduitFooter = () => {
                     <FontAwesome name='whatsapp' size={20} />
                   </View>
                 </View>
-                
+
                 <TouchableOpacity style={styles.closeButton} onPress={toggleModal}>
                   <Text style={styles.closeButtonText}>Close</Text>
                 </TouchableOpacity>
@@ -60,7 +166,7 @@ const DetailProduitFooter = () => {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
-    </View>
+      </View>
   );
 };
 
@@ -126,10 +232,12 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginTop: 10,
     marginBottom: 20,
+    width: 100,
   },
   closeButtonText: {
     color: '#fff',
     fontSize: 14,
+    textAlign: "center"
   },
   containerFooter: {
     position: 'absolute',
@@ -140,25 +248,39 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     height: 100,
-    backgroundColor: 'transparent',
     paddingHorizontal: 10,
     borderColor: "#ccc",
     borderTopWidth: 1,
     elevation: 5,
     backgroundColor: "#c1c1c1ad",
   },
-  button: {
-    backgroundColor: "#FFFFFF", 
+  containerFooter2: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
     flexDirection: 'row',
-    alignItems: 'center', 
-    padding: 7, 
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    height: 100,
+    paddingHorizontal: 10,
+    borderColor: "#ccc",
+    borderTopWidth: 1,
+    elevation: 5,
+    backgroundColor: "#DDDDDD",
+  },
+  button: {
+    backgroundColor: "#FFFFFF",
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 7,
     borderRadius: 30,
   },
   buttonAddWhatsp: {
-    backgroundColor: "#FF6A69", 
+    backgroundColor: "#FF6A69",
     flexDirection: 'row',
-    alignItems: 'center', 
-    padding: 7, 
+    alignItems: 'center',
+    padding: 7,
     borderRadius: 30,
   },
   buttonText: {

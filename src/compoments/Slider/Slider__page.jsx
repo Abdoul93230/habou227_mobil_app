@@ -3,15 +3,17 @@ import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions } from 'rea
 import Swiper from 'react-native-swiper';
 import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
+const { width, height } = Dimensions.get('window');
 
 const ProductsSli = ({ products, name }) => {
+
   const navigation = useNavigation();
   const screenWidth = Dimensions.get('window').width;
 
   return (
     <View style={styles.productsSli}>
       <View style={styles.top}>
-        
+
         <TouchableOpacity onPress={() => navigation.navigate('Home')} style={styles.link}>
           <View style={styles.before} />
           <Text style={styles.title}>{name}</Text>
@@ -46,8 +48,8 @@ const ProductsSli = ({ products, name }) => {
                       </Text>
                     </View>
                   )}
-                  <TouchableOpacity onPress={() => navigation.navigate('ProductDetails', { id: param._id })} style={styles.midel}>
-                    <Image source={param.image1} style={styles.image} />
+                  <TouchableOpacity onPress={() => navigation.navigate('Détail-Produit', { id: param._id })} style={styles.midel}>
+                    <Image source={{uri:param.image1}} style={styles.image} />
                   </TouchableOpacity>
                   <View style={styles.bottomContent}>
                     <Text style={styles.name}>{param.name.slice(0, 9)}...</Text>
@@ -95,6 +97,7 @@ const styles = StyleSheet.create({
   },
   title: {
     textTransform: 'capitalize',
+     fontSize: width * 0.03,
   },
   more: {
     textTransform: 'capitalize',
@@ -159,7 +162,7 @@ const styles = StyleSheet.create({
   proText: {
     marginLeft: 5,
     color: '#fff',
-    fontSize: 12,
+    fontSize: width * 0.025,
     fontWeight: 'bold',
   },
   midel: {
@@ -186,11 +189,12 @@ const styles = StyleSheet.create({
     color: '#5c6c86',
     marginVertical: 1,
     textDecorationLine: 'line-through',
+    fontSize: width * 0.025,
   },
   newPrice: {
     color: '#5c6c86',
     marginVertical: 1,
-    fontSize: 12,
+    fontSize: width * 0.028,
   },
 });
 

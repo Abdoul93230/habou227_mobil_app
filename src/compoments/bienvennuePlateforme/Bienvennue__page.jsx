@@ -1,11 +1,13 @@
 import { StyleSheet, Text, View, Animated, Dimensions, Image, FlatList } from 'react-native';
 import React, { useRef, useEffect, useState } from 'react';
+import axios from 'axios';
 
-const Bienvennue__page = () => {
+const Bienvennue__page = ({ categories }) => {
     const scrollX = useRef(new Animated.Value(0)).current;
     const flatListRef = useRef(null);
     const { width } = Dimensions.get('window');
-    
+    const [allPub, setAllPub] = useState([]);
+
     const [carousel, setCarousel] = useState([
         { id: '1', image: require('../../image/ordinateur14.jpg')},
         { id: '2', image: require('../../image/ordinateur14.jpg')},
@@ -15,19 +17,33 @@ const Bienvennue__page = () => {
     ]);
 
     useEffect(() => {
-        // Handle marquee animation
-        const marqueeWidth = width * 1; // Adjust width as needed to ensure the text scrolls seamlessly
-        
+        axios
+          .get(`https://chagona.onrender.com/productPubget`)
+          .then((pub) => {
+            if (pub.data.length > 0) {
+              setAllPub(pub.data);
+            } else {
+              setAllPub([]);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }, []);
+
+    useEffect(() => {
+        const marqueeWidth = width * 1;
+
         Animated.loop(
             Animated.sequence([
                 Animated.timing(scrollX, {
                     toValue: -marqueeWidth,
-                    duration: 11000, // Adjust duration for smoother scrolling
+                    duration: 11000,
                     useNativeDriver: true,
                 }),
                 Animated.timing(scrollX, {
                     toValue: 0,
-                    duration: 0, // Instant jump to start
+                    duration: 0,
                     useNativeDriver: true,
                 }),
             ])
@@ -35,22 +51,21 @@ const Bienvennue__page = () => {
     }, [scrollX, width]);
 
     useEffect(() => {
-        // Automatic carousel scrolling
         let currentIndex = 0;
 
         const scrollInterval = setInterval(() => {
-            if (flatListRef.current) {
-                currentIndex = (currentIndex + 1) % carousel.length;
+            if (flatListRef.current && allPub.length > 0) {
+                currentIndex = (currentIndex + 1) % allPub.length;
                 flatListRef.current.scrollToIndex({
                     index: currentIndex,
                     animated: true,
                     viewPosition: 0.5,
                 });
             }
-        }, 3000); // Scroll every 3 seconds
+        }, 3000);
 
-        return () => clearInterval(scrollInterval); // Cleanup interval on unmount
-    }, [carousel]);
+        return () => clearInterval(scrollInterval);
+    }, [allPub]);
 
     return (
         <View style={styles.container}>
@@ -68,18 +83,18 @@ const Bienvennue__page = () => {
             <View style={styles.card__menu}>
                 <FlatList
                     ref={flatListRef}
-                    data={carousel}
+                    data={allPub}
                     showsHorizontalScrollIndicator={false}
                     horizontal
-                    keyExtractor={(item) => item.id}
+                    keyExtractor={(item) => item._id}
                     renderItem={({ item }) => (
                         <View style={styles.carouselItem}>
-                            <Image source={item.image} style={styles.carouselImage} />
+                            <Image source={{uri:item.image}} style={styles.carouselImage} />
                         </View>
                     )}
                 />
             </View>
-      
+
              <View style={styles.box__marque__deux}>
                 <Animated.View style={[styles.marquee, { transform: [{ translateX: scrollX }] }]}>
                     <Text style={styles.text__marque__text}>
@@ -119,7 +134,7 @@ const styles = StyleSheet.create({
     },
     marquee: {
         flexDirection: 'row',
-        width: '300%', // Ensure the text can scroll completely
+        width: '300%',
     },
     text__marque__text: {
         color: "#fff",
@@ -136,7 +151,7 @@ const styles = StyleSheet.create({
     latestText: {
         fontSize: 24,
         fontWeight: 'bold',
-        color: '#515C70', // Change as needed
+        color: '#515C70',
     },
     card__menu: {
         top: 12,
@@ -144,10 +159,10 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         borderRadius: 10,
         position: "relative",
-        overflow: 'hidden', // Ensure child elements respect rounded corners
+        overflow: 'hidden',
     },
     carouselItem: {
-        width: Dimensions.get('window').width, // Ensure each item takes full width
+        width: Dimensions.get('window').width,
         height: '100%',
     },
     carouselImage: {

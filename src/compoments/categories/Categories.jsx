@@ -1,31 +1,42 @@
-import { Button, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { Button, StyleSheet, Text, View, Image, TouchableOpacity,Dimensions } from 'react-native';
 import React, { useState } from 'react';
 import Profil from "../../image/logo.png";
 import { AntDesign } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
-const Categories = () => {
+const { width, height } = Dimensions.get('window');
+const Categories = ({categories} ) => {
+  const navigation = useNavigation()
   const titre = "Categories";
-  const [categories, setCategories] = useState([
+  const [Categories, setCategories] = useState([
     { id: 1, name: "Homme", image: require("../../image/IHFt.jpg") },
     { id: 2, name: "Électroniques", image: require("../../image/IHFt.jpg") },
     { id: 3, name: "Bauté", image: require("../../image/IHFt.jpg") },
     { id: 4, name: "All", image: require("../../image/IHFt.jpg") },
     { id: 5, name: "Cuisine & Ustensiles", image: require("../../image/IHFt.jpg") },
     { id: 6, name: "Électroménager", image: require("../../image/IHFt.jpg") },
-    // { id: 7, name: "Travel", image: require("../../image/IHFt.jpg") },
   ]);
 
   return (
     <View style={styles.container}>
       <Text style={styles.titre__img}>{titre}</Text>
       <View style={styles.menu}>
-        {categories.map((category) => (
-          <View key={category.id} style={styles.box__img}>
-            <Image source={category.image} style={styles.categoryImage} />
+        {categories.map((category,index) => {
+          if(index<6 && category.name !== "all"){
+            return  <TouchableOpacity key={index} style={styles.box__img} 
+            onPress={() =>{ navigation.navigate('CategoriDetailPage');
+            }}>
+            <Image source={{uri:category.image}} style={styles.categoryImage} />
             <Text style={styles.categoryText}>{category.name}</Text>
-          </View>
-        ))}
-        <TouchableOpacity style={styles.seeAll}>
+          </TouchableOpacity>
+          }else{
+            return null;
+          }
+        }
+
+
+        )}
+        <TouchableOpacity style={styles.seeAll} onPress={() => navigation.navigate('Voir tous')}>
           <View style={styles.seeAll__icon}>
             <AntDesign name='right' size={24} color="#FF6A69" />
           </View>
@@ -42,6 +53,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFF00',
+    marginBottom:10,
   },
   titre__img: {
     padding: 12,
@@ -54,15 +66,16 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   box__img: {
-    width: 96,
-    height: 96,
+    width: width * 0.20, // Largeur relative
+    height: width * 0.20, // Hauteur relative pour garder le carré
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 30,
     borderRadius: 50,
     shadowColor: "#FF6A69",
     shadowOffset: { width: 0, height: 0.2 },
     shadowOpacity: 0.50,
     shadowRadius: 3.84,
+
   },
   categoryImage: {
     width: 80,
@@ -72,7 +85,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   categoryText: {
-    fontSize: 13,
+    fontSize: width * 0.026,
     fontWeight: 'sans serif',
   },
   seeAll: {

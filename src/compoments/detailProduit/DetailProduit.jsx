@@ -1,23 +1,31 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity,Dimensions } from 'react-native';
 import React from 'react';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import { useNavigation , useNavigationState} from '@react-navigation/native';
 
 
-
-const DetailProduit = () => {
+const { width, height } = Dimensions.get('window');
+const DetailProduit = ({produit}) => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.navigate("Home")} style={styles.backButton}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
           <AntDesign name="left" size={24} color="#FF6A69" />
         </TouchableOpacity>
 
         <View style={styles.headerContent}>
-          <Text style={styles.headerText}>Refroidisseur d'ordinateur portable</Text>
+          <Text style={styles.headerText}>{produit?.name}</Text>
           <View style={styles.ratingContainer}>
-            <Text style={styles.CFAText}>CFA 15000</Text>
+            {
+              produit?.prixPromo <= 0 ?<Text style={styles.CFAText}>CFA {produit?.prix}</Text>
+              :<View>
+                <Text style={styles.CFAText2}>CFA {produit?.prix}</Text>
+                <Text style={styles.CFAText}>CFA {produit?.prixPromo}</Text>
+              </View>
+            }
+
+
             <View style={styles.staro}>
               <AntDesign name="staro" size={15} color="#FFF" />
               <Text style={styles.ratingText}>4.9</Text>
@@ -60,8 +68,9 @@ const styles = StyleSheet.create({
   },
   headerText: {
     color: '#000000c2',
-    fontSize: 17,
+    fontSize: width * 0.027,
     textAlign: 'center',
+    marginTop:5
   },
   ratingContainer: {
     flexDirection: "row",
@@ -84,8 +93,14 @@ const styles = StyleSheet.create({
   },
   CFAText: {
     color: '#000',
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold',
+  },
+  CFAText2: {
+    color: '#000',
+    fontSize: 12,
+    fontWeight: 'bold',
+    textDecorationLine:'line-through'
   },
   cartButton: {
     justifyContent: 'center',

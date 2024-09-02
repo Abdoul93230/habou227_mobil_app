@@ -3,31 +3,32 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import Ordi from '../../image/ordinateur14.jpg';
 import { useNavigation } from '@react-navigation/native';
 
-const Produits = ({ titre }) => {
+
+const Produits = ({ products, name }) => {
     const navigation = useNavigation()
     const [produits,setProduits] = useState([1,2,3,4,5,6])
   return (
     <View style={styles.container}>
       <View style={styles.product__page}>
         <View style={styles.navProduct}>
-          <Text style={styles.title__product}>{titre}</Text>
+          <Text style={styles.title__product}>{name}</Text>
         </View>
       </View>
 
       <View style={styles.box__menu}>
         {
-          produits.map((item,index) => {
-            
-            return  <TouchableOpacity key={index} onPress={() => navigation.navigate("Détail-Produit")} style={styles.box__card}>
-          <Image source={Ordi} style={styles.image} resizeMode="cover" />
+          products?.map((item,index) => {
+
+            return <TouchableOpacity key={index} onPress={() => navigation.navigate("Détail-Produit",{ id: item._id })} style={styles.box__card}>
+          <Image source={{uri:item.image1}} style={styles.image} resizeMode="cover" />
           <View style={styles.footer}>
-            <Text style={styles.footerText}>Footer 1</Text>
+            <Text style={styles.footerText}>{item.name.slice(0, 20)}...</Text>
           </View>
         </TouchableOpacity>
           })
         }
 
-       
+
       </View>
     </View>
   );

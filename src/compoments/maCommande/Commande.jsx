@@ -1,9 +1,58 @@
 import { StyleSheet, Text, View, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { useNavigation } from '@react-navigation/native';
 const { width, height } = Dimensions.get('window');
 
 const Commande = () => {
+  const navigation = useNavigation()
+  const [myAllComande, setMyAllCommandes] = useState(null);
+  const [rond, setRond] = useState(false);
   const [selectedButton, setSelectedButton] = useState('En cours'); // État initial
+
+
+
+
+
+  useEffect(() => {
+    const fetchData = async()=>{
+      const jsonValue = await AsyncStorage.getItem('userEcomme');
+        const user = JSON.parse(jsonValue);
+    setRond(true)
+    axios
+      .get(`https://chagona.onrender.com/getCommandesByClefUser/${user.id}`)
+      .then((res) => {
+        setRond(false)
+        setMyAllCommandes(res.data.commandes);
+      })
+      .catch((error) => {console.log(error)
+        setRond(false)
+      });
+    }
+    fetchData()
+  }, []);
+
+
+  const nbrCommandesEnCours = myAllComande?.filter(
+    (param) => param.statusLivraison === "en cours"
+  )?.length;
+  const nbrCommandesRecues = myAllComande?.filter(
+    (param) => param.statusLivraison === "recu"
+  )?.length;
+
+  function formatDate(date) {
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const year = date.getFullYear();
+
+    return `${day}/${month}/${year}`;
+  }
+  function getFormattedDay(date) {
+    const options = { weekday: "long" };
+    const formattedDay = new Intl.DateTimeFormat("fr-FR", options).format(date);
+    return formattedDay;
+  }
 
   return (
     <View style={styles.container}>
@@ -18,12 +67,12 @@ const Commande = () => {
             onPress={() => setSelectedButton('En cours')}
           >
             <Text style={styles.btnText}>
-              En cours <Text style={styles.countText}>(100)</Text>
+              En cours <Text style={styles.countText}>{nbrCommandesEnCours}</Text>
             </Text>
           </TouchableOpacity>
           {selectedButton === 'En cours' && (
             <View style={styles.notifi}>
-              <Text style={styles.btnNoti}>99+</Text>
+              <Text style={styles.btnNoti}>{nbrCommandesEnCours} </Text>
             </View>
           )}
         </View>
@@ -37,12 +86,12 @@ const Commande = () => {
             onPress={() => setSelectedButton('Récus')}
           >
             <Text style={styles.btnText}>
-              Récus <Text style={styles.countText}>(100)</Text>
+              Récus <Text style={styles.countText}>{nbrCommandesRecues}</Text>
             </Text>
           </TouchableOpacity>
           {selectedButton === 'Récus' && (
             <View style={styles.notifi}>
-              <Text style={styles.btnNoti}>99+</Text>
+              <Text style={styles.btnNoti}>{nbrCommandesRecues}</Text>
             </View>
           )}
         </View>
@@ -52,45 +101,49 @@ const Commande = () => {
       <ScrollView style={styles.pageContent} showsVerticalScrollIndicator={false}>
         {selectedButton === 'En cours' && (
           <>
-            {[...Array(10)].map((_, index) => (
-              <View key={index} style={styles.cardNoti}>
+            { myAllComande
+                ?.filter((param) => param.statusLivraison === "en cours")
+                .reverse()?.map((param, index) => (
+              <TouchableOpacity key={index} style={styles.cardNoti} onPress={() => navigation.navigate('Suivre la commande')}>
                 <View style={styles.gaucheCard}>
-                  <Text style={styles.jourText}>Lundi</Text>
+                  <Text style={styles.jourText}>{getFormattedDay(new Date(param.date))}</Text>
                   <View style={styles.produitContent}>
                     <Text style={styles.ProduitName}>NBRS Produit</Text>
-                    <Text style={styles.ProduitNumber}>1 Produit</Text>
+                    <Text style={styles.ProduitNumber}>{param.nbrProduits.length} Produit</Text>
                   </View>
                 </View>
                 <View style={styles.separator}></View>
                 <View style={styles.droiteCard}>
-                  <Text style={styles.dateText}>22/10/2024</Text>
+                  <Text style={styles.dateText}>{formatDate(new Date(param.date))}</Text>
                   <View style={styles.produitDroite}>
                     <Text style={styles.ProduitName}>Prix Total</Text>
-                    <Text style={styles.ProduitNumber}>35000 F CFA</Text>
+                    <Text style={styles.ProduitNumber}>{param.prix} F CFA</Text>
                   </View>
                 </View>
-              </View>
+              </TouchableOpacity>
             ))}
           </>
         )}
 
         {selectedButton === 'Récus' && (
           <>
-            {[...Array(10)].map((_, index) => (
+            {myAllComande
+                ?.filter((param) => param.statusLivraison === "recu")
+                .reverse()?.map((param, index) => (
               <View key={index} style={styles.cardNoti}>
                 <View style={styles.gaucheCard}>
-                  <Text style={styles.jourText}>Mardi</Text>
+                  <Text style={styles.jourText}>{getFormattedDay(new Date(param.date))}</Text>
                   <View style={styles.produitContent}>
                     <Text style={styles.ProduitName}>NBRS Produit</Text>
-                    <Text style={styles.ProduitNumber}>1 Produit</Text>
+                    <Text style={styles.ProduitNumber}>{param.nbrProduits.length} Produit</Text>
                   </View>
                 </View>
                 <View style={styles.separator}></View>
                 <View style={styles.droiteCard}>
-                  <Text style={styles.dateText}>22/10/2024</Text>
+                  <Text style={styles.dateText}>{formatDate(new Date(param.date))}</Text>
                   <View style={styles.produitDroite}>
                     <Text style={styles.ProduitName}>Prix Total</Text>
-                    <Text style={styles.ProduitNumber}>35000 F CFA</Text>
+                    <Text style={styles.ProduitNumber}>{param.prix} F CFA</Text>
                   </View>
                 </View>
               </View>
@@ -199,7 +252,7 @@ const styles = StyleSheet.create({
   },
   droiteCard: {
     flex: 1, // Prend l'autre moitié de la largeur de la carte
-    alignItems: 'flex-end', 
+    alignItems: 'flex-end',
     justifyContent: 'center', // Centre le contenu verticalement
     padding: width * 0.02,
   },
