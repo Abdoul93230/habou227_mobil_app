@@ -82,7 +82,7 @@ export default function App() {
       <GestureHandlerRootView style={{ flex: 1 }}>
         <NavigationContainer>
           {isAuthChecked ? (
-            <Stack.Navigator initialRouteName="Home"  screenOptions={{ headerShown: false }}>
+            <Stack.Navigator initialRouteName="Connexion"  screenOptions={{ headerShown: false }}>
               <Stack.Screen name="Login" component={LogIn} />
               <Stack.Screen name="Signup" component={SignUp} />
               <Stack.Screen name="Home" component={Home} />

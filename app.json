@@ -7,6 +7,9 @@
     },
     "android": {
       "package": "com.abdoulrazak.habou227_mob_app"
+    },
+    "ios": {
+      "bundleIdentifier": "test1"
     }
   }
 }
