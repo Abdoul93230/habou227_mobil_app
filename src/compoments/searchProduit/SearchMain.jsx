@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import LoadingIndicator from '../../pages/LoadingIndicator';
 import axios from 'axios';
+import { API_URL } from "@env";
 
 const SearchMain = ( allCategories,allProducts) => {
 
@@ -89,7 +90,7 @@ const SearchMain = ( allCategories,allProducts) => {
     }
     setLoading1(true);
     axios
-      .get(`https://chagona.onrender.com/searchProductByName/${searchName}`)
+      .get(`${API_URL}/searchProductByName/${searchName}`)
       .then((res) => {
         setProduct(res.data.products);
         setSh(false);

@@ -4,6 +4,7 @@ import DetailProduit from "../compoments/detailProduit/DetailProduit";
 import DetailProduitFooter from '../compoments/detailProduit/DetailProduitFooter';
 import DetailProduitMain from '../compoments/detailProduit/DetailProduitMain';
 import LoadingIndicator from './LoadingIndicator';
+import { API_URL } from "@env";
 import axios from 'axios';
 import {AntDesign} from '@expo/vector-icons';
 import { useRoute } from '@react-navigation/native';
@@ -45,7 +46,7 @@ const ProductDet = () => {
     setLoading(true);
     const fetchData = async () => {
       try {
-        const res = await axios.get(`https://chagona.onrender.com/Product/${id}`);
+        const res = await axios.get(`${API_URL}/Product/${id}`);
         setVp(res.data.data);
         setLoading(false);
         // Défilement vers le haut lorsque les données sont chargées
@@ -100,7 +101,7 @@ const ProductDet = () => {
       return;
     }
     axios
-      .post(`https://chagona.onrender.com/createCommenteProduit`, {
+      .post(`${API_URL}/createCommenteProduit`, {
         description: commente,
         clefProduct: VP?._id,
         clefType: VP?.ClefType,
@@ -114,7 +115,7 @@ const ProductDet = () => {
         setCommente("");
 
         axios
-          .get(`https://chagona.onrender.com/getAllCommenteProduitById/${params.id}`)
+          .get(`${API_URL}/getAllCommenteProduitById/${params.id}`)
           .then((coments) => {
             setAllCommente(coments.data);
             // console.log(coments.data);

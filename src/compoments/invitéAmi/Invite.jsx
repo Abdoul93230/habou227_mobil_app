@@ -2,16 +2,114 @@ import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Dimensions,
 import React, { useState, useEffect, useRef } from 'react';
 import { FontAwesome5 } from '@expo/vector-icons';
 import Produit from "../../image/Vnike2.jpg";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-toast-message';
+import axios from 'axios';
+import { API_URL } from "@env";
 
 const Invite = () => {
+  const regexMail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const [message, setMessage] = useState("Salut [Nom de votre ami], Je viens de découvrir un super site de commerce électronique avec des produits de haute qualité à des prix compétitifs. Si tu t'inscris en utilisant mon lien de parrainage, tu bénéficieras d'une réduction sur ta première commande, et moi aussi ! Ne rate pas cette occasion, rejoins-moi sur ce site génial ! Amicalement, [Ton nom]");
   const [email, setEmail] = useState("");
+  const [user, setUser] = useState(null);
+  const [emailP, setEmailP] = useState(null);
+  const [name, setName] = useState(null);
 
   const { height } = Dimensions.get('window');
 
   const imageOpacity = useRef(new Animated.Value(0)).current;
   const formOpacity = useRef(new Animated.Value(0)).current;
   const buttonTranslateY = useRef(new Animated.Value(30)).current;
+  const handleAlert = (message) => {
+    Toast.show({
+      type: 'success',
+      text1: 'success',
+      text2: message,
+      position: 'top',
+      visibilityTime: 5000,
+      autoHide: true,
+      bottomOffset: 40,
+
+    });
+  };
+
+  const handleAlertwar = (message) => {
+    Toast.show({
+      type: 'error',
+      text1: 'error',
+      text2: message,
+      position: 'top',
+      visibilityTime: 5000,
+      autoHide: true,
+      bottomOffset: 40,
+
+    });
+  };
+
+  useEffect(() => {
+    const fetchData = async()=>{
+      const jsonValue = await AsyncStorage.getItem('userEcomme');
+        const userData = jsonValue != null ? JSON.parse(jsonValue) : null;
+        setUser(userData);
+        setName(userData.name)
+      if (userData) {
+        axios
+          .get(`${API_URL}/user`, {
+            params: {
+              id: userData.id,
+            },
+          })
+          .then((response) => {
+            const data = response.data.user;
+            if (!emailP) {
+              setEmailP(data.email);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    }
+  },[]);
+
+  const envoyer = async (e) => {
+    e.preventDefault();
+    if (!regexMail.test(email) && number.length < 8) {
+      handleAlertwar("Format de l'email non valide !");
+      return;
+    }
+    handleAlert("Envoi en cours...");
+    if (regexMail.test(email) || number.length >= 8) {
+      if (regexMail.test(email)) {
+        const emailData = {
+          senderEmail: emailP,
+          subject: "Sujet de l'e-mail",
+          message: message,
+          friendEmail: email,
+          clientName: name,
+        };
+
+        try {
+          setLoading(true);
+          await axios.post(`${API_URL}/Send_email_freind`, emailData);
+          handleAlert("Email envoyé !");
+          setLoading(false);
+          // Attendre quelques secondes avant de naviguer
+          setTimeout(() => {
+            navigue("/Profile");
+          }, 3000);
+        } catch (error) {
+          console.error("Erreur lors de la requête:", error);
+        }
+      }
+
+      // if (regexPhone.test(number.toString())) {
+      //   handleAlert("Invitation envoyée avec succès par téléphone !");
+      // }
+    }
+  };
+
+
 
   useEffect(() => {
     Animated.sequence([
@@ -42,10 +140,10 @@ const Invite = () => {
         <Image source={Produit} style={styles.image} />
       </Animated.View>
       <Animated.View style={[styles.containerBottom, { opacity: formOpacity }]}>
-        <TextInput 
+        <TextInput
           value={message}
           onChangeText={text => setMessage(text)}
-          style={styles.textInput} 
+          style={styles.textInput}
           multiline
         />
         <View style={styles.emailContainer}>
@@ -58,7 +156,7 @@ const Invite = () => {
           />
         </View>
         <Animated.View style={{ transform: [{ translateY: buttonTranslateY }], width: "100%", }}>
-          <TouchableOpacity style={styles.submitButton}>
+          <TouchableOpacity style={styles.submitButton} onPress={envoyer}>
             <Text style={styles.submitButtonText}>Soumettre</Text>
           </TouchableOpacity>
         </Animated.View>
@@ -87,7 +185,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-    height: "100%", 
+    height: "100%",
     resizeMode: "cover",
   },
   containerBottom: {

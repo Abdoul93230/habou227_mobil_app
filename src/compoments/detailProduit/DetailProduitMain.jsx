@@ -15,6 +15,7 @@ import { shuffle } from "lodash";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from 'react-native';
 import axios from 'axios';
+import { API_URL } from "@env";
 const { width } = Dimensions.get('window'); // Largeur de l'écran pour le carrousel
 
 
@@ -130,7 +131,7 @@ const DetailProduitMain = ({produit,chgColor, chgTail,id}) => {
 
 
     axios
-      .get(`https://chagona.onrender.com/getAllCommenteProduitById/${id}`)
+      .get(`${API_URL}/getAllCommenteProduitById/${id}`)
       .then((coments) => {
         setAllCommente(coments.data);
       })

@@ -6,7 +6,6 @@ import { useNavigation } from '@react-navigation/native';
 
 const Produits = ({ products, name }) => {
     const navigation = useNavigation()
-    const [produits,setProduits] = useState([1,2,3,4,5,6])
   return (
     <View style={styles.container}>
       <View style={styles.product__page}>

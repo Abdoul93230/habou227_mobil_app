@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, TouchableOpacity, Dimensions, ScrollView } from
 import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { API_URL } from "@env";
 import { useNavigation } from '@react-navigation/native';
 const { width, height } = Dimensions.get('window');
 
@@ -21,7 +22,7 @@ const Commande = () => {
         const user = JSON.parse(jsonValue);
     setRond(true)
     axios
-      .get(`https://chagona.onrender.com/getCommandesByClefUser/${user.id}`)
+      .get(`${API_URL}/getCommandesByClefUser/${user.id}`)
       .then((res) => {
         setRond(false)
         setMyAllCommandes(res.data.commandes);

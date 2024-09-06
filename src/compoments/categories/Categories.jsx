@@ -8,14 +8,6 @@ const { width, height } = Dimensions.get('window');
 const Categories = ({categories} ) => {
   const navigation = useNavigation()
   const titre = "Categories";
-  const [Categories, setCategories] = useState([
-    { id: 1, name: "Homme", image: require("../../image/IHFt.jpg") },
-    { id: 2, name: "Électroniques", image: require("../../image/IHFt.jpg") },
-    { id: 3, name: "Bauté", image: require("../../image/IHFt.jpg") },
-    { id: 4, name: "All", image: require("../../image/IHFt.jpg") },
-    { id: 5, name: "Cuisine & Ustensiles", image: require("../../image/IHFt.jpg") },
-    { id: 6, name: "Électroménager", image: require("../../image/IHFt.jpg") },
-  ]);
 
   return (
     <View style={styles.container}>
@@ -23,8 +15,8 @@ const Categories = ({categories} ) => {
       <View style={styles.menu}>
         {categories.map((category,index) => {
           if(index<6 && category.name !== "all"){
-            return  <TouchableOpacity key={index} style={styles.box__img} 
-            onPress={() =>{ navigation.navigate('CategoriDetailPage');
+            return  <TouchableOpacity key={index} style={styles.box__img}
+            onPress={() =>{ navigation.navigate('CategoriDetailPage', { categoryId: category._id });
             }}>
             <Image source={{uri:category.image}} style={styles.categoryImage} />
             <Text style={styles.categoryText}>{category.name}</Text>

@@ -6,6 +6,7 @@ import Profile from '../../image/macbook profil.png';
 import Invite from '../invitéAmi/Invite';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
+import { API_URL } from "@env";
 import Toast from 'react-native-toast-message';
 const ProfilePage = () => {
   const navigation = useNavigation()
@@ -74,13 +75,13 @@ const ProfilePage = () => {
 
       setLoading(true);
       axios
-        .post(`https://chagona.onrender.com/createProfile`, formData)
+        .post(`${API_URL}/createProfile`, formData)
         .then((Profile) => {
           if (Profile.status === 200) {
             handleAlert(Profile.data.message);
 
             axios
-              .get(`https://chagona.onrender.com/getUserProfile`, {
+              .get(`${API_URL}/getUserProfile`, {
                 params: {
                   id: user.id,
                 },
@@ -137,7 +138,7 @@ const ProfilePage = () => {
         setUser(userData);
         if (userData) {
           axios
-            .get(`https://chagona.onrender.com/user`, {
+            .get(`${API_URL}/user`, {
               params: {
                 id: userData.id,
               },
@@ -153,7 +154,7 @@ const ProfilePage = () => {
             });
 
           axios
-            .get(`https://chagona.onrender.com/getUserProfile`, {
+            .get(`${API_URL}/getUserProfile`, {
               params: {
                 id: userData.id,
               },

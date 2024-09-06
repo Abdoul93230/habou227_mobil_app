@@ -1,12 +1,19 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
+import RenderHtml from 'react-native-render-html';
+import { useWindowDimensions } from 'react-native';
 
 const MessageCard = ({ message, sender, timestamp }) => {
+  const { width } = useWindowDimensions();
   const isUserMessage = sender === 'user';
 
   return (
     <View style={[styles.card, isUserMessage ? styles.userCard : styles.otherCard]}>
-      <Text style={styles.messageText}>{message}</Text>
+      <RenderHtml
+        contentWidth={width}
+        source={{ html: message }}
+        baseStyle={styles.messageText}
+      />
       <Text style={styles.timestamp}>{timestamp}</Text>
     </View>
   );
@@ -30,11 +37,11 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   userCard: {
-    backgroundColor: '#DCF8C6', // Light green for user messages
+    backgroundColor: '#DCF8C6',
     alignSelf: 'flex-end',
   },
   otherCard: {
-    backgroundColor: '#FFF', // White for other person's messages
+    backgroundColor: '#FFF',
     alignSelf: 'flex-start',
   },
   messageText: {

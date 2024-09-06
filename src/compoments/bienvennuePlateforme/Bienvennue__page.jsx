@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Animated, Dimensions, Image, FlatList } from 'react-native';
 import React, { useRef, useEffect, useState } from 'react';
 import axios from 'axios';
-
+import { API_URL } from "@env";
 const Bienvennue__page = ({ categories }) => {
     const scrollX = useRef(new Animated.Value(0)).current;
     const flatListRef = useRef(null);
@@ -18,7 +18,7 @@ const Bienvennue__page = ({ categories }) => {
 
     useEffect(() => {
         axios
-          .get(`https://chagona.onrender.com/productPubget`)
+          .get(`${API_URL}/productPubget`)
           .then((pub) => {
             if (pub.data.length > 0) {
               setAllPub(pub.data);

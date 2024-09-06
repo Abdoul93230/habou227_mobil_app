@@ -4,11 +4,13 @@ import { Ionicons, FontAwesome, MaterialIcons, MaterialCommunityIcons } from '@e
 import * as ImagePicker from 'expo-image-picker';
 import { Audio } from 'expo-av';
 import { CameraView, useCameraPermissions } from 'expo-camera';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Chat__footer = ({ onSendMessage }) => {
+const Chat__footer = ({ onSendMessage,startRecording,stopRecording }) => {
   const [message, setMessage] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const [recording, setRecording] = useState(null);
+  const [recordings, setRecordings] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [permissionResponse, requestPermission] = Audio.usePermissions();
   const [facing, setFacing] = useState('back');
@@ -17,6 +19,11 @@ const Chat__footer = ({ onSendMessage }) => {
   useEffect(() => {
     getPermissionAsync();
   }, []);
+
+
+
+
+
 
   const getPermissionAsync = async () => {
     if (Platform.OS !== 'web') {
@@ -60,39 +67,39 @@ const Chat__footer = ({ onSendMessage }) => {
 
 
 
-  async function startRecording() {
-    try {
-      if (permissionResponse.status !== 'granted') {
-        console.log('Requesting permission..');
-        await requestPermission();
-      }
-      await Audio.setAudioModeAsync({
-        allowsRecordingIOS: true,
-        playsInSilentModeIOS: true,
-      });
+  // async function startRecording() {
+  //   try {
+  //     const permission = await Audio.requestPermissionsAsync();
+  //     if (permission.status === 'granted') {
+  //       await Audio.setAudioModeAsync({
+  //         allowsRecordingIOS: true,
+  //         playsInSilentModeIOS: true,
+  //       });
+  //       const { recording } = await Audio.Recording.createAsync(Audio.RecordingOptionsPresets.HIGH_QUALITY);
+  //       setRecording(recording);
+  //       setIsRecording(true);
+  //     } else {
+  //       alert('Permission d\'enregistrement audio refusée');
+  //     }
+  //   } catch (err) {
+  //     console.error('Failed to start recording', err);
+  //   }
+  // }
 
-      console.log('Starting recording..');
-      const { recording } = await Audio.Recording.createAsync( Audio.RecordingOptionsPresets.HIGH_QUALITY
-      );
-      setRecording(recording);
-      console.log('Recording started');
-    } catch (err) {
-      console.error('Failed to start recording', err);
-    }
-  }
+  // async function stopRecording() {
+  //   setIsRecording(false);
+  //   await recording.stopAndUnloadAsync();
+  //   const uri = recording.getURI();
 
-  async function stopRecording() {
-    console.log('Stopping recording..');
-    setRecording(undefined);
-    await recording.stopAndUnloadAsync();
-    await Audio.setAudioModeAsync(
-      {
-        allowsRecordingIOS: false,
-      }
-    );
-    const uri = recording.getURI();
-    console.log('Recording stopped and stored at', recording);
-  }
+  //   setRecording(null);
+
+  //   // Sauvegarder l'enregistrement dans AsyncStorage
+  //   const newRecordings = [...recordings, uri];
+  //   setRecordings(newRecordings);
+  //   await AsyncStorage.setItem('recordings', JSON.stringify(newRecordings));
+
+  //   // console.log('Enregistrement sauvegardé à', uri);
+  // }
 
 
 
@@ -100,21 +107,32 @@ const Chat__footer = ({ onSendMessage }) => {
 
 
   const handleAudioRecord = async () => {
-    
-      if (isRecording===false) {
-        setIsRecording(true)
-        startRecording()
-        
-      } else {
-        setIsRecording(false);
-        stopRecording()
-      }
-    
+    if (isRecording) {
+      await stopRecording();
+    } else {
+      await startRecording();
+    }
+    setIsRecording(!isRecording)
   };
+
+  const playRecording = async (uri) => {
+    try {
+      const { sound } = await Audio.Sound.createAsync({ uri });
+
+      if (sound) {
+        await sound.playAsync();
+      } else {
+        console.log('Sound object is undefined');
+      }
+    } catch (error) {
+      console.error('Error while playing sound:', error);
+    }
+  };
+
 
   const handleSendMessage = () => {
     if (message.trim().length > 0) {
-      onSendMessage(message, 'user');
+      onSendMessage(message);
       setMessage('');
     }
   };
@@ -172,9 +190,11 @@ const Chat__footer = ({ onSendMessage }) => {
             multiline
           />
           <TouchableOpacity onPress={handleAudioRecord} style={styles.iconButton}>
-            {
-              isRecording ? (<MaterialIcons name="voice-over-off" size={24} />):<MaterialIcons name="keyboard-voice" size={24} />
-            }
+            {isRecording ? (
+              <MaterialIcons name="voice-over-off" size={24} />
+            ) : (
+              <MaterialIcons name="keyboard-voice" size={24} />
+            )}
           </TouchableOpacity>
           <TouchableOpacity style={styles.sendButton} onPress={handleSendMessage}>
             <Ionicons name="send" size={24} color="white" />
@@ -291,16 +311,17 @@ const styles = StyleSheet.create({
   },
   autorisationText: {
     textAlign: 'center',
-    bottom: Platform.OS === 'ios' ? 0 : 40, 
+    bottom: Platform.OS === 'ios' ? 0 : 40,
   },
   cancelButton: {
-    width: Platform.OS === 'ios' ?  '10%' : "100%",
+    width: Platform.OS === 'ios' ?  '90%' : "100%",
     padding: 15,
     backgroundColor: '#FF6A69',
     borderRadius: 25,
     alignItems: 'center',
     // bottom: Platform.OS === 'ios' ? 0 : 30,
     margin: "auto",
+    marginBottom:3
   },
   cancelButtonAndroid: {
     width: Platform.OS === 'ios' ?  '10%' : "100%",

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Toast from 'react-native-toast-message';
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Toast from "react-native-toast-message";
 import { Provider } from "react-redux";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import Home from "./src/pages/Home";
@@ -31,7 +31,14 @@ import CategoriDetailPage from "./src/pages/CategoriDetailPage";
 import LogIn from "./src/pages/login";
 import SignUp from "./src/pages/signup";
 import axios from "axios";
-import { getCategories, getProducts, getProducts_Commentes, getProducts_Pubs, getTypes } from "./src/redux/ProductsActions";
+import {
+  getCategories,
+  getProducts,
+  getProducts_Commentes,
+  getProducts_Pubs,
+  getTypes,
+} from "./src/redux/ProductsActions";
+import ForgotPassword from "./src/pages/forgotPassword";
 import SeePage from "./src/pages/SeePage";
 import SuivreCommande from "./src/pages/SuivreCommande";
 import ConnexionPage from "./src/pages/ConnexionPage";
@@ -39,10 +46,12 @@ import InscriptionPage from "./src/pages/InscriptionPage";
 import OTPPage from "./src/pages/OTPPage";
 import VerificationNumPage from "./src/pages/VerificationNumPage";
 import ChangePassword from "./src/pages/ChangePassword";
+import { API_URL } from "@env";
 
 const Stack = createNativeStackNavigator();
 
-const BackendUrl = process.env.REACT_APP_Backend_Url;
+// const BackendUrl = process.env.REACT_APP_Backend_Url;
+console.log(API_URL);
 
 export default function App() {
   const [isAuthChecked, setIsAuthChecked] = useState(false);
@@ -59,15 +68,19 @@ export default function App() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const jsonValue = await AsyncStorage.getItem('userEcomme');
+        const jsonValue = await AsyncStorage.getItem("userEcomme");
         const user = JSON.parse(jsonValue);
         if (user) {
-          axios.defaults.headers.common["Authorization"] = `Bearer ${user.token}`;
-          const response = await axios.get(`https://chagona.onrender.com/verify`, { withCredentials: true });
+          axios.defaults.headers.common[
+            "Authorization"
+          ] = `Bearer ${user.token}`;
+          const response = await axios.get(`${API_URL}/verify`, {
+            withCredentials: true,
+          });
           setIsAuthenticated(true);
         }
       } catch (error) {
-        console.error('Erreur lors de la vérification:', error);
+        console.error("Erreur lors de la vérification:", error);
       } finally {
         setIsAuthChecked(true);
       }
@@ -81,11 +94,17 @@ export default function App() {
       <GestureHandlerRootView style={{ flex: 1 }}>
         <NavigationContainer>
           {isAuthChecked ? (
-            <Stack.Navigator initialRouteName="Connexion"  screenOptions={{ headerShown: false }}>
+            <Stack.Navigator
+              initialRouteName="Homme"
+              screenOptions={{ headerShown: false }}
+            >
               <Stack.Screen name="Login" component={LogIn} />
               <Stack.Screen name="Signup" component={SignUp} />
               <Stack.Screen name="Home" component={Home} />
-              <Stack.Screen name="CategoriDetailPage" component={CategoriDetailPage} />
+              <Stack.Screen
+                name="CategoriDetailPage"
+                component={CategoriDetailPage}
+              />
               <Stack.Screen name="Voir tous" component={SeePage} />
               <Stack.Screen name="Search" component={Search} />
               <Stack.Screen name="Cart" component={Cart} />
@@ -95,32 +114,88 @@ export default function App() {
               <Stack.Screen name="Détail-Produit" component={ProductDet} />
               <Stack.Screen name="Checkout" component={Checkout} />
               <Stack.Screen name="Succes" component={Succes} />
-              <Stack.Screen name="Inviter les amis" component={Invite} options={{ headerShown: true }} />
-              <Stack.Screen name="Service Page" component={ServicePage} options={{ headerShown: true }} />
-              <Stack.Screen name="Commande Page" component={Commande} options={{ headerShown: true }} />
-              <Stack.Screen name="Suivre la commande" component={SuivreCommande}/>
-              <Stack.Screen name="Suggestion Page" component={SuggestionPage} options={{ headerShown: true }} />
-              <Stack.Screen name="Livraison Page" component={LivraisonPage} options={{ headerShown: true }} />
-              <Stack.Screen name="Paiement Page" component={PaiementPage} options={{ headerShown: true }} />
-              <Stack.Screen name="Paramètre de notification" component={ParaNotification} options={{ headerShown: true }} />
-              <Stack.Screen name="Avis de confidentialité" component={Confidentialite} options={{ headerShown: true }} />
-              <Stack.Screen name="Question Page" component={QuestionPage} options={{ headerShown: true }} />
-              <Stack.Screen name="Information Page" component={InformationPage} options={{ headerShown: true }} />
+              <Stack.Screen
+                name="Inviter les amis"
+                component={Invite}
+                options={{ headerShown: true }}
+              />
+              <Stack.Screen
+                name="Service Page"
+                component={ServicePage}
+                options={{ headerShown: true }}
+              />
+              <Stack.Screen
+                name="Commande Page"
+                component={Commande}
+                options={{ headerShown: true }}
+              />
+              <Stack.Screen
+                name="Suivre la commande"
+                component={SuivreCommande}
+              />
+              <Stack.Screen
+                name="Suggestion Page"
+                component={SuggestionPage}
+                options={{ headerShown: true }}
+              />
+              <Stack.Screen
+                name="Livraison Page"
+                component={LivraisonPage}
+                options={{ headerShown: true }}
+              />
+              <Stack.Screen
+                name="Paiement Page"
+                component={PaiementPage}
+                options={{ headerShown: true }}
+              />
+              <Stack.Screen
+                name="Paramètre de notification"
+                component={ParaNotification}
+                options={{ headerShown: true }}
+              />
+              <Stack.Screen
+                name="Avis de confidentialité"
+                component={Confidentialite}
+                options={{ headerShown: true }}
+              />
+              <Stack.Screen
+                name="Question Page"
+                component={QuestionPage}
+                options={{ headerShown: true }}
+              />
+              <Stack.Screen
+                name="Information Page"
+                component={InformationPage}
+                options={{ headerShown: true }}
+              />
+              <Stack.Screen
+                name="forgotPassword"
+                component={ForgotPassword}
+                options={{ headerShown: true }}
+              />
               <Stack.Screen name="Connexion" component={ConnexionPage} />
               <Stack.Screen name="Inscription" component={InscriptionPage} />
               <Stack.Screen name="OTP" component={OTPPage} />
-              <Stack.Screen name="Vérifier votre numéro de téléphone" component={VerificationNumPage} />
-              <Stack.Screen name="Changez votre mot de passe" component={ChangePassword} />
-
-
+              <Stack.Screen
+                name="Vérifier votre numéro de téléphone"
+                component={VerificationNumPage}
+              />
+              <Stack.Screen
+                name="Changez votre mot de passe"
+                component={ChangePassword}
+              />
             </Stack.Navigator>
           ) : (
             <View style={styles.container}>
-              <ActivityIndicator size="small" color="#FF6969" style={styles.spinner} />
+              <ActivityIndicator
+                size="small"
+                color="#FF6969"
+                style={styles.spinner}
+              />
               <Text>En cours de vérification...</Text>
             </View>
           )}
-          <Toast config={toastConfig}  ref={(ref) => Toast.setRef(ref)} />
+          <Toast config={toastConfig} ref={(ref) => Toast.setRef(ref)} />
         </NavigationContainer>
       </GestureHandlerRootView>
     </Provider>
@@ -130,14 +205,14 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
   },
   spinner: {
     borderWidth: 4,
-    borderColor: 'rgba(0, 0, 0, 0.1)',
-    borderTopColor: '#FF6969',
+    borderColor: "rgba(0, 0, 0, 0.1)",
+    borderTopColor: "#FF6969",
     borderRadius: 50,
     width: 30,
     height: 30,
