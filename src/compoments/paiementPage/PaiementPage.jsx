@@ -201,7 +201,7 @@ const PaiementPage = () => {
           );
           return;
         }else if (numero.length < 8 && operateur==="229") {
-          console.log(2)
+          // console.log(2)
           handleAlertwar(
             "Le numéro de l'utilisateur doit contenir au moins 8 chiffres Benin"
           );
@@ -275,7 +275,6 @@ const PaiementPage = () => {
     const renderSelectedPaymentPage = () => {
       // const [service, setService] = useState("");
       const dernierChiffres = numeroCard.toString().length >= 3 ? numeroCard.toString().slice(-3) : ''; // Extraire les 3 derniers chiffres
-      console.log(dernierChiffres)
     switch (selectedPayment) {
       case 'master Card':
   return (

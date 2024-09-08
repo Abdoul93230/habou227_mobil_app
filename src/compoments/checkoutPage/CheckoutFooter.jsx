@@ -7,20 +7,25 @@ import { Feather } from '@expo/vector-icons';
 import { useNavigation, useNavigationState } from '@react-navigation/native';
 
 
-const CheckoutFooter = () => {
+const CheckoutFooter = ({onButtonClick,total,reduction}) => {
     const navigation = useNavigation();
+
 
   return (
     <View style={styles.footerContainer}>
       <View style={styles.footerDetails}>
         <View>
           <Text style={styles.totalLabel}>Total</Text>
-          <Text style={styles.totalAmount}>CFA 5000</Text>
-          <Text style={styles.shippingInfo}>livraison: CFA 1000 (Niamey)</Text>
+          <Text style={styles.totalAmount}>CFA {total}</Text>
+          {
+            reduction>0?<Text style={styles.totalAmount}>Reduction : CFA {total}</Text>:<></>
+          }
+          {/* <Text style={styles.shippingInfo}>livraison: CFA 1000 (Niamey)</Text> */}
+          <Text style={styles.shippingInfo}>{total>1000?'shipping : 1000 Niamey':total>20000?"shipping : 1500 Niamey":"Free Bomestic shipping"}</Text>
         </View>
       </View>
       <View style={styles.footerAction}>
-        <TouchableOpacity style={styles.buttonCheck} onPress={() => navigation.navigate("Succes")}>
+        <TouchableOpacity style={styles.buttonCheck} onPress={() => {onPress={onButtonClick}}}>
         <Feather name="arrow-right-circle" size={24} color="white" />
           <Text style={styles.buttonText}>Passer la commande</Text>
         </TouchableOpacity>
@@ -38,7 +43,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: "100%",
     backgroundColor: "#f8f9fa",
-    padding: 16, 
+    padding: 16,
     borderTopWidth: 1,
     borderColor: '#ddd',
     shadowColor: "#000",

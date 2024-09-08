@@ -50,8 +50,6 @@ import { API_URL } from "@env";
 
 const Stack = createNativeStackNavigator();
 
-// const BackendUrl = process.env.REACT_APP_Backend_Url;
-console.log(API_URL);
 
 export default function App() {
   const [isAuthChecked, setIsAuthChecked] = useState(false);
@@ -95,7 +93,7 @@ export default function App() {
         <NavigationContainer>
           {isAuthChecked ? (
             <Stack.Navigator
-              initialRouteName="Homme"
+              initialRouteName={isAuthenticated?"Home":"Login"}
               screenOptions={{ headerShown: false }}
             >
               <Stack.Screen name="Login" component={LogIn} />

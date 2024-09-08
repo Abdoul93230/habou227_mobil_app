@@ -44,6 +44,7 @@ export const getProducts_Commentes = () => async (dispatch) => {
   try {
     const response = await axios.get(`${BackendUrl}/getAllCommenteProduit`);
     dispatch(setProducts_Commentes(response.data));
+    // console.log(response.data)
   } catch (error) {
     console.log(error);
   }

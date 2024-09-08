@@ -28,7 +28,8 @@ function shufflee(array) {
   }
   return shuffled;
 }
-const DetailProduitMain = ({produit,chgColor, chgTail,id}) => {
+const DetailProduitMain = ({produit,chgColor, chgTail,id,Allcommente}) => {
+
   const flatListRef = useRef(null);
   const [selectedImageIds, setSelectedImageIds] = useState([]);
   const [selectedImageURL, setSelectedImage] = useState(null);
@@ -46,7 +47,7 @@ const DetailProduitMain = ({produit,chgColor, chgTail,id}) => {
   const [taille, setTaille] = useState(null);
   const [nbrCol, setNbrCol] = useState(null);
   const [commente, setCommente] = useState("");
-  const [Allcommente, setAllCommente] = useState([]);
+  // const [Allcommente, setAllCommente] = useState([]);
   const pan = useRef(new Animated.ValueXY()).current;
   const DATA_Types = useSelector((state) => state.products.types);
   const DATA_Categories = useSelector((state) => state.products.categories);
@@ -127,33 +128,28 @@ const DetailProduitMain = ({produit,chgColor, chgTail,id}) => {
   }, [produit]);
 
 
-  useEffect(() => {
 
-
-    axios
-      .get(`${API_URL}/getAllCommenteProduitById/${id}`)
-      .then((coments) => {
-        setAllCommente(coments.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
 
 
   const selectRandomComments = (comments, maxCount) => {
-    // Vérifie si le nombre de commentaires disponibles est inférieur ou égal à maxCount
-    if (comments.length <= maxCount) {
+ if(comments){
+     // Vérifie si le nombre de commentaires disponibles est inférieur ou égal à maxCount
+     if ([comments].length <= maxCount) {
       return comments; // Retourne tous les commentaires disponibles
     }
 
-    const shuffled = comments.sort(() => 0.5 - Math.random()); // Mélange les commentaires de manière aléatoire
+   if([comments].length>0){
+    const shuffled = [comments].sort(() => 0.5 - Math.random()); // Mélange les commentaires de manière aléatoire
     return shuffled.slice(0, maxCount); // Sélectionne les premiers maxCount commentaires
+   }
+ }else{
+  return []
+ }
+
   };
 
   // Utilise la fonction selectRandomComments pour obtenir une liste de commentaires aléatoires
   const randomComments = selectRandomComments(Allcommente, 10);
-
   const handleDetailsPress = () => {
     setActiveButton('details'); // Met à jour l'état du bouton actif
     // Alert.alert('Details', 'Afficher les détails du produit.');

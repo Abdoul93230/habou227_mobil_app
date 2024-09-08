@@ -1,11 +1,58 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState,forwardRef, useImperativeHandle } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Alert, Image, Modal, TextInput, TouchableWithoutFeedback, Platform } from 'react-native';
 import { Feather, EvilIcons, Ionicons } from '@expo/vector-icons';
 import Items from "../../image/macbook cote.png";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation , useNavigationState} from '@react-navigation/native';
+import { API_URL } from "@env";
+import axios from 'axios';
+import { useSelector } from 'react-redux';
+import Toast from 'react-native-toast-message';
 
-const CheckoutMain = () => {
+const CheckoutMain = forwardRef (({chgTotal,chgReduction},ref)=>{
+  const [user, setUser] = useState(null);
+  const [codeValide, setCodeValide] = useState(null);
+  const [produits, setProduits] = useState(null);
+  const [produitIds, setProduitIds] = useState(null);
+  const [Vide, setVide] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [promoCode, setPromoCode] = useState('');
+  const [nom, setNom] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [region, setRegion] = useState("");
+  const [Quartier, setQuartier] = useState("");
+  const [plus, setPlus] = useState("");
+  const [choix, setChoix] = useState("");
+  const [numeroCard, setNumeroCard] = useState("");
+  const [cvc, setCvc] = useState("");
+  const [numero, setNumero] = useState("");
+  const [operateur, setOperateur] = useState("");
+  const DATA_Products = useSelector((state) => state.products.data);
+  let total = 0;
+  const navigation = useNavigation();
+  const handleAlert = (message) => {
+    Toast.show({
+      type: 'success',
+      text1: message,
+      position: 'top',
+      visibilityTime: 3000,
+      autoHide: true,
+      bottomOffset: 40,
+    });
+  };
+
+  const handleAlertwar = (message) => {
+    Toast.show({
+      type: 'error',
+      text1: message,
+      position: 'top',
+      visibilityTime: 3000,
+      autoHide: true,
+      bottomOffset: 40,
+    });
+  };
 
   const handleButtonPress = () => {
     Alert.alert("Voir les données", "Étudiant\n+227 85822480\nCodeloccol\ndelomodibo@gmail.com\n+227 85822480");
@@ -13,9 +60,396 @@ const CheckoutMain = () => {
 
   const handleApplyPromoCode = () => {
     // Logic to apply the promo code
-    Alert.alert("Code promotionnel", `Le code ${promoCode} a été appliqué!`);
-    setModalVisible(false);
+    setLoading(true)
+
+    if (promoCode.length === 0) {
+      setLoading(false)
+      handleAlertwar("code invalide.");
+      setModalVisible(!modalVisible);
+      return;
+    }
+    // setRond(true)
+    // const encodedHashedCode = encodeURIComponent(codePro);
+    axios
+      .get(`${API_URL}/getCodePromoByHashedCode`, {
+        params: {
+          hashedCode: promoCode,
+        },
+      })
+      .then((code) => {
+        // console.log(code);
+        setLoading(false)
+        if (code.data.data.isValide) {
+          setCodeValide(code.data.data);
+          chgReduction(code.data.data.prixReduiction)
+          setModalVisible(!modalVisible);
+          handleAlert('Code Appliquer')
+        } else {
+          handleAlertwar("Ce code la est expirer.");
+          setModalVisible(!modalVisible);
+        }
+      })
+      .catch((error) => {
+        setLoading(false)
+        handleAlertwar("Ce code de promo n'exite pas");
+        setModalVisible(!modalVisible);
+      });
   };
+
+
+  useEffect(() => {
+    // setLoading(true);
+    const fetchData = async () => {
+      try {
+        const jsonValue = await AsyncStorage.getItem('userEcomme');
+        const userData = jsonValue != null ? JSON.parse(jsonValue) : null;
+        setUser(userData)
+        if(userData){
+          setUser(userData);
+          axios
+              .get(`${API_URL}/getAddressByUserKey/${userData.id}`)
+              .then((shippingAd) => {
+                setEmail(shippingAd.data.address.email);
+                setNom(shippingAd.data.address.name);
+                setPhone(shippingAd.data.address.numero);
+                setQuartier(shippingAd.data.address.quartier);
+                setRegion(shippingAd.data.address.region);
+                setPlus(shippingAd.data.address.description);
+              })
+              .catch((error) => {
+                console.log(error.response);
+              });
+
+            axios
+              .get(`${API_URL}/getMoyentPaymentByClefUser/${userData.id}`)
+              .then((res) => {
+                if (res.data.paymentMethod.type) {
+                  setChoix(res.data.paymentMethod.type);
+                }
+                if (res.data.paymentMethod.numeroCard) {
+                  setNumeroCard(res.data.paymentMethod.numeroCard);
+                }
+                if (res.data.paymentMethod.cvc) {
+                  setCvc(res.data.paymentMethod.cvc);
+                }
+                if (res.data.paymentMethod.phone) {
+                  setNumero(res.data.paymentMethod.phone);
+                }
+                if (res.data.paymentMethod.operateur) {
+                  setOperateur(res.data.paymentMethod.operateur);
+                }
+              })
+              .catch((error) => {console.log(error.response);});
+        }
+
+      } catch (error) {
+        // setLoading(false);
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const calculateTotal = (products) => {
+    let total = 0;
+    products.forEach((product) => {
+      const productData = DATA_Products?.find((item) => item._id === product.id);
+      if (productData) {
+        const price = productData.prixPromo > 0 ? productData.prixPromo : productData.prix;
+        total += price * product.quantity;
+      }
+    });
+    chgTotal(total);
+    return total;
+  };
+
+
+  const incrementQuantity = (index) => {
+    const updatedProducts = [...produits];
+    updatedProducts[index].quantity += 1;
+    setProduits(updatedProducts);
+    AsyncStorage.setItem('panier', JSON.stringify(updatedProducts));
+    calculateTotal(updatedProducts);
+  };
+
+  const decrementQuantity = (index) => {
+    const updatedProducts = [...produits];
+
+    if (updatedProducts[index].quantity > 1) {
+      updatedProducts[index].quantity -= 1;
+      setProduits(updatedProducts);
+      AsyncStorage.setItem('panier', JSON.stringify(updatedProducts));
+      calculateTotal(updatedProducts);
+    } else {
+      updatedProducts.splice(index, 1); // Supprimer le produit du panier
+      handleAlertwar('Produit supprimé !');
+      setProduits(updatedProducts);
+
+      // Vérifier si le panier est vide après la suppression
+      if (updatedProducts.length === 0) {
+        AsyncStorage.removeItem('panier'); // Supprimer l'objet du localStorage
+      } else {
+        AsyncStorage.setItem('panier', JSON.stringify(updatedProducts));
+      }
+      calculateTotal(updatedProducts);
+    }
+  };
+
+  useEffect(() => {
+    const getPanier = async () => {
+      try {
+        const local = await AsyncStorage.getItem("panier");
+        if (local && local.length>0) {
+          const parsedLocal = JSON.parse(local);
+          setProduits(parsedLocal);
+          const a = parsedLocal.map((para) => para.id);
+          setProduitIds(a);
+          calculateTotal(parsedLocal);
+        } else {
+          setProduits(null);
+          setVide("Aucune produit sélectionné, veuillez vous rendre dans la section Orders pour vos commandes !");
+        }
+      } catch (error) {
+        console.error("Error fetching panier from AsyncStorage", error);
+      }
+    };
+
+    getPanier();
+  }, []);
+
+
+  const removeProduct = (index) => {
+    const updatedProducts = [...produits];
+    updatedProducts.splice(index, 1); // Supprimer le produit du panier
+    handleAlertwar('Produit supprimé !');
+    setProduits(updatedProducts);
+
+    // Vérifier si le panier est vide après la suppression
+    if (updatedProducts.length === 0) {
+      AsyncStorage.removeItem('panier'); // Supprimer l'objet du localStorage
+    } else {
+      AsyncStorage.setItem('panier', JSON.stringify(updatedProducts));
+    }
+    calculateTotal(updatedProducts);
+  };
+
+// //////////////////////////////////////////////////////////////////////////////////////////
+function generateUniqueID() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0"); // Ajoute un zéro au début si le mois est < 10
+  const day = String(now.getDate()).padStart(2, "0"); // Ajoute un zéro au début si le jour est < 10
+  const hours = String(now.getHours()).padStart(2, "0"); // Ajoute un zéro au début si l'heure est < 10
+  const minutes = String(now.getMinutes()).padStart(2, "0"); // Ajoute un zéro au début si la minute est < 10
+  const seconds = String(now.getSeconds()).padStart(2, "0"); // Ajoute un zéro au début si la seconde est < 10
+
+  // Concatène les différentes parties pour former l'identifiant unique
+  const uniqueID = `${year}${month}${day}${hours}${minutes}${seconds}`;
+
+  return uniqueID;
+}
+// //////////////////////////////////////////////////////////////////////////////////////////
+
+useImperativeHandle(ref,()=>({
+
+
+   Plasser : async() => {
+    console.log('cliker')
+    const local = await AsyncStorage.getItem("panier");
+
+    setLoading(true);
+    if (local=== null || JSON.parse(local)?.length === 0) {
+      handleAlertwar("Aucun produit n'est selectionner.");
+      setLoading(false);
+      // navigue('/home')
+      navigation.navigate('Home')
+      return;
+    }
+    if (phone?.length <= 0) {
+      setLoading(false);
+      // navigue("/More/shipping_address?fromCart=true");
+      navigation.navigate("Livraison Page")
+      return;
+    }
+    if (choix?.length <= 0) {
+      setLoading(false);
+      // navigue("/More/payment_method?fromCart=true");
+      navigation.navigate("Paiement Page")
+
+      return;
+    }
+
+    if (local) {
+      const pane = JSON.parse(local);
+      let prod = [];
+      for (let i = 0; i < produits.length; i++) {
+        let ob = {
+          produit: produits[i]?.id,
+          quantite: produits[i]?.quantity,
+          tailles: produits[i]?.sizes,
+          couleurs: produits[i]?.colors,
+        };
+        prod.push(ob);
+      }
+      let data = {
+        clefUser: user.id,
+        nbrProduits: prod,
+        prix: total,
+      };
+      if (codeValide) {
+        if (codeValide.isValide) {
+          data.codePro = true;
+          data.idCodePro = codeValide?._id;
+        }
+      }
+
+      // console.log(data);
+      if (choix.length > 0) {
+        const uniqueID = generateUniqueID();
+        const dataToSend = {
+          name: user?.name,
+          currency: "XOF",
+          country: "NE",
+          total: total ? total : "",
+          transaction_id: uniqueID,
+          choix: choix,
+          numeroCard: numeroCard,
+          phone: numero,
+        };
+        data.reference = uniqueID;
+
+        if (
+          choix === "Visa" ||
+          choix === "Master Card" ||
+          choix === "Mobile Money"
+        ) {
+          axios
+            .post(`${API_URL}/payments`, dataToSend)
+            .then((response) => {
+              const ref = response.data.data.reference;
+              handleAlert("success");
+              axios
+                .get(`${BackendUrl}/payments/`)
+                .then((res) => {
+                  // setAllPayment(res.data.data);
+
+                  if (
+                    res.data.data.find((item) => item.reference === ref)
+                      .status != "Failed"
+                    // ||
+                    // res.data.data.find((item) => item.reference === ref)
+                    //   .status != "Initiated"
+                  ) {
+                    axios
+                      .post(`${API_URL}/createCommande`, data)
+                      .then(async(resp) => {
+                        handleAlert(resp.data.message);
+                        setLoading(false);
+                        // localStorage.removeItem("panier");
+                        await AsyncStorage.removeItem('panier');
+                        if (codeValide) {
+                          if (codeValide.isValide) {
+                            axios
+                              .put(`${API_URL}/updateCodePromo`, {
+                                codePromoId: codeValide._id,
+                                isValide: false,
+                              })
+                              .then(() => {
+                                // console.log("fait")
+                              })
+                              .catch((error) => console.log(error));
+                          }
+                        }
+                        // navigation.navigate("Cart")
+                        navigation.navigate("Succes")
+                      })
+                      .catch((error) => {
+                        setLoading(false);
+                        console.log("errrr", error);
+                      });
+                    console.log("Réponse de l'API:", response);
+                  } else {
+                    setLoading(false);
+                    handleAlertwar(
+                      "le payment na pas pu etre effectuer veuiller ressayer !"
+                    );
+                    return;
+                  }
+                })
+                .catch((error) => {
+                  setLoading(false);
+                  console.log(error);
+                });
+            })
+            .catch((error) => {
+              setLoading(false);
+              console.log(
+                "Erreur lors de la requête:",
+                error.response ? error.response.data : error.message,
+                error
+              );
+            });
+        } else if (choix === "Payment a domicile") {
+          axios
+            .post(`${API_URL}/createCommande`, data)
+            .then(async(res) => {
+              handleAlert(res.data.message);
+              setLoading(false);
+              await AsyncStorage.removeItem('panier');
+              if (codeValide) {
+                if (codeValide.isValide) {
+                  axios
+                    .put(`${API_URL}/updateCodePromo`, {
+                      codePromoId: codeValide._id,
+                      isValide: false,
+                    })
+                    .then(() => {
+                      setLoading(false);
+                      // console.log("fait")
+                    })
+                    .catch((error) => {
+                      setLoading(false);
+                      console.log(error);
+                    });
+                }
+              }
+              // navigation.navigate("Cart")
+              navigation.navigate("Succes")
+            })
+            .catch((error) => {
+              setLoading(false);
+              console.log("errrr", error);
+            });
+        }
+      } else {
+        setLoading(false);
+        handleAlertwar("les infos du payment ne sont pas encore mis");
+        return;
+      }
+    }
+  }
+
+
+
+}))
+
+// //////////////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+if (loading) {
+  return (
+    <View style={styles.loadingContainer}>
+      <ActivityIndicator size="large" color="#FF6A69" />
+      <Text style={styles.loadingText}>Chargement...</Text>
+    </View>
+  );
+}
+
+
 
   return (
     <View style={styles.CheckoutMain}>
@@ -23,64 +457,96 @@ const CheckoutMain = () => {
       <Text style={styles.paraMain}>Adresse de livraison</Text>
       <View style={styles.card}>
         <View style={styles.donner}>
-          <Text style={styles.para}>Name : Étudiant</Text>
+          <Text style={styles.para}>Name : {nom} </Text>
         </View>
         <View style={styles.donner}>
-          <Text style={styles.para}>Region : Niamey</Text>
+          <Text style={styles.para}>Region : {region} </Text>
         </View>
         <View style={styles.donner}>
-          <Text style={styles.para}>Quartier : Codeloccol</Text>
+          <Text style={styles.para}>Quartier : {Quartier} </Text>
         </View>
         <View style={styles.donner}>
-          <Text style={styles.para}>Email : delomodibo@gmail.com</Text>
+          <Text style={styles.para}>Email : {email} </Text>
         </View>
         <View style={styles.donner}>
-          <Text style={styles.para}>Tel : +227 85822480</Text>
+          <Text style={styles.para}>Tel : {phone} </Text>
         </View>
       </View>
-      <TouchableOpacity style={styles.button} onPress={handleButtonPress}>
+      <TouchableOpacity style={styles.button} onPress={()=>navigation.navigate("Livraison Page")}>
         <Text style={styles.buttonText}>Voir les données</Text>
       </TouchableOpacity>
-      
-      <View style={styles.paymentContainer}>
-        <Text style={styles.paymentText}>Mode de paiement</Text>
-        <TouchableOpacity>
-          <View style={styles.cardMoney}>
-            <Feather name="credit-card" size={24} color="#FF6A69" />
-            <Text style={styles.paraMoney}>Mobile Money<Text> +227 85822480</Text></Text>
-            <View style={Platform.OS === 'ios' ? styles.IconCircle : styles.IconCircle2}>
-              <EvilIcons name="arrow-right" size={30} color="#fff" style={Platform.OS === 'ios' ? styles.iOS : styles.android} />
-            </View>
-          </View>
-        </TouchableOpacity>
-      </View>
 
-      {[1, 2, 3, 4].map((item, index) => (
-        <View key={index} style={styles.cardItem}>
+      <View style={styles.paymentContainer}>
+      <Text style={styles.paymentText}>Mode de paiement</Text>
+      <TouchableOpacity onPress={()=>navigation.navigate("Paiement Page")} >
+        <View style={styles.cardMoney}>
+          <Feather name="credit-card" size={24} color="#FF6A69" />
+          <Text style={styles.paraMoney}>
+            {choix}
+            {choix === "Mobile Money" ? ` ${numero}` : ""}
+            {choix === "master Card" || choix === "Visa"
+              ? ` ending **${String(numeroCard).slice(-2)}`
+              : ""}
+            {choix.length <= 0
+              ? " veuillez configurer votre moyen de paiement"
+              : ""}
+          </Text>
+          <View style={Platform.OS === 'ios' ? styles.IconCircle : styles.IconCircle2}>
+            <EvilIcons name="arrow-right" size={30} color="#fff" />
+          </View>
+        </View>
+      </TouchableOpacity>
+    </View>
+{/* {console.log(produits.length)} */}
+      {produits?.map((item, index) => {
+        if (item.quantity === 0) {
+          return null; // Ne pas afficher le produit si la quantité est 0
+        }
+        const product = DATA_Products?.find((iteme) => iteme._id === item.id);
+
+        if (!product) {
+          return null; // Ne pas afficher le produit si les données sont manquantes
+        }
+
+        const price = product.prixPromo > 0 ? product.prixPromo : product.prix;
+        total += price * item.quantity;
+
+        return (
+          <View key={index} style={styles.cardItem}>
           <View style={styles.cardItemContainer}>
             <View style={styles.circleItem}>
-              <Image source={Items} style={styles.image} />
+              <Image source={{uri: product.image1}} style={styles.image} />
             </View>
             <View style={styles.itemInfo}>
-              <Text style={styles.nike}>Nike air</Text>
-              <Text style={styles.CFAPrix}>CFA 11000</Text>
+              <Text style={styles.nike}>{product.name.slice(0, 20)}...</Text>
+              {/* <Text style={styles.CFAPrix}>CFA 11000</Text> */}
+              {product.prixPromo > 0 ? (
+                <>
+                  {/* <Text style={styles.panierText33}>cfa {product.prix}</Text> */}
+                  <Text style={styles.CFAPrix}>CFA {product.prixPromo}</Text>
+                </>
+              ) : (
+                <Text style={styles.CFAPrix}>CFA {product.prix}</Text>
+              )}
             </View>
-       
+
               <View style={styles.quantityContainer}>
-                <TouchableOpacity style={styles.IconCircle}>
+                <TouchableOpacity onPress={() => incrementQuantity(index)} style={styles.IconCircle}>
                   <EvilIcons name="plus" size={30} color="#FFF" style={Platform.OS === 'ios' ? styles.iOS : styles.android} />
                 </TouchableOpacity>
-                <Text style={styles.quantityText}>1</Text>
-                <TouchableOpacity style={styles.IconCircle}>
+                <Text style={styles.quantityText}>{item.quantity}</Text>
+                <TouchableOpacity style={styles.IconCircle} onPress={() => decrementQuantity(index)}>
                   <EvilIcons name="minus" size={30} color="#fff" style={Platform.OS === 'ios' ? styles.iOS : styles.android}/>
                 </TouchableOpacity>
               </View>
-          
-           
+
+
           </View>
         </View>
-      ))}
-      
+        )
+      }
+      )}
+
       <TouchableOpacity style={styles.proMo} onPress={() => setModalVisible(true)}>
         <View style={styles.cardMoney}>
           <Feather name="credit-card" size={24} color="#FF6A69" />
@@ -112,12 +578,12 @@ const CheckoutMain = () => {
             </TouchableOpacity>
           </View>
         </View>
-        </TouchableWithoutFeedback> 
-    
+        </TouchableWithoutFeedback>
+
       </Modal>
     </View>
   );
-}
+})
 
 export default CheckoutMain;
 
@@ -341,5 +807,11 @@ const styles = StyleSheet.create({
     color: '#FFF',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f5f5f5', // Fond de la page de chargement
   },
 });

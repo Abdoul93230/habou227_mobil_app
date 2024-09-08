@@ -10,14 +10,17 @@ import {AntDesign} from '@expo/vector-icons';
 import { useRoute } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import Toast from 'react-native-toast-message';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const ProductDet = () => {
   const route = useRoute();
   const { id } = route.params;
+  const [send, setsSend] = useState(false);
   const [isCommentBoxVisible, setIsCommentBoxVisible] = useState(false);
   const [allCategories, setAllCategories] = useState([]);
   const [allProducts, setAllProducts] = useState([]);
   const [rating, setRating] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
   const [VP, setVp] = useState(null);
   const [color, setColor] = useState(null);
   const [taille, setTaille] = useState(null);
@@ -27,6 +30,7 @@ const ProductDet = () => {
   const DATA_Types = useSelector((state) => state.products.types);
   const DATA_Categories = useSelector((state) => state.products.categories);
   const DATA_Products = useSelector((state) => state.products.data);
+  const DATA_Commentes = useSelector((state) => state.products.products_Commentes);
   const scrollViewRef = useRef(null);
   const handleRating = (rate) => {
     setRating(rate);
@@ -46,13 +50,41 @@ const ProductDet = () => {
     setLoading(true);
     const fetchData = async () => {
       try {
-        const res = await axios.get(`${API_URL}/Product/${id}`);
-        setVp(res.data.data);
+        const jsonValue = await AsyncStorage.getItem('userEcomme');
+        const userData = jsonValue != null ? JSON.parse(jsonValue) : null;
+        if(userData){
+          setUser(userData);
+        }
+        // const res = await axios.get(`${API_URL}/Product/${id}`);
+        // setVp(res.data.data);
+        setVp(DATA_Products.find((item)=>item._id===id));
+
         setLoading(false);
         // Défilement vers le haut lorsque les données sont chargées
         if (scrollViewRef.current) {
           scrollViewRef.current.scrollTo({ y: 0, animated: true });
         }
+
+
+
+
+
+          axios
+            .get(`${API_URL}/getAllCommenteProduitById/${id}`)
+            .then((coments) => {
+              setAllCommente(coments.data);
+              // setAllCommente(DATA_Commentes?.filter(item=>item.clefProduct===id)?DATA_Commentes?.filter(item=>item.clefProduct===id):[]);
+
+              console.log()
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+
+
+
+
+
       } catch (error) {
         setLoading(false);
         console.log(error);
@@ -60,7 +92,7 @@ const ProductDet = () => {
     };
 
     fetchData();
-  }, [id]); // Dépendance sur `id` pour déclencher l'effet
+  }, [id]);
 
 
   const handleAlert = (message) => {
@@ -88,16 +120,21 @@ const ProductDet = () => {
 
   const envoyer = () => {
     const regexNumber = /^[0-5]$/;
+    setsSend(true)
+   if(user){
     if (commente.trim().length < 3) {
       handleAlertwar("votre commentaire doit contenire au moin 3 carracteres.");
+      setsSend(false)
       return;
     }
     if (!rating) {
       handleAlertwar("veuiller noter ce produit s'il vous plait.");
+      setsSend(false)
       return;
     }
     if (!regexNumber.test(rating.toString())) {
       handleAlertwar("forma non valid de 1 a 5 s'il vous plait!");
+      setsSend(false)
       return;
     }
     axios
@@ -105,30 +142,36 @@ const ProductDet = () => {
         description: commente,
         clefProduct: VP?._id,
         clefType: VP?.ClefType,
-        etoil: etoil,
+        etoil: rating,
         userName: user.name,
       })
       .then((resp) => {
-        alert(resp.data.message);
-        setPoppup(false);
-        setEtoil(null);
+        handleAlert(resp.data.message);
+        setIsCommentBoxVisible(false);
+        setRating(null);
         setCommente("");
 
         axios
-          .get(`${API_URL}/getAllCommenteProduitById/${params.id}`)
+          .get(`${API_URL}/getAllCommenteProduitById/${id}`)
           .then((coments) => {
             setAllCommente(coments.data);
-            // console.log(coments.data);
+            setsSend(false)
           })
           .catch((error) => {
-            alert(error.response.data);
+            handleAlertwar(error.response.data);
+            setsSend(false)
             console.log(error);
           });
       })
       .catch((error) => {
-        alert(error.response.data);
+        handleAlertwar(error.response.data);
+        setsSend(false)
         console.log(error);
       });
+   }else{
+    handleAlertwar("veuiller vous connecter ou creer un compte.")
+    return;
+   }
   };
 
 
@@ -146,7 +189,7 @@ const ProductDet = () => {
     <View style={styles.container}>
       <DetailProduit produit = {VP} />
       <ScrollView ref={scrollViewRef} showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollViewContent}>
-        <DetailProduitMain chgColor={chgColor} chgTail={chgTail} produit = {VP} id={id} />
+        <DetailProduitMain chgColor={chgColor} chgTail={chgTail} produit = {VP} id={id} Allcommente={Allcommente} />
       </ScrollView>
       <DetailProduitFooter produit = {VP} color={color} taille={taille} id={id} />
 
@@ -179,10 +222,18 @@ const ProductDet = () => {
           ))}
         </View>
           </View>
-          <View style={styles.btn}>
-            <Button title="Envoyer" onPress={ envoyer} />
-            <Button title="Fermer" onPress={handleCommentBoxToggle} />
-          </View>
+          {
+            send?
+              <><View style={styles.loadingContainer2}>
+              <ActivityIndicator size="large" color="#FF6A69" />
+              <Text style={styles.loadingText}>Chargement...</Text>
+            </View></>
+           :<><View style={styles.btn}>
+           <Button title="Envoyer" onPress={ envoyer} />
+           <Button title="Fermer" onPress={handleCommentBoxToggle} />
+         </View></>
+          }
+
 
         </View>
       </View>
@@ -271,6 +322,12 @@ btn: {
   alignItems: "center"
 },
 loadingContainer: {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: '#f5f5f5', // Fond de la page de chargement
+},
+loadingContainer2: {
   flex: 1,
   justifyContent: 'center',
   alignItems: 'center',
