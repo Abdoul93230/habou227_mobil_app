@@ -3,75 +3,23 @@ import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Image, FlatList
 import { EvilIcons, AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
-const SeeAll = () => {
+const SeeAll = ({cards}) => {
     const navigation = useNavigation();
     const [expandedCard, setExpandedCard] = useState(1);
+
+
+
     const toggleCard = (id) => {
         setExpandedCard(expandedCard === id ? null : id);
     };
-    const cards = [
-        {
-            id: 1,
-            title: 'Homme',
-            description: 'homme',
-            items: ['Baskette', 'Chaussures'],
-            image: require("../../image/macbook profil.png")
-        },
-         {
-            id: 2,
-            title: 'électroniques',
-            description: 'électroniques',
-            items: [
-                'Ordinateur',
-                'accessories'
-            ],
-            image: require("../../image/macbook profil.png")
-        },
-        {
-            id: 3,
-            title: 'Beauté',
-            description: 'Beauté',
-            items: [
-                'Accessories_Beauté',
-                'Accessories'
-            ],
-            image: require("../../image/macbook profil.png")
-        },
-        {
-            id: 4,
-            title: 'Tous',
-            description: 'Tous',
-            items: [
-              
-            ],
-            image: require("../../image/macbook profil.png")
-        },
-        {
-            id: 5,
-            title: 'cuisine & ustensiles',
-            description: 'cuisine & ustensiles',
-            items: [
-                'Contenants Isolants'
-            ],
-            image: require("../../image/macbook profil.png")
-        },
-        {
-            id: 6,
-            title: 'Électroménager',
-            description: 'Électroménager',
-            items: [
-                'Appareils de Cuisine'
-            ],
-            image: require("../../image/macbook profil.png")
-        },
-    ];
+
 
     const renderCard = ({ item }) => (
         <TouchableOpacity style={styles.cardMain}  onPress={() => toggleCard(item.id)}>
 
         <View style={styles.cardMainHeader}>
-            <Image 
-                source={item.image} 
+            <Image
+                source={item.image}
                 style={styles.cardImage}
                 resizeMode="cover"
             />
@@ -80,9 +28,9 @@ const SeeAll = () => {
                 <View style={styles.cardContent}>
                 <Text style={styles.cardTitle}>{item.description}</Text>
                 {item.items.map((subItem, index) => (
-                    <TouchableOpacity 
-                    key={index} 
-                    style={styles.cardLigne} 
+                    <TouchableOpacity
+                    key={index}
+                    style={styles.cardLigne}
                     onPress={() => console.log(`Voir plus pressed for ${subItem}`)}
                     >
                         <Text style={styles.cardLink}>{subItem}</Text>
@@ -93,7 +41,7 @@ const SeeAll = () => {
                 ))}
             </View>
             )}
-            
+
         </View>
         <View style={styles.cardTitleContainer}>
             <Text style={styles.cardTitle}>{item.title}</Text>
@@ -106,8 +54,8 @@ const SeeAll = () => {
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.headerText}>Toutes les catégories</Text>
-                <TouchableOpacity 
-                    style={styles.closeButton} 
+                <TouchableOpacity
+                    style={styles.closeButton}
                     onPress={() => navigation.navigate('Home')}
                 >
                     <EvilIcons name="close" size={30} color="#FF6969" />
@@ -150,7 +98,7 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
-        elevation: 5, 
+        elevation: 5,
         marginBottom: 15,
     },
     cardMainHeader: {

@@ -54,10 +54,10 @@ const SuivreCommandePage = () => {
                                     </View>
                                     <View style={styles.callActions}>
                                         <TouchableOpacity style={styles.callButton}>
-                                            <MaterialIcons name="call" size={17} color="#FF3231" />   
+                                            <MaterialIcons name="call" size={17} color="#30A08B" />   
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.callButton}>
-                                            <AntDesign name="message1" size={17} color="#FF3231" />
+                                            <AntDesign name="message1" size={17} color="#30A08B" />
                                        </TouchableOpacity>
                                     </View>
                                 </View>
@@ -135,232 +135,245 @@ const styles = StyleSheet.create({
     },
     map: {
         width: '100%',
-        height: height * 0.3, // Augmenter la hauteur pour la visibilité
+        height: height * 0.3, 
     },
     menu: {
         width: '100%',
         borderWidth: 1,
-        borderColor: '#ccc',
+        borderColor: '#B2905F',
         marginVertical: 12,
         borderRadius: 10,
         padding: 10,
-    },
-    title: {
+        backgroundColor: '#FFF',
+      },
+      title: {
         fontSize: 15,
         fontWeight: 'bold',
-        color: '#FF3231',
-    },
-    menuHead: {
+        color: '#B17236',
+      },
+      menuHead: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-    },
-    edit: {
+      },
+      edit: {
         paddingVertical: 6,
         paddingHorizontal: 12,
-        backgroundColor: '#FF3232',
+        backgroundColor: '#B17236', 
         borderRadius: 5,
-    },
-    editText: {
-        color: '#fff',
+      },
+      editText: {
+        color: '#FFF',
         fontSize: 14,
-    },
-    bgLocation: {
-        backgroundColor: '#FF3232',
+      },
+      bgLocation: {
+        backgroundColor: '#30A08B', 
         padding: 8,
         width: 40,
         height: 40,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 10,
-    },
-    menuMain: {
+      },
+      menuMain: {
         width: '100%',
         height: height * 0.3,
-    },
-    locationContainer: {
+        backgroundColor: '#F5F6F8', 
+        borderRadius: 10,
+        padding: 10,
+      },
+      locationContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-    },
-    locationText: {
+      },
+      locationText: {
         marginLeft: 10,
         fontSize: 16,
-    },
-    locationTextPara: {
+        color: '#333', 
+      },
+      locationTextPara: {
         marginLeft: 10,
         fontSize: 11,
-    },
-    ligneHori: {
+        color: '#333', 
+      },
+      ligneHori: {
         width: width * 0.01,
         height: height * 0.13,
-        backgroundColor: '#FF3232',
+        backgroundColor: '#B17236', 
         marginVertical: 0,
         marginHorizontal: 18,
-    },
-    pointContent: {
+      },
+      pointContent: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'start',
         position: 'absolute',
         width: '100%',
         top: 50,
-    },
-    point: {
+      },
+      point: {
         width: 13,
         height: 13,
         borderRadius: 50,
-        backgroundColor: '#FF3232',
-        marginHorizontal: 13.7,
+        backgroundColor: '#B17236',
+        marginHorizontal: 15.7,
         zIndex: 100,
-    },
-    imageProfile: {
+        left: 8
+      },
+      imageProfile: {
         width: 30,
         height: 30,
         borderRadius: 20,
         resizeMode: 'cover',
-    },
-    titleLivraison: {
+      },
+      titleLivraison: {
         fontWeight: 'bold',
         fontSize: 13,
-    },
-    subtitle: {
+        color: '#B17236',
+      },
+      subtitle: {
         fontSize: 11,
-    },
-    cardCall: {
+        color: '#B2905F',
+      },
+      cardCall: {
         flexDirection: 'row',
         justifyContent: "space-between",
         alignItems: "center",
         padding: 12,
-        backgroundColor: "#ccc",
+        backgroundColor: "#F9F9F9",
         width: '93%',
         borderRadius: 10,
         margin: 5,
-    },
-    callHead: {
+        borderColor: '#B2905F',
+        borderWidth: 1,
+      },
+      callHead: {
         flexDirection: 'row',
         alignItems: "center",
-    },
-    imageWrapper: {
+      },
+      imageWrapper: {
         width: 30,
         height: 30,
-    },
-    profileName: {
+      },
+      profileName: {
         fontWeight: '500',
         marginHorizontal: 7,
         fontSize: 12,
-    },
-    callActions: {
+        color: '#333', // Couleur sombre pour le nom du profil
+      },
+      callActions: {
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: "center",
-    },
-    callButton: {
+      },
+      callButton: {
         padding: 5,
-        marginHorizontal: 3,
         marginHorizontal: 3,
         backgroundColor: '#FFF',
         borderRadius: 10,
-    },
-    ligneMadame: {
+        borderColor: '#B2905F',
+        borderWidth: 1,
+      },
+      ligneMadame: {
         width: width * 0.01,
         height: '16%',
-        backgroundColor: '#8E8E8E',
+        backgroundColor: '#B2905F', // Couleur secondaire pour la ligne madame
         marginVertical: 0,
         marginHorizontal: 18,
-    },
-    contentMadame: {
+      },
+      contentMadame: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'start',
         position: 'absolute',
         width: '100%',
         top: 145,
-    },
-    pointMadame: {
+      },
+      pointMadame: {
         width: 13,
         height: 13,
         borderRadius: 50,
-        backgroundColor: '#FF3232',
-        marginHorizontal: 13.7,
+        backgroundColor: '#B17236', // Couleur principale pour les points madame
+        marginHorizontal: 15.7,
         zIndex: 130,
-    },
-    bgSucess: {
-        backgroundColor: '#8E8E8E',
+        left: 8
+      },
+      bgSucess: {
+        backgroundColor: '#30A08B', // Couleur principale pour le bouton de succès
         padding: 8,
         width: 40,
         height: 40,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 10,
-    },
-    box: {
+      },
+      box: {
         width: '100%',
         maxWidth: 600,
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: '#ddd',
-        backgroundColor: '#fff',
-        marginVertical: 12,        
-    },
-    boxHead: {
+        borderColor: '#B2905F', // Bordure de boîte
+        backgroundColor: '#FFF', // Fond blanc pour les boîtes
+        marginVertical: 12,
+      },
+      boxHead: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingHorizontal: 10,
         borderBottomWidth: 1,
-        borderColor: '#ddd',
+        borderColor: '#B2905F', // Bordure de tête de boîte
         paddingVertical: 8,
-    },
-    boxTitle: {
+      },
+      boxTitle: {
         fontSize: 20,
         fontWeight: 'bold',
-        color: '#FF3232',
-    },
-    boxContent: {
+        color: '#B17236', // Couleur principale pour le titre de la boîte
+      },
+      boxContent: {
         paddingHorizontal: 10,
         paddingVertical: 8,
-    },
-    boxMain: {
+      },
+      boxMain: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingVertical: 4,
         borderBottomWidth: 2,
-        borderColor: '#333',
-    },
-    boxItem: {
+        borderColor: '#B2905F', // Bordure principale de la boîte
+      },
+      boxItem: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingVertical: 4,
-    },
-    boxMainFooter: {
+      },
+      boxMainFooter: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingVertical: 4,
         borderTopWidth: 2,
-        borderColor: '#333',
+        borderColor: '#B2905F', // Bordure du bas de la boîte
         marginTop: 10,
-    },
-    boxTextBold: {
+      },
+      boxTextBold: {
         color: '#333',
         fontWeight: 'bold',
         flex: 1,
         textAlign: 'center',
-    },
-    boxText: {
+      },
+      boxText: {
         color: '#333',
         flex: 1,
         textAlign: 'center',
-    },
-    boxTextFoot: {
+      },
+      boxTextFoot: {
         color: '#333',
         flex: 1,
         textAlign: 'center',
         fontWeight: 'bold',
-    },
-});
+      },});
 
 export default SuivreCommandePage;
 

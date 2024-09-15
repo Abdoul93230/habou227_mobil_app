@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, TouchableOpacity, Dimensions, ScrollView } from
 import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { API_URL } from "@env";
 import { useNavigation } from '@react-navigation/native';
 const { width, height } = Dimensions.get('window');
 
@@ -21,7 +22,7 @@ const Commande = () => {
         const user = JSON.parse(jsonValue);
     setRond(true)
     axios
-      .get(`https://chagona.onrender.com/getCommandesByClefUser/${user.id}`)
+      .get(`${API_URL}/getCommandesByClefUser/${user.id}`)
       .then((res) => {
         setRond(false)
         setMyAllCommandes(res.data.commandes);
@@ -56,102 +57,102 @@ const Commande = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.commande}>Ma commande</Text>
-      <View style={styles.toucheCommande}>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={[
-              styles.btn,
-              selectedButton === 'En cours' && styles.btnSelected,
-            ]}
-            onPress={() => setSelectedButton('En cours')}
-          >
-            <Text style={styles.btnText}>
-              En cours <Text style={styles.countText}>{nbrCommandesEnCours}</Text>
-            </Text>
-          </TouchableOpacity>
-          {selectedButton === 'En cours' && (
-            <View style={styles.notifi}>
-              <Text style={styles.btnNoti}>{nbrCommandesEnCours} </Text>
-            </View>
-          )}
-        </View>
-
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={[
-              styles.btn,
-              selectedButton === 'Récus' && styles.btnSelected,
-            ]}
-            onPress={() => setSelectedButton('Récus')}
-          >
-            <Text style={styles.btnText}>
-              Récus <Text style={styles.countText}>{nbrCommandesRecues}</Text>
-            </Text>
-          </TouchableOpacity>
-          {selectedButton === 'Récus' && (
-            <View style={styles.notifi}>
-              <Text style={styles.btnNoti}>{nbrCommandesRecues}</Text>
-            </View>
-          )}
-        </View>
+    <Text style={styles.commande}>Ma commande</Text>
+    <View style={styles.toucheCommande}>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={[
+            styles.btn,
+            selectedButton === 'En cours' && styles.btnSelected,
+          ]}
+          onPress={() => setSelectedButton('En cours')}
+        >
+          <Text style={styles.btnText}>
+            En cours <Text style={styles.countText}>{nbrCommandesEnCours}</Text>
+          </Text>
+        </TouchableOpacity>
+        {selectedButton === 'En cours' && (
+          <View style={styles.notifi}>
+            <Text style={styles.btnNoti}>{nbrCommandesEnCours}</Text>
+          </View>
+        )}
       </View>
 
-      {/* Contenu de la page */}
-      <ScrollView style={styles.pageContent} showsVerticalScrollIndicator={false}>
-        {selectedButton === 'En cours' && (
-          <>
-            { myAllComande
-                ?.filter((param) => param.statusLivraison === "en cours")
-                .reverse()?.map((param, index) => (
-              <TouchableOpacity key={index} style={styles.cardNoti} onPress={() => navigation.navigate('Suivre la commande')}>
-                <View style={styles.gaucheCard}>
-                  <Text style={styles.jourText}>{getFormattedDay(new Date(param.date))}</Text>
-                  <View style={styles.produitContent}>
-                    <Text style={styles.ProduitName}>NBRS Produit</Text>
-                    <Text style={styles.ProduitNumber}>{param.nbrProduits.length} Produit</Text>
-                  </View>
-                </View>
-                <View style={styles.separator}></View>
-                <View style={styles.droiteCard}>
-                  <Text style={styles.dateText}>{formatDate(new Date(param.date))}</Text>
-                  <View style={styles.produitDroite}>
-                    <Text style={styles.ProduitName}>Prix Total</Text>
-                    <Text style={styles.ProduitNumber}>{param.prix} F CFA</Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            ))}
-          </>
-        )}
-
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={[
+            styles.btn,
+            selectedButton === 'Récus' && styles.btnSelected,
+          ]}
+          onPress={() => setSelectedButton('Récus')}
+        >
+          <Text style={styles.btnText}>
+            Récus <Text style={styles.countText}>{nbrCommandesRecues}</Text>
+          </Text>
+        </TouchableOpacity>
         {selectedButton === 'Récus' && (
-          <>
-            {myAllComande
-                ?.filter((param) => param.statusLivraison === "recu")
-                .reverse()?.map((param, index) => (
-              <View key={index} style={styles.cardNoti}>
-                <View style={styles.gaucheCard}>
-                  <Text style={styles.jourText}>{getFormattedDay(new Date(param.date))}</Text>
-                  <View style={styles.produitContent}>
-                    <Text style={styles.ProduitName}>NBRS Produit</Text>
-                    <Text style={styles.ProduitNumber}>{param.nbrProduits.length} Produit</Text>
-                  </View>
-                </View>
-                <View style={styles.separator}></View>
-                <View style={styles.droiteCard}>
-                  <Text style={styles.dateText}>{formatDate(new Date(param.date))}</Text>
-                  <View style={styles.produitDroite}>
-                    <Text style={styles.ProduitName}>Prix Total</Text>
-                    <Text style={styles.ProduitNumber}>{param.prix} F CFA</Text>
-                  </View>
+          <View style={styles.notifi}>
+            <Text style={styles.btnNoti}>{nbrCommandesRecues}</Text>
+          </View>
+        )}
+      </View>
+    </View>
+
+    {/* Contenu de la page */}
+    <ScrollView style={styles.pageContent} showsVerticalScrollIndicator={false}>
+      {selectedButton === 'En cours' && (
+        <>
+          {myAllComande
+            ?.filter((param) => param.statusLivraison === "en cours")
+            .reverse()?.map((param, index) => (
+            <TouchableOpacity key={index} style={styles.cardNoti} onPress={() => navigation.navigate('Suivre la commande')}>
+              <View style={styles.gaucheCard}>
+                <Text style={styles.jourText}>{getFormattedDay(new Date(param.date))}</Text>
+                <View style={styles.produitContent}>
+                  <Text style={styles.ProduitName}>NBRS Produit</Text>
+                  <Text style={styles.ProduitNumber}>{param.nbrProduits.length} Produit</Text>
                 </View>
               </View>
-            ))}
-          </>
-        )}
-      </ScrollView>
-    </View>
+              <View style={styles.separator}></View>
+              <View style={styles.droiteCard}>
+                <Text style={styles.dateText}>{formatDate(new Date(param.date))}</Text>
+                <View style={styles.produitDroite}>
+                  <Text style={styles.ProduitName}>Prix Total</Text>
+                  <Text style={styles.ProduitNumber}>{param.prix} F CFA</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </>
+      )}
+
+      {selectedButton === 'Récus' && (
+        <>
+          {myAllComande
+            ?.filter((param) => param.statusLivraison === "recu")
+            .reverse()?.map((param, index) => (
+            <View key={index} style={styles.cardNoti}>
+              <View style={styles.gaucheCard}>
+                <Text style={styles.jourText}>{getFormattedDay(new Date(param.date))}</Text>
+                <View style={styles.produitContent}>
+                  <Text style={styles.ProduitName}>NBRS Produit</Text>
+                  <Text style={styles.ProduitNumber}>{param.nbrProduits.length} Produit</Text>
+                </View>
+              </View>
+              <View style={styles.separator}></View>
+              <View style={styles.droiteCard}>
+                <Text style={styles.dateText}>{formatDate(new Date(param.date))}</Text>
+                <View style={styles.produitDroite}>
+                  <Text style={styles.ProduitName}>Prix Total</Text>
+                  <Text style={styles.ProduitNumber}>{param.prix} F CFA</Text>
+                </View>
+              </View>
+            </View>
+          ))}
+        </>
+      )}
+    </ScrollView>
+  </View>  
   );
 };
 
@@ -161,42 +162,42 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F5F6F8',
-    padding: width * 0.03, // Padding responsive
+    padding: width * 0.03,
   },
   commande: {
-    fontSize: width * 0.065, // Taille de police responsive
+    fontSize: width * 0.065, 
     fontWeight: 'bold',
-    color: '#515C70',
-    marginBottom: width * 0.03, // Marge responsive
+    color: '#B17236',
+    marginBottom: width * 0.03, 
   },
   toucheCommande: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center', // Centre les éléments verticalement
-    marginVertical: height * 0.02, // Marge responsive
+    alignItems: 'center',
+    marginVertical: height * 0.02, 
   },
   buttonContainer: {
     flex: 1,
-    marginHorizontal: width * 0.02, // Marge responsive
+    marginHorizontal: width * 0.02, 
   },
   btn: {
-    paddingVertical: height * 0.015, // Padding responsive
-    paddingHorizontal: width * 0.04, // Padding responsive
+    paddingVertical: height * 0.015,
+    paddingHorizontal: width * 0.04,
     borderRadius: 30,
-    backgroundColor: '#D3D3D3',
+    backgroundColor: '#B2905F',
     alignItems: 'center',
     justifyContent: 'center',
   },
   btnSelected: {
-    backgroundColor: '#FF6A69',
+    backgroundColor: '#30A08B',
   },
   btnText: {
-    fontSize: width * 0.04, // Taille de police responsive
+    fontSize: width * 0.04, 
     color: '#FFF',
     fontWeight: 'bold',
   },
   countText: {
-    fontSize: width * 0.035, // Taille de police responsive
+    fontSize: width * 0.035,
     color: '#FFF',
   },
   btnNoti: {
@@ -205,18 +206,18 @@ const styles = StyleSheet.create({
   },
   notifi: {
     position: 'absolute',
-    right: width * -0.02, // Positionnement responsive
-    top: height * -0.025, // Positionnement responsive
-    backgroundColor: '#FF6A69',
+    right: width * -0.02, 
+    top: height * -0.025,
+    backgroundColor: '#30A08B',
     borderRadius: 10,
-    paddingHorizontal: width * 0.015, // Padding responsive
-    paddingVertical: height * 0.005, // Padding responsive
+    paddingHorizontal: width * 0.015,
+    paddingVertical: height * 0.005, 
     alignItems: 'center',
     justifyContent: 'center',
   },
   pageContent: {
     flex: 1,
-    padding: width * 0.02, // Padding responsive
+    padding: width * 0.02, 
     backgroundColor: '#FFF',
     borderRadius: 10,
     shadowColor: '#000',
@@ -240,20 +241,20 @@ const styles = StyleSheet.create({
     elevation: 3,
     padding: width * 0.02,
     marginVertical: 5,
-    alignItems: 'center', // Centre les éléments verticalement
+    alignItems: 'center',
   },
   gaucheCard: {
     flex: 1,
     justifyContent: 'center',
   },
   produitContent: {
-    marginTop: 10, // Ajuste l'espacement
+    marginTop: 10,
     marginHorizontal: 20,
   },
   droiteCard: {
-    flex: 1, // Prend l'autre moitié de la largeur de la carte
+    flex: 1, 
     alignItems: 'flex-end',
-    justifyContent: 'center', // Centre le contenu verticalement
+    justifyContent: 'center',
     padding: width * 0.02,
   },
   produitDroite: {
@@ -263,29 +264,28 @@ const styles = StyleSheet.create({
   jourText: {
     fontSize: 15,
     fontWeight: 'bold',
-    color: '#515C70',
+    color: '#B17236', 
     bottom: 20
   },
   dateText: {
     fontSize: 15,
     fontWeight: 'bold',
-    color: '#515C70',
+    color: '#B17236', 
     bottom: 20
-
   },
   ProduitName: {
-    fontSize: 12,
+    fontSize: 17,
     fontWeight: 'bold',
-    color: '#515C70',
+    color: '#30A08B', 
   },
   ProduitNumber: {
-    fontSize: 12,
-    color: '#515C70',
+    fontSize: 15,
+    color: '#30A08B', 
   },
   separator: {
     width: 1,
-    backgroundColor: '#555',
-    height: '100%', // Ajuste la hauteur pour bien s'adapter à la carte
+    backgroundColor: '#B17236',
+    height: '100%',
     marginHorizontal: width * 0.02,
   },
 });

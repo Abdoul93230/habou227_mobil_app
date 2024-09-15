@@ -1,4 +1,4 @@
-import { Platform,StyleSheet, Text, View, TouchableOpacity, Modal, TextInput, TouchableWithoutFeedback } from 'react-native';
+import { Platform,StyleSheet, Text, View, TouchableOpacity, Modal, TextInput, TouchableWithoutFeedback,Linking } from 'react-native';
 import React, { useState } from 'react';
 import { FontAwesome, Ionicons, Entypo, Feather } from '@expo/vector-icons';
 import Toast from 'react-native-toast-message';
@@ -115,20 +115,79 @@ const DetailProduitFooter = ({produit,color,taille,id}) => {
     setModalVisible(!modalVisible);
   };
 
+
+
+
+  // Fonction pour gérer le clic sur le bouton de discussion
+  const handleChatButtonClick = (
+    productName,
+    productLink,
+    phoneNumber,
+    productImageURL
+  ) => {
+    // Vérification des données du produit et du numéro de téléphone
+    if (!productName || !phoneNumber) {
+      console.error(
+        "Les informations du produit et le numéro de téléphone sont requis."
+      );
+      return;
+    }
+
+    // Création du message pré-rempli avec les informations du produit
+    let message = `Bonjour, je suis intéressé(e) par le produit ${productName}.\n`;
+
+    // Si une URL d'image est fournie, l'ajouter au message
+    if (productImageURL) {
+      message += `Voici le lien vers l'image : \n\n ${productImageURL} \n`;
+    }
+    // if (productLink) {
+    //   message += `et le lien vers les détails du produit\n\n${productLink}`;
+    // }
+
+    // Encodage du message pour l'URL
+    const encodedMessage = encodeURIComponent(message);
+
+    // Création de l'URL WhatsApp avec le numéro de téléphone et le message pré-rempli
+    const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+
+    // Utiliser Linking pour ouvrir WhatsApp
+    Linking.openURL(whatsappURL).catch((err) =>
+      console.error("Une erreur s'est produite lors de l'ouverture de WhatsApp:", err)
+    );
+  };
+
+  // Exemple d'utilisation dans un composant
+  const Discuite = () => {
+    const currentURL = 'lien_a_remplacer_avec_la_valeur_appropriee'; // Remplacez ceci par l'URL actuelle si nécessaire
+
+    // Appel de la fonction de chat avec les données du produit
+    handleChatButtonClick(
+      produit?.name ?? "nom",
+      currentURL,
+      '22787727501',
+      produit?.image1
+    );
+  };
+
+
+
+
+
+
   return (
     <View style={Platform.OS === 'ios' ?styles.containerFooter: styles.containerFooter2}>
-      <TouchableOpacity style={styles.button} onPress={toggleModal}>
+      {/* <TouchableOpacity style={styles.button} onPress={toggleModal}>
         <Entypo name="share" size={20} color="#FF6A69" />
         <Text style={styles.buttonText}>Partagez ceci</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
-      <TouchableOpacity style={styles.buttonAddWhatsp}>
+      <TouchableOpacity style={styles.buttonAddWhatsp} onPress={Discuite}>
         <Ionicons name="logo-whatsapp" size={20} color="#27AA19" />
         <Text style={styles.buttonTextAddWhatsp}>Discuter</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.buttonAddWhatsp} onPress={AddProduct}>
-        <FontAwesome name="shopping-cart" size={20} color="#F0F0F0" />
+        <FontAwesome name="shopping-cart" size={20} color="#30A08B" />
         <Text style={styles.buttonTextAddWhatsp}>Ajouter au panier</Text>
       </TouchableOpacity>
 
@@ -247,12 +306,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    height: 100,
+    height: 78,
     paddingHorizontal: 10,
     borderColor: "#ccc",
-    borderTopWidth: 1,
     elevation: 5,
-    backgroundColor: "#c1c1c1ad",
+    backgroundColor: "#F5F6F8",
   },
   containerFooter2: {
     position: 'absolute',
@@ -262,26 +320,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    height: 100,
+    height: 78,
     paddingHorizontal: 10,
     borderColor: "#ccc",
     borderTopWidth: 1,
     elevation: 5,
-    backgroundColor: "#DDDDDD",
+    backgroundColor: "rgba(255, 153, 0, 0.56)",
   },
   button: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#B2905F",
     flexDirection: 'row',
     alignItems: 'center',
     padding: 7,
     borderRadius: 30,
   },
   buttonAddWhatsp: {
-    backgroundColor: "#FF6A69",
+    backgroundColor: "#B2905F",
     flexDirection: 'row',
+    justifyContent: "center",
     alignItems: 'center',
     padding: 7,
     borderRadius: 30,
+    width: "40%",
   },
   buttonText: {
     textTransform: "uppercase",

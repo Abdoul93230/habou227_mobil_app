@@ -1,20 +1,22 @@
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { AntDesign } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 const Succes = () => {
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <View style={styles.succes}>
         <AntDesign name="check" size={40} color="#FF6A69" />
-      </View> 
+      </View>
       <Text style={styles.text}>Commande passée !</Text>
       <Text style={styles.paragraphe}>
         Votre commande a été passée avec succès. Pour
-        plus de détails, consultez la page de toutes 
+        plus de détails, consultez la page de toutes
         mes commandes sous l'onglet Profil.
       </Text>
-      <TouchableOpacity style={styles.btnOrder}>
+      <TouchableOpacity style={styles.btnOrder} onPress={()=>navigation.navigate('Commande Page')} >
         <Text style={styles.commandes}>Mes commandes</Text>
         <View style={styles.right}>
           <AntDesign name="right" size={24} color="black" />

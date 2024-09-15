@@ -4,19 +4,23 @@ import DetailProduit from "../compoments/detailProduit/DetailProduit";
 import DetailProduitFooter from '../compoments/detailProduit/DetailProduitFooter';
 import DetailProduitMain from '../compoments/detailProduit/DetailProduitMain';
 import LoadingIndicator from './LoadingIndicator';
+import { API_URL } from "@env";
 import axios from 'axios';
 import {AntDesign} from '@expo/vector-icons';
 import { useRoute } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import Toast from 'react-native-toast-message';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const ProductDet = () => {
   const route = useRoute();
   const { id } = route.params;
+  const [send, setsSend] = useState(false);
   const [isCommentBoxVisible, setIsCommentBoxVisible] = useState(false);
   const [allCategories, setAllCategories] = useState([]);
   const [allProducts, setAllProducts] = useState([]);
   const [rating, setRating] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
   const [VP, setVp] = useState(null);
   const [color, setColor] = useState(null);
   const [taille, setTaille] = useState(null);
@@ -26,6 +30,7 @@ const ProductDet = () => {
   const DATA_Types = useSelector((state) => state.products.types);
   const DATA_Categories = useSelector((state) => state.products.categories);
   const DATA_Products = useSelector((state) => state.products.data);
+  const DATA_Commentes = useSelector((state) => state.products.products_Commentes);
   const scrollViewRef = useRef(null);
   const handleRating = (rate) => {
     setRating(rate);
@@ -45,13 +50,41 @@ const ProductDet = () => {
     setLoading(true);
     const fetchData = async () => {
       try {
-        const res = await axios.get(`https://chagona.onrender.com/Product/${id}`);
-        setVp(res.data.data);
+        const jsonValue = await AsyncStorage.getItem('userEcomme');
+        const userData = jsonValue != null ? JSON.parse(jsonValue) : null;
+        if(userData){
+          setUser(userData);
+        }
+        // const res = await axios.get(`${API_URL}/Product/${id}`);
+        // setVp(res.data.data);
+        setVp(DATA_Products.find((item)=>item._id===id));
+
         setLoading(false);
         // Défilement vers le haut lorsque les données sont chargées
         if (scrollViewRef.current) {
           scrollViewRef.current.scrollTo({ y: 0, animated: true });
         }
+
+
+
+
+
+          axios
+            .get(`${API_URL}/getAllCommenteProduitById/${id}`)
+            .then((coments) => {
+              setAllCommente(coments.data);
+              // setAllCommente(DATA_Commentes?.filter(item=>item.clefProduct===id)?DATA_Commentes?.filter(item=>item.clefProduct===id):[]);
+
+              console.log()
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+
+
+
+
+
       } catch (error) {
         setLoading(false);
         console.log(error);
@@ -59,7 +92,7 @@ const ProductDet = () => {
     };
 
     fetchData();
-  }, [id]); // Dépendance sur `id` pour déclencher l'effet
+  }, [id]);
 
 
   const handleAlert = (message) => {
@@ -87,47 +120,58 @@ const ProductDet = () => {
 
   const envoyer = () => {
     const regexNumber = /^[0-5]$/;
+    setsSend(true)
+   if(user){
     if (commente.trim().length < 3) {
       handleAlertwar("votre commentaire doit contenire au moin 3 carracteres.");
+      setsSend(false)
       return;
     }
     if (!rating) {
       handleAlertwar("veuiller noter ce produit s'il vous plait.");
+      setsSend(false)
       return;
     }
     if (!regexNumber.test(rating.toString())) {
       handleAlertwar("forma non valid de 1 a 5 s'il vous plait!");
+      setsSend(false)
       return;
     }
     axios
-      .post(`https://chagona.onrender.com/createCommenteProduit`, {
+      .post(`${API_URL}/createCommenteProduit`, {
         description: commente,
         clefProduct: VP?._id,
         clefType: VP?.ClefType,
-        etoil: etoil,
+        etoil: rating,
         userName: user.name,
       })
       .then((resp) => {
-        alert(resp.data.message);
-        setPoppup(false);
-        setEtoil(null);
+        handleAlert(resp.data.message);
+        setIsCommentBoxVisible(false);
+        setRating(null);
         setCommente("");
 
         axios
-          .get(`https://chagona.onrender.com/getAllCommenteProduitById/${params.id}`)
+          .get(`${API_URL}/getAllCommenteProduitById/${id}`)
           .then((coments) => {
             setAllCommente(coments.data);
-            // console.log(coments.data);
+            setsSend(false)
           })
           .catch((error) => {
-            alert(error.response.data);
+            handleAlertwar(error.response.data);
+            setsSend(false)
             console.log(error);
           });
       })
       .catch((error) => {
-        alert(error.response.data);
+        handleAlertwar(error.response.data);
+        setsSend(false)
         console.log(error);
       });
+   }else{
+    handleAlertwar("veuiller vous connecter ou creer un compte.")
+    return;
+   }
   };
 
 
@@ -145,14 +189,14 @@ const ProductDet = () => {
     <View style={styles.container}>
       <DetailProduit produit = {VP} />
       <ScrollView ref={scrollViewRef} showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollViewContent}>
-        <DetailProduitMain chgColor={chgColor} chgTail={chgTail} produit = {VP} id={id} />
+        <DetailProduitMain chgColor={chgColor} chgTail={chgTail} produit = {VP} id={id} Allcommente={Allcommente} />
       </ScrollView>
       <DetailProduitFooter produit = {VP} color={color} taille={taille} id={id} />
 
 
       <TouchableOpacity style={styles.commenteBox} onPress={handleCommentBoxToggle}>
         <View style={styles.commente}>
-          <Text style={{fontSize: 12}}>Commenter?</Text>
+          <Text style={{fontSize: 12, color: "#30A08B"}}>Commenter?</Text>
         </View>
       </TouchableOpacity>
 
@@ -173,15 +217,23 @@ const ProductDet = () => {
             <View style={styles.satrIcon}>
           {[1, 2, 3, 4, 5].map((star) => (
             <TouchableOpacity key={star} onPress={() => handleRating(star)}>
-              <AntDesign name='staro' size={18} color={star <= rating ? '#FF6A69' : 'black'} />
+              <AntDesign name='staro' size={20} color={star <= rating ? '#30A08B' : '#B2905F'} />
             </TouchableOpacity>
           ))}
         </View>
           </View>
-          <View style={styles.btn}>
-            <Button title="Envoyer" onPress={ envoyer} />
-            <Button title="Fermer" onPress={handleCommentBoxToggle} />
-          </View>
+          {
+            send?
+              <><View style={styles.loadingContainer2}>
+              <ActivityIndicator size="large" color="#FF6A69" />
+              <Text style={styles.loadingText}>Chargement...</Text>
+            </View></>
+           :<><View style={styles.btn}>
+           <Button title="Fermer" color={"#B2905F"} onPress={handleCommentBoxToggle} />
+           <Button title="Envoyer" color={'#30A08B'} onPress={ envoyer} />
+         </View></>
+          }
+
 
         </View>
       </View>
@@ -213,8 +265,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     textAlign: "center",
-    shadowColor: "#000",
-    shadowOffset: {  width: 2, height: Platform.OS ===  'ios' ? 2 : 2, },
+    shadowColor: "#FF9800",
+    shadowOffset: {  width: 0, height: Platform.OS ===  'ios' ? 2 : 2, },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: Platform.OS === 'android' ?  5 : 0,
@@ -235,11 +287,12 @@ const styles = StyleSheet.create({
   cardTitle: {
   fontSize: 18,
   marginBottom: 10,
+  color: "#30A08B"
 },
   textInput: {
   width: '100%',
   height: 100,
-  borderColor: '#CCCCCC',
+  borderColor: '#ccc',
   borderWidth: 1,
   borderRadius: 5,
   padding: 10,
@@ -255,13 +308,14 @@ satrIcon: {
   flexDirection: "row",
   justifyContent: "space-between",
   alignItems: "center",
-  width: "40%",
+  width: "60%",
   marginLeft:8,
   marginTop:6
 },
 noteProduit: {
   fontSize: 18,
   textAlign: "center",
+  color: "#B2905F"
 },
 btn: {
   width: "90%",
@@ -270,6 +324,12 @@ btn: {
   alignItems: "center"
 },
 loadingContainer: {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: '#f5f5f5', // Fond de la page de chargement
+},
+loadingContainer2: {
   flex: 1,
   justifyContent: 'center',
   alignItems: 'center',

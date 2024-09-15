@@ -1,7 +1,8 @@
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Dimensions, Animated, Easing } from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Dimensions, Animated, Easing, KeyboardAvoidingView } from 'react-native';
 import React, { useState, useEffect, useRef } from 'react';
 import { FontAwesome5 } from '@expo/vector-icons';
 import Produit from "../../image/Vnike2.jpg";
+import { Platform } from 'react-native';
 
 const SuggestionPage = () => {
   const [valueText, setValueText] = useState("")
@@ -38,7 +39,9 @@ const SuggestionPage = () => {
   }, [imageOpacity, formOpacity, buttonTranslateY]);
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView 
+    behavior={Platform.OS  === "ios" ? "padding" : "height"}
+    style={styles.container}>
       <Animated.View style={[styles.containerTop, { opacity: imageOpacity }]}>
         <Image source={Produit} style={styles.image} />
       </Animated.View>
@@ -57,7 +60,7 @@ const SuggestionPage = () => {
           <Text style={styles.envoieText}>Envoyer</Text>
         </TouchableOpacity>
       </Animated.View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -71,7 +74,7 @@ const styles = StyleSheet.create({
   containerTop: {
     width: "100%",
     height: "50%",
-    backgroundColor: "#e0e0e0",
+    backgroundColor: "#B2905F", // Couleur de fond pour la partie supérieure
     justifyContent: "center",
     alignItems: "center",
     borderBottomLeftRadius: 20,
@@ -86,28 +89,28 @@ const styles = StyleSheet.create({
   containerBottom: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#ffffff",
+    backgroundColor: "#FFFFFF", // Couleur de fond pour la partie inférieure
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
   suggestionText: {
     fontSize: 22,
     fontWeight: "bold",
-    color: "#333333",
+    color: "#B17236", // Couleur pour le texte de suggestion
     marginBottom: 15,
   },
   textInput: {
     height: 100,
-    borderColor: "#cccccc",
+    borderColor: "#B2905F", // Couleur de la bordure
     borderWidth: 1,
     borderRadius: 10,
     padding: 10,
     fontSize: 16,
-    backgroundColor: "#fafafa",
+    backgroundColor: "#F0F0F0", // Couleur de fond du champ de texte
     marginBottom: 20,
   },
   envoieBtn: {
-    backgroundColor: "#FF6A69",
+    backgroundColor: "#30A08B", // Couleur pour le bouton
     paddingVertical: 15,
     borderRadius: 25,
     shadowColor: "#000",
@@ -119,7 +122,7 @@ const styles = StyleSheet.create({
   envoieText: {
     textAlign: "center",
     fontSize: 18,
-    color: "#ffffff",
+    color: "#FFFFFF", // Couleur du texte sur le bouton
     fontWeight: "bold",
-  }
+  },
 });

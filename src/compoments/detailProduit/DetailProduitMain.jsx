@@ -15,6 +15,7 @@ import { shuffle } from "lodash";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from 'react-native';
 import axios from 'axios';
+import { API_URL } from "@env";
 const { width } = Dimensions.get('window'); // Largeur de l'écran pour le carrousel
 
 
@@ -27,7 +28,8 @@ function shufflee(array) {
   }
   return shuffled;
 }
-const DetailProduitMain = ({produit,chgColor, chgTail,id}) => {
+const DetailProduitMain = ({produit,chgColor, chgTail,id,Allcommente}) => {
+
   const flatListRef = useRef(null);
   const [selectedImageIds, setSelectedImageIds] = useState([]);
   const [selectedImageURL, setSelectedImage] = useState(null);
@@ -45,7 +47,7 @@ const DetailProduitMain = ({produit,chgColor, chgTail,id}) => {
   const [taille, setTaille] = useState(null);
   const [nbrCol, setNbrCol] = useState(null);
   const [commente, setCommente] = useState("");
-  const [Allcommente, setAllCommente] = useState([]);
+  // const [Allcommente, setAllCommente] = useState([]);
   const pan = useRef(new Animated.ValueXY()).current;
   const DATA_Types = useSelector((state) => state.products.types);
   const DATA_Categories = useSelector((state) => state.products.categories);
@@ -126,33 +128,28 @@ const DetailProduitMain = ({produit,chgColor, chgTail,id}) => {
   }, [produit]);
 
 
-  useEffect(() => {
 
-
-    axios
-      .get(`https://chagona.onrender.com/getAllCommenteProduitById/${id}`)
-      .then((coments) => {
-        setAllCommente(coments.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
 
 
   const selectRandomComments = (comments, maxCount) => {
-    // Vérifie si le nombre de commentaires disponibles est inférieur ou égal à maxCount
-    if (comments.length <= maxCount) {
+ if(comments){
+     // Vérifie si le nombre de commentaires disponibles est inférieur ou égal à maxCount
+     if ([comments].length <= maxCount) {
       return comments; // Retourne tous les commentaires disponibles
     }
 
-    const shuffled = comments.sort(() => 0.5 - Math.random()); // Mélange les commentaires de manière aléatoire
+   if([comments].length>0){
+    const shuffled = [comments].sort(() => 0.5 - Math.random()); // Mélange les commentaires de manière aléatoire
     return shuffled.slice(0, maxCount); // Sélectionne les premiers maxCount commentaires
+   }
+ }else{
+  return []
+ }
+
   };
 
   // Utilise la fonction selectRandomComments pour obtenir une liste de commentaires aléatoires
   const randomComments = selectRandomComments(Allcommente, 10);
-
   const handleDetailsPress = () => {
     setActiveButton('details'); // Met à jour l'état du bouton actif
     // Alert.alert('Details', 'Afficher les détails du produit.');
@@ -325,14 +322,14 @@ const DetailProduitMain = ({produit,chgColor, chgTail,id}) => {
         <TouchableOpacity
           style={[styles.buttonDetail, activeButton === 'details' && styles.activeButton]}
           onPress={handleDetailsPress}>
-          <Text style={styles.text}>Details</Text>
-          <MaterialCommunityIcons name="arrow-bottom-right" size={18} color="#515C70" />
+          <Text style={styles.text}>Détails</Text>
+          <MaterialCommunityIcons name="arrow-bottom-right" size={18} color="#30A08B" />
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.buttonDetail, activeButton === 'reviews' && styles.activeButton]}
           onPress={handleReviewsPress}>
-          <Text style={styles.text}>Reviews</Text>
-          <MaterialCommunityIcons name="arrow-bottom-right" size={18} color="#515C70" />
+          <Text style={styles.text}>Commantaires</Text>
+          <MaterialCommunityIcons name="arrow-bottom-right" size={18} color="#30A08B" />
         </TouchableOpacity>
       </View>
 
@@ -361,7 +358,7 @@ const DetailProduitMain = ({produit,chgColor, chgTail,id}) => {
               {
                 produit?.pictures.length !== 0 ?<>
                 <Text style={{width:'100%',display:'flex',justifyContent:'flex-start'}}>
-          Selectionner la color: {tailleImage !== null && <Text>Color: {tailleImage}</Text>}
+          Selectionner la color: {tailleImage !== null && <Text style={{color: "#30A08B"}}>Color: {tailleImage}</Text>}
         </Text>
         <View style={styles.cardTaille}>
         {produit?.pictures.map((param, index) => (
@@ -369,7 +366,7 @@ const DetailProduitMain = ({produit,chgColor, chgTail,id}) => {
             key={index}
             style={[
               styles.boxCard,
-              tailleImageB === index && { borderColor: '#FF6A69', borderWidth: 2 }
+              tailleImageB === index && { borderColor: '#FF9800', borderWidth: 2 }
             ]}
             onPress={() => {
               handlePress(index);
@@ -392,7 +389,7 @@ const DetailProduitMain = ({produit,chgColor, chgTail,id}) => {
             key={index}
             style={[
               styles.boxCard,
-              tailleImageB === index && { borderColor: '#FF6A69', borderWidth: 2 }
+              tailleImageB === index && { borderColor: '#FF9800', borderWidth: 2 }
             ]}
             onPress={() => {
               handlePress(index);
@@ -437,21 +434,22 @@ const DetailProduitMain = ({produit,chgColor, chgTail,id}) => {
 
       {
           produit?.taille[0].split(",").length >= 2 ?<>
-          <Text style={{width:'100%',display:'flex',justifyContent:'flex-start'}}>Selectionner la taille: {tailleNumber !== null && <Text>Taille: {tailleNumber}</Text>}</Text>
+          <Text style={{width:'100%',display:'flex',justifyContent:'flex-start'}}>
+            Selectionner la taille: {tailleNumber !== null && <Text style={{color: "#30A08B"}}>Taille: {tailleNumber}</Text>}</Text>
           <View style={styles.cardTaille}>
           {produit?.taille[0].split(",").map((size) => (
           <TouchableOpacity
             key={size}
             style={[
               styles.boxNumber,
-              tailleNumber === size && { borderColor: '#FF6A69', borderWidth: 2 }
+              tailleNumber === size && { borderColor: '#FF9800', borderWidth: 2 }
             ]}
             onPress={() => {
               handlePressTaillle(size)
               chgTail(size)
             }}
           >
-            <Text>{size}</Text>
+            <Text style={{color: "#30A08B"}}>{size}</Text>
           </TouchableOpacity>
         ))}
         </View>
@@ -469,7 +467,7 @@ const DetailProduitMain = ({produit,chgColor, chgTail,id}) => {
       />
             </View>
 
-            <Text style={styles.galerie__title}>Galeries</Text>
+            <Text style={styles.galerie__title}>Produits</Text>
 
                 <View style={styles.galerie__box}>
                   {products?.map((item) => (
@@ -499,7 +497,7 @@ const DetailProduitMain = ({produit,chgColor, chgTail,id}) => {
       <View style={styles.bottomContainer}>
         <View style={styles.textContainer}>
           <Text style={styles.textTitle}>{products?.find(item=>item._id===idClicked)?.name.slice(0,20)} ...</Text>
-          <Text style={styles.textPrice}>Prix du produit</Text>
+          {/* <Text style={styles}>Prix du produit</Text> */}
           {/* {
               products?.find(item=>item._id===idClicked)?.prixPromo <= 0 ?<Text style={styles.CFAText}>CFA {products?.find(item=>item._id===idClicked)?.prix}</Text>:<Text style={styles.CFAText}>CFA {products?.find(item=>item._id===idClicked)?.prixPromo}</Text>
             } */}
@@ -565,7 +563,7 @@ const DetailProduitMain = ({produit,chgColor, chgTail,id}) => {
             key={star}
             name='star'
             size={18}
-            color={star <= rating[index] ? '#FF6A69' : 'black'} // Couleur des étoiles
+            color={star <= rating[index] ? '#30A08B' : '#B2905F'} // Couleur des étoiles
           />
         ))}
           </View>
@@ -574,7 +572,7 @@ const DetailProduitMain = ({produit,chgColor, chgTail,id}) => {
           </View>
         </View>
         <View style={styles.date}>
-          <Text>{formatDate(param.date)}</Text>
+          <Text style={{color: "#30A08B"}}>{formatDate(param.date)}</Text>
         </View>
       </View>
   <View style={styles.commantaire}>
@@ -617,16 +615,16 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
   },
   CFAText2: {
-    color: '#000',
-    fontSize: 12,
+    color: '#30A08B',
+    fontSize: 20,
     fontWeight: 'bold',
     textDecorationLine:'line-through'
   },
   CFAText: {
-    color: '#000',
-    fontSize: 14,
+    color: '#30A08B',
     fontWeight: 'bold',
-  },
+    fontSize: 28,
+    },
   box: {
     width: '100%',
     height: 270,
@@ -661,20 +659,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 13,
+    paddingHorizontal: 10,
+    top: 5
   },
   activeButton: {
     backgroundColor: '#fff',
     borderRadius: 10,
-    shadowColor: '#000',
+    shadowColor: '#B17236',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.21,
     shadowRadius: 5,
     elevation: 5,
-  },
-  text: {
-    color: '#515C70',
-
   },
   additionalDetails: {
     flexDirection: 'column',
@@ -714,7 +709,7 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#515C70',
+    color: '#B2905F',
   },
   para: {
     fontSize: 14,
@@ -725,7 +720,7 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#515C70',
+    color: '#B2905F',
     textAlign: 'right',
   },
   para2: {
@@ -745,7 +740,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 50,
-    shadowColor: Platform.OS === 'ios' ? "#FF6A69" : "#FF6A69",
+    shadowColor: Platform.OS === 'ios' ? "#B2905F" : "#B2905F",
     shadowOffset: { width: 0, height: Platform.OS === 'ios' ? 2 : 2},
     shadowOpacity: 0.8,
     elevation: Platform.OS === 'android' ? 5 : 5,
@@ -764,7 +759,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 50,
-    shadowColor: Platform.OS === 'ios' ? "#FF6A69" : "#FF6A69",
+    shadowColor: Platform.OS === 'ios' ? "#B2905F" : "#B2905F",
     shadowOffset: { width: 0, height: Platform.OS === 'ios' ? 2 : 2},
     shadowOpacity: 0.8,
     elevation: Platform.OS === 'android' ? 5 : 0,
@@ -788,12 +783,11 @@ const styles = StyleSheet.create({
 
   galerie__title: {
     width:'100%',
-    display:'flex',
-    justifyContent:'flex-start',
-    fontSize: 20,
     letterSpacing: 1,
-    color: '#000',
     marginVertical: 10,
+    fontSize: 26,
+    fontWeight: 'bold',
+    color: '#B17236',
   },
   galerie__box: {
     width: '100%',
@@ -812,7 +806,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     position: 'relative',
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#FF9800',
   },
   image: {
     width: '100%',
@@ -850,6 +844,7 @@ const styles = StyleSheet.create({
   },
   textName: {
     fontSize: 26,
+    color:"#30A08B"
   },
   messageContainer: {
     flex: 1,
@@ -877,7 +872,7 @@ const styles = StyleSheet.create({
   },
   containerModal: {
     flex: 1,
-    backgroundColor: '#b9b9bb',
+    backgroundColor: '#30A08B',
   },
   modelContainer: {
     flex: 2,
@@ -903,6 +898,8 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     resizeMode: 'cover',
+    borderRadius: 20,
+    overflow: "hidden"
 
   },
   bottomContainer: {
@@ -918,14 +915,11 @@ const styles = StyleSheet.create({
   },
   textTitle: {
     fontSize: 28,
-    color: '#051E47',
+    color: '#B17236',
     fontWeight: 'bold',
+    
   },
-  textPrice: {
-    fontSize: 28,
-    color: '#FF6A69',
-    fontWeight: 'bold',
-  },
+
   text: {
     color: 'black',
     fontSize: 16,
@@ -939,7 +933,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   button: {
-    backgroundColor: '#FF6A69',
+    backgroundColor: '#B2905F',
     padding: 10,
     width: '45%',
     justifyContent: 'center',

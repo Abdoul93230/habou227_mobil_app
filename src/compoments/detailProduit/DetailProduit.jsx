@@ -11,7 +11,7 @@ const DetailProduit = ({produit}) => {
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <AntDesign name="left" size={24} color="#FF6A69" />
+          <AntDesign name="left" size={24} color="#B2905F" />
         </TouchableOpacity>
 
         <View style={styles.headerContent}>
@@ -35,7 +35,7 @@ const DetailProduit = ({produit}) => {
 
         <TouchableOpacity style={styles.cartButton} onPress={() => navigation.navigate('Cart')}>
           <View style={styles.cartContainer}>
-            <Feather name="shopping-cart" size={24} color="#000000c2" />
+            <Feather name="shopping-cart" size={24} color="#B2905F" />
             <View style={styles.cartBadge}>
               <Text style={styles.cartCount}>0</Text>
             </View>
@@ -51,12 +51,12 @@ export default DetailProduit;
 const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
-    backgroundColor: "#DDD",
-    height: 105,
+    backgroundColor: "rgba(255, 152, 0, 0.2)",
+    height: 95,
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 15,
-    paddingTop: 40,
+    paddingTop: 40,  
   },
   backButton: {
     justifyContent: 'center',
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerText: {
-    color: '#000000c2',
+    color: '#B2905F',
     fontSize: width * 0.027,
     textAlign: 'center',
     marginTop:5
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 5,
     paddingVertical: 2,
-    backgroundColor: "#FF6A69",
+    backgroundColor: "#30A08B",
     borderRadius: 5,
     marginLeft: 10,
   },
@@ -92,12 +92,12 @@ const styles = StyleSheet.create({
     marginLeft: 3,
   },
   CFAText: {
-    color: '#000',
+    color: '#30A08B',
     fontSize: 14,
     fontWeight: 'bold',
   },
   CFAText2: {
-    color: '#000',
+    color: '#B2905F',
     fontSize: 12,
     fontWeight: 'bold',
     textDecorationLine:'line-through'
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: -5,
     right: -10,
-    backgroundColor: "#FF6A69",
+    backgroundColor: "#30A08B",
     borderRadius: 12,
     width: 17,
     height: 17,

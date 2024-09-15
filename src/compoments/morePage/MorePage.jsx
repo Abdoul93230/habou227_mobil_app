@@ -4,6 +4,8 @@ import { AntDesign, Feather, SimpleLineIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 
+
+const colors = ['#B17236', '#B2905F', '#30A08B'];
 const MorePage = () => {
   const navigation = useNavigation()
 
@@ -17,43 +19,67 @@ const MorePage = () => {
   };
   return (
     <View style={styles.container}>
-      <Text style={styles.moreTitle}>More</Text>
-      <View style={styles.moreBox}>
-        <TouchableOpacity style={styles.shippingAddress} onPress={() => navigation.navigate('Livraison Page')}>
-          <AntDesign name="home" size={24} color="black" style={styles.icon} />
-          <Text style={styles.shippingAddressText}>Adresse de livraison</Text>
-          <AntDesign name="right" size={24} color="black" style={styles.iconRight} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.shippingAddress} onPress={() => navigation.navigate('Paiement Page')}>
-          <Feather name="credit-card" size={24} color="black" style={styles.icon}  />
-          <Text style={styles.shippingAddressText}>Mode de paiement</Text>
-          <AntDesign name="right" size={24} color="black" style={styles.iconRight} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.shippingAddress} onPress={() => navigation.navigate("Paramètre de notification")}>
-          <Feather name="bell" size={24} color="black" style={styles.icon}/>
-          <Text style={styles.shippingAddressText}>Paramètres de notification</Text>
-          <AntDesign name="right" size={24} color="black" style={styles.iconRight} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.shippingAddress}  onPress={() => navigation.navigate('Avis de confidentialité')} >
-          <SimpleLineIcons name="lock" size={24} color="black" style={styles.icon}  />
-          <Text style={styles.shippingAddressText}>Avis de confidentialité</Text>
-          <AntDesign name="right" size={24} color="black" style={styles.iconRight} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.shippingAddress} onPress={() => navigation.navigate('Question Page')}>
-          <AntDesign name="questioncircleo" size={24} color="black" style={styles.icon}  />
-          <Text style={styles.shippingAddressText}>Questions fréquemment posées</Text>
-          <AntDesign name="right" size={24} color="black" style={styles.iconRight} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.shippingAddress} onPress={() => navigation.navigate("Information Page")}>
-          <AntDesign name="infocirlceo" size={24} color="black" style={styles.icon}  />
-          <Text style={styles.shippingAddressText}>Legal information</Text>
-          <AntDesign name="right" size={24} color="black" style={styles.iconRight} />
-        </TouchableOpacity>
-      </View>
-      <TouchableOpacity style={styles.deconnecter} onPress={clearStorage}>
-        <Text style={styles.deconnecterText}>Se déconnecter</Text>
+    <Text style={[styles.moreTitle, {color: colors[0]}]}>More</Text>
+    <View style={styles.moreBox}>
+      <TouchableOpacity style={styles.shippingAddress} onPress={() => navigation.navigate('Livraison Page')}>
+        <View style={[styles.iconContainer, { backgroundColor: colors[0] }]}>
+          <AntDesign name="home" size={24} color="#FFF" />
+        </View>
+        <Text style={styles.shippingAddressText}>Adresse de livraison</Text>
+        <View style={styles.arrowContainer}>
+          <AntDesign name='right' size={18} color="#FFF" />
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.shippingAddress} onPress={() => navigation.navigate('Paiement Page')}>
+        <View style={[styles.iconContainer, { backgroundColor: colors[0] }]}>
+          <Feather name="credit-card" size={24} color="#FFF" />
+        </View>
+        <Text style={styles.shippingAddressText}>Mode de paiement</Text>
+        <View style={styles.arrowContainer}>
+          <AntDesign name='right' size={18} color="#FFF" />
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.shippingAddress} onPress={() => navigation.navigate("Paramètre de notification")}>
+        <View style={[styles.iconContainer, { backgroundColor: colors[0] }]}>
+          <Feather name="bell" size={24} color="#FFF" />
+        </View>
+        <Text style={styles.shippingAddressText}>Paramètres de notification</Text>
+        <View style={styles.arrowContainer}>
+          <AntDesign name='right' size={18} color="#FFF" />
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.shippingAddress} onPress={() => navigation.navigate('Avis de confidentialité')}>
+        <View style={[styles.iconContainer, { backgroundColor: colors[0] }]}>
+          <SimpleLineIcons name="lock" size={24} color="#FFF" />
+        </View>
+        <Text style={styles.shippingAddressText}>Avis de confidentialité</Text>
+        <View style={styles.arrowContainer}>
+          <AntDesign name='right' size={18} color="#FFF" />
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.shippingAddress} onPress={() => navigation.navigate('Question Page')}>
+        <View style={[styles.iconContainer, { backgroundColor: colors[0] }]}>
+          <AntDesign name="questioncircleo" size={24} color="#FFF" />
+        </View>
+        <Text style={styles.shippingAddressText}>Questions fréquemment posées</Text>
+        <View style={styles.arrowContainer}>
+          <AntDesign name='right' size={18} color="#FFF" />
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.shippingAddress} onPress={() => navigation.navigate("Information Page")}>
+        <View style={[styles.iconContainer, { backgroundColor: colors[0] }]}>
+          <AntDesign name="infocirlceo" size={24} color="#FFF" />
+        </View>
+        <Text style={styles.shippingAddressText}>Legal information</Text>
+        <View style={styles.arrowContainer}>
+          <AntDesign name='right' size={18} color="#FFF" />
+        </View>
       </TouchableOpacity>
     </View>
+    <TouchableOpacity style={styles.deconnecter} onPress={clearStorage}>
+      <Text style={styles.deconnecterText}>Se déconnecter</Text>
+    </TouchableOpacity>
+  </View>
   );
 };
 
@@ -66,59 +92,65 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   moreTitle: {
-    color: '#FF6A69',
     fontSize: 22,
     fontWeight: 'bold',
     marginTop: 15,
     zIndex: 1000,
   },
   moreBox: {
-    marginTop: 15,
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    marginTop: 0,
     width: '100%',
-    padding: 15,
+    padding: 5,
   },
   shippingAddress: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 10,
-    borderRadius: 10,
-    backgroundColor: '#f5f5f5',
+    paddingVertical: 8,
+    backgroundColor: "#B2905F",  
     marginVertical: 10,
+    borderRadius: 15, 
+    paddingHorizontal: 20,
+    elevation: 8,  
+    shadowColor: '#000', 
+    shadowOffset: { width: 0, height: 4 }, 
+    shadowOpacity: 0.3,  
+    shadowRadius: 8,
   },
-  icon: {
-    marginRight: 10,
+  arrowContainer: {
+    backgroundColor: '#30A08B',  // Couleur de fond des flèches
+    borderRadius: 50,
+    padding: 5,
+  },
+  iconContainer: {
+    backgroundColor: '#B2905F', // Default background color for icons
+    borderRadius: 50,
+    padding: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   shippingAddressText: {
     flex: 1,
-    color: '#000',
     fontSize: 16,
+    marginLeft: 15,
+    color: '#FFF',
   },
-  iconRight: {
-    marginLeft: 10,
-  },
+ 
   deconnecter: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     marginTop: 30,
     padding: 20,
-    borderRadius: 10,
-    backgroundColor: "#f5f5f5",
+    borderRadius: 15,
+    backgroundColor: colors[2],
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2, },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
   },
   deconnecterText: {
-    color: "#FF6A69",
+    color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
   }

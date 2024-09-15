@@ -1,12 +1,13 @@
 // getSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { API_URL } from "@env";
 
-const BackendUrl = "https://chagona.onrender.com";
+// const BackendUrl = "https://chagona.onrender.com";
 // console.log("")
 export const getProducts = () => async (dispatch) => {
   try {
-    const response = await axios.get(`${BackendUrl}/products`);
+    const response = await axios.get(`${API_URL}/products`);
     dispatch(setProducts(response.data.data));
   } catch (error) {
     console.log(error.response.data.message);
@@ -15,7 +16,7 @@ export const getProducts = () => async (dispatch) => {
 
 export const getTypes = () => async (dispatch) => {
   try {
-    const response = await axios.get(`${BackendUrl}/getAllType`);
+    const response = await axios.get(`${API_URL}/getAllType`);
     dispatch(setTypes(response.data.data));
   } catch (error) {
     console.log(error);
@@ -23,7 +24,7 @@ export const getTypes = () => async (dispatch) => {
 };
 export const getCategories = () => async (dispatch) => {
   try {
-    const response = await axios.get(`${BackendUrl}/getAllCategories`);
+    const response = await axios.get(`${API_URL}/getAllCategories`);
     dispatch(setCategories(response.data.data));
     // console.log(response.data.data)
   } catch (error) {
@@ -32,7 +33,7 @@ export const getCategories = () => async (dispatch) => {
 };
 export const getProducts_Pubs = () => async (dispatch) => {
   try {
-    const response = await axios.get(`${BackendUrl}/productPubget`);
+    const response = await axios.get(`${API_URL}/productPubget`);
     dispatch(setProducts_Pubs(response.data));
   } catch (error) {
     console.log(error);
@@ -40,8 +41,9 @@ export const getProducts_Pubs = () => async (dispatch) => {
 };
 export const getProducts_Commentes = () => async (dispatch) => {
   try {
-    const response = await axios.get(`${BackendUrl}/getAllCommenteProduit`);
+    const response = await axios.get(`${API_URL}/getAllCommenteProduit`);
     dispatch(setProducts_Commentes(response.data));
+    // console.log(response.data)
   } catch (error) {
     console.log(error);
   }

@@ -2,83 +2,274 @@ import { StyleSheet, Text, View, SafeAreaView, Image, Dimensions, TouchableOpaci
 import React, { useState } from 'react';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
+import { ChevronRight } from "react-native-feather";
+import { useRoute } from '@react-navigation/native';
+import { shuffle } from "lodash";
+import Produits from '../produits/Produit';
+import ReviewList from '../../pages/ReviewList';
 
 const { width } = Dimensions.get('window'); // Pour gérer les dimensions de l'image
 
 const CategorieDetails = () => {
   const navigation = useNavigation()
   const [showSearch, setShowSearch] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [allCategories, setAllCategories] = useState([]);
+  const [Ptp, setPtp] = useState([]);
+  const [pt2, setPt2] = useState([]);
+  const [ptAll, setPtAll] = useState([]);
   const [activeSection, setActiveSection] = useState('Homme'); // État pour suivre la section active
+  const DATA_Products = useSelector((state) => state.products.data);
+  const DATA_Types = useSelector((state) => state.products.types);
+  const DATA_Categories = useSelector((state) => state.products.categories);
+  const DATA_Products_pubs = useSelector(
+    (state) => state.products.products_Pubs
+  );
+  const DATA_Commentes = useSelector(
+    (state) => state.products.products_Commentes
+  );
+  const route = useRoute();
+  const { categoryId } = route.params;
+
+
+
+
+  let Pub =
+  DATA_Products_pubs?.filter(
+    (item) =>
+      item.clefCategorie ===
+    categoryId
+  ) || [];
+  const handleScroll = (event) => {
+    const slideSize = event.nativeEvent.layoutMeasurement.width;
+    const index = Math.floor(event.nativeEvent.contentOffset.x / slideSize);
+    setCurrentIndex(index);
+  };
+
+  function getRandomElementsSix(array, nbr) {
+    const shuffledArray = shuffle(array);
+    return shuffledArray.slice(0, nbr);
+  }
+
+  const Home1 = getRandomElementsSix(
+    DATA_Products.filter((item) =>
+      DATA_Types.some(
+        (type) =>
+          type.clefCategories === categoryId && item.ClefType === type._id
+      )
+    ),
+    9
+  );
+
+  const Home2 = getRandomElementsSix(
+    DATA_Products.filter((item) =>
+      DATA_Types.some(
+        (type) =>
+          type.clefCategories === categoryId && item.ClefType === type._id
+      )
+    ),
+    6
+  );
+  const filteredProductsPromo = DATA_Products.filter((item) =>
+    DATA_Types.some(
+      (type) =>
+        type.clefCategories === categoryId &&
+        item.ClefType === type._id &&
+        item.prixPromo > 0
+    )
+  );
+
+  const filteredProductsTop30 = DATA_Products.slice(0, 30).filter((item) =>
+    DATA_Types.some(
+      (type) =>
+        type.clefCategories === categoryId && item.ClefType === type._id
+    )
+  );
+  const typesInCategory = DATA_Types.filter(type => type.clefCategories === categoryId);
+
+  const filteredComments = DATA_Commentes.filter(comment =>
+    typesInCategory.some(type => type._id === comment.clefType)
+  );
+
+
+
+  // setPtAll(
+  //   DATA_Products.filter((item) =>
+  //     DATA_Types.some(
+  //       (type) =>
+  //         type.clefCategories === categoryId &&
+  //         item.ClefType === type._id
+  //     )
+  //   )
+  // );
+  // setPtp(getRandomElementsSix(filteredProductsPromo, 6));
+  // setPt2(getRandomElementsSix(filteredProductsTop30, 6));
+
+
+
 
   const renderContent = () => {
     switch (activeSection) {
       case 'Homme':
         return (
           <ScrollView>
+
+
+            <View>
+      <Text style={styles.heading}>Trending</Text>
+
+      {Pub?.length > 0 ? (
+        <View style={styles.carouselContainer}>
+          <ScrollView
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            onScroll={handleScroll}
+            scrollEventThrottle={16}
+          >
+            {Pub?.map((param, index) => (
+              <View key={index} style={styles.slide}>
+                {param.pub ? (
+                  <View style={styles.sup}>
+                    <Text style={styles.collectionText}>Collection</Text>
+                    <TouchableOpacity>
+                      <ChevronRight color="#000" />
+                    </TouchableOpacity>
+                  </View>
+                ) : null}
+                <Image source={{ uri: param.image }} style={styles.image} resizeMode="cover" />
+              </View>
+            ))}
+          </ScrollView>
+          <View style={styles.pagination}>
+            {Pub?.map((_, index) => (
+              <View
+                key={index}
+                style={[
+                  styles.dot,
+                  currentIndex === index ? styles.activeDot : styles.inactiveDot,
+                ]}
+              />
+            ))}
+          </View>
+        </View>
+      ) : null}
+    </View>
+
+
+
             <Text style={styles.titleHomme}>Tendance</Text>
             <View style={styles.containerHommeCard}>
-              {[...Array(9)].map((_, index) => (
-                <TouchableOpacity style={styles.cardBox} key={index}>
-                  <Image 
-                    source={require("../../image/macbook profil.png")} 
-                    style={styles.cardImage} 
+              {Home1?.map((param, index) => (
+                <TouchableOpacity onPress={() => navigation.navigate("Détail-Produit",{ id: param._id })} style={styles.cardBox} key={index}>
+                  <Image
+                    source={{uri:param.image1}}
+                    style={styles.cardImage}
                   />
                   <View style={styles.cardFooter}>
-                    <Text style={styles.cardTitle}>Pantoufles Plates</Text>
-                    <Text style={styles.cardPrice}>F 1200</Text>
+                    <Text style={styles.cardTitle}>{param.name.slice(0, 10)}...</Text>
+                    <Text style={styles.cardPrice}>F {param.prixPromo ? param.prixPromo : param.prix}</Text>
                   </View>
                 </TouchableOpacity>
               ))}
             </View>
+              <Produits products={Home2}  name={DATA_Categories.find(item=>item._id===categoryId).name}/>
           </ScrollView>
         );
       case 'Products':
         return(
           <ScrollView>
             <View style={styles.productFilter}>
-              <TouchableOpacity>
+
+            {
+              DATA_Types?.filter(
+                (para) => para.clefCategories === categoryId
+              ).map((param, index)=>{
+                if (index > 4) {
+                  return null;
+                }
+                return <TouchableOpacity>
+                <Text>{param.name}</Text>
+                <View style={styles.ligneBas} />
+              </TouchableOpacity>
+              })
+            }
+
+
+
+              {/* <TouchableOpacity>
                 <Text>Baskette</Text>
                 <View style={styles.ligneBas} />
               </TouchableOpacity>
-              
+
               <TouchableOpacity>
                 <Text>Chaussures</Text>
                 <View style={styles.ligneBas} />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
-            <Text style={styles.titleHomme}>Homme</Text>
+
+            {/* <Produits products={Home2}  name={DATA_Categories.find(item=>item._id===categoryId).name}/> */}
+                {
+                  filteredProductsTop30?.length>2?<>
+                  <Text style={styles.titleHomme}>{DATA_Categories.find(item=>item._id===categoryId).name}</Text>
+                  {getRandomElementsSix(filteredProductsTop30, 6)?.length > 0 ? (
+              <Produits products={getRandomElementsSix(filteredProductsTop30, 6)}  name={DATA_Categories.find(item=>item._id===categoryId).name}/>
+
+          ) : (
+            <></>
+          )}
+                  </>:<></>
+                }
+
+
+
+
+            {
+              getRandomElementsSix(filteredProductsPromo, 6)?.length>4?<>
+
             <Text style={styles.titleHomme}>Promo</Text>
             <View style={styles.containerHommeCard}>
-              {[...Array(9)].map((_, index) => (
-                <TouchableOpacity style={styles.cardBox} key={index}>
+              {getRandomElementsSix(filteredProductsPromo, 6).map((param, index) => (
+                <TouchableOpacity onPress={() => navigation.navigate("Détail-Produit",{ id: param._id })} style={styles.cardBox} key={index}>
                   <View style={styles.valeurPromo}>
-                    <Text style={styles.promoText}>-13%</Text>
+                    <Text style={styles.promoText}>-{Math.round(
+                        ((param.prix - param.prixPromo) / param.prix) * 100
+                      )}%</Text>
                   </View>
-                  <Image 
-                    source={require("../../image/macbook profil.png")} 
-                    style={styles.cardImage} 
+                  <Image
+                    source={{uri:param.image2}}
+                    style={styles.cardImage}
                   />
                   <View style={styles.cardFooter}>
-                    <Text style={styles.cardTitle}>Pantoufles Plates</Text>
+                    <Text style={styles.cardTitle}>{param.name.slice(0, 10)}...</Text>
                     <View style={styles.cardPriceContainer}>
-                      <Text style={styles.cardPriceDefaullt}>F 1200</Text>
-                      <Text style={styles.cardPrice}>F 1200</Text>
+                      <Text style={styles.cardPriceDefaullt}>F {param.prix}</Text>
+                      <Text style={styles.cardPrice}>F {param.prixPromo}</Text>
                     </View>
                   </View>
                 </TouchableOpacity>
               ))}
             </View>
+              </>:<></>
+            }
             <Text style={styles.titleHomme}>Tous</Text>
             <View style={styles.containerHommeCard}>
-              {[...Array(60)].map((_, index) => (
-                <TouchableOpacity style={styles.cardBoxAll} key={index}>
-                  <Image 
-                    source={require("../../image/macbook profil.png")} 
-                    style={styles.cardImage} 
+              { DATA_Products.filter((item) =>
+          DATA_Types.some(
+            (type) =>
+              type.clefCategories === categoryId &&
+              item.ClefType === type._id
+          )
+        )?.map((param, index) => (
+                <TouchableOpacity onPress={() => navigation.navigate("Détail-Produit",{ id: param._id })} style={styles.cardBoxAll} key={index}>
+                  <Image
+                    source={{uri:param.image1}}
+                    style={styles.cardImage}
                   />
                   <View style={styles.cardFooter}>
-                    <Text style={styles.cardTitleAll}>Pantoufles Plates</Text>
-                    <Text style={styles.cardPriceAll}>F 1200</Text>
+                    <Text style={styles.cardTitleAll}>{param.name.slice(0, 10)}...</Text>
+                    <Text style={styles.cardPriceAll}>F {param.prixPromo && param.prixPromo< param.prix? param.prixPromo : param.prix}</Text>
                   </View>
                 </TouchableOpacity>
               ))}
@@ -87,7 +278,8 @@ const CategorieDetails = () => {
         )
       case 'Reviews':
         return <>
-        <Text style={{fontSize: 20 , textAlign: 'center'}}>Aucun commentaires pour le moment </Text>
+        <ReviewList randomComments={filteredComments} DATA_Products={DATA_Products} />
+        {/* <Text style={{fontSize: 20 , textAlign: 'center'}}>Aucun commentaires pour le moment </Text> */}
         </>
 
       default:
@@ -99,7 +291,8 @@ const CategorieDetails = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Image
-          source={require("../../image/IHFt.jpg")}
+          // source={require("../../image/IHFt.jpg")}
+          source={{uri:DATA_Categories?.find(item=>item._id===categoryId).image}}
           style={styles.backgroundImage}
           resizeMode="cover"
         />
@@ -122,29 +315,29 @@ const CategorieDetails = () => {
         </View>
       )}
           <View style={styles.headerIcons}>
-         
+
           </View>
           <View style={styles.textBox}>
-            <Text style={styles.titleHead}>Homme</Text>
+            <Text style={styles.titleHead}>{DATA_Categories.find(item=>item._id===categoryId).name}</Text>
             <Text style={styles.fashion}>All your fashion needs under one roof</Text>
           </View>
         </View>
       </View>
       <View style={styles.ContainerButton}>
-        <TouchableOpacity 
-          style={activeSection === 'Homme' ? styles.activeButton : styles.button} 
+        <TouchableOpacity
+          style={activeSection === 'Homme' ? styles.activeButton : styles.button}
           onPress={() => setActiveSection('Homme')}
         >
           <Text style={activeSection === 'Homme' ? styles.activeButtonText : styles.buttonText}>Home</Text>
         </TouchableOpacity>
-        <TouchableOpacity 
-          style={activeSection === 'Products' ? styles.activeButton : styles.button} 
+        <TouchableOpacity
+          style={activeSection === 'Products' ? styles.activeButton : styles.button}
           onPress={() => setActiveSection('Products')}
         >
           <Text style={activeSection === 'Products' ? styles.activeButtonText : styles.buttonText}>Products</Text>
         </TouchableOpacity>
-        <TouchableOpacity 
-          style={activeSection === 'Reviews' ? styles.activeButton : styles.button} 
+        <TouchableOpacity
+          style={activeSection === 'Reviews' ? styles.activeButton : styles.button}
           onPress={() => setActiveSection('Reviews')}
         >
           <Text style={activeSection === 'Reviews' ? styles.activeButtonText : styles.buttonText}>Reviews</Text>
@@ -192,7 +385,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 10,
   },
-  cardBox: { 
+  cardBox: {
     backgroundColor: '#F7F7F7',
     padding: 0, // Padding intérieur constant
     borderRadius: 10,
@@ -202,10 +395,10 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     elevation: Platform.OS === 'ios' ? 8 : 1,
     marginBottom: 10,
-    width: (width - 40) / 3, 
-    height: 150, 
+    width: (width - 40) / 3,
+    height: 150,
   },
-  cardBoxAll: { 
+  cardBoxAll: {
     backgroundColor: '#F7F7F7',
     padding: 0, // Padding intérieur constant
     borderRadius: 10,
@@ -215,8 +408,8 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     elevation: Platform.OS === 'ios' ? 8 : 1,
     marginBottom: 10,
-    width: (width - 40) / 3, 
-    height: 125, 
+    width: (width - 40) / 3,
+    height: 125,
   },
   valeurPromo: {
     fontSize: 18,
@@ -236,7 +429,7 @@ const styles = StyleSheet.create({
     color: '#FFF',
   },
   cardImage: {
-    width: '100%', 
+    width: '100%',
     height: '75%',
     borderRadius: 10,
     resizeMode: 'cover',
@@ -244,7 +437,7 @@ const styles = StyleSheet.create({
   cardFooter: {
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
-    height: '30%', 
+    height: '30%',
   },
   cardTitle: {
     fontSize: 13,
@@ -280,7 +473,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   header: {
-    height: 200, 
+    height: 200,
     width: '100%',
     position: 'relative',
   },
@@ -370,5 +563,55 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     marginTop: 5,
+  },
+  ////////////////////////////////////////////////////////////
+
+  heading: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  carouselContainer: {
+    overflow: "hidden",
+  },
+  slide: {
+    width: width,
+    height: 200,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  sup: {
+    position: "absolute",
+    top: 10,
+    left: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    zIndex: 1,
+  },
+  collectionText: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 10,
+  },
+  pagination: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: 10,
+  },
+  dot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginHorizontal: 5,
+  },
+  activeDot: {
+    backgroundColor: "#000",
+  },
+  inactiveDot: {
+    backgroundColor: "#ccc",
   },
 });

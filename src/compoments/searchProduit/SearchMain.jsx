@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import LoadingIndicator from '../../pages/LoadingIndicator';
 import axios from 'axios';
+import { API_URL } from "@env";
 
 const SearchMain = ( allCategories,allProducts) => {
 
@@ -89,7 +90,7 @@ const SearchMain = ( allCategories,allProducts) => {
     }
     setLoading1(true);
     axios
-      .get(`https://chagona.onrender.com/searchProductByName/${searchName}`)
+      .get(`${API_URL}/searchProductByName/${searchName}`)
       .then((res) => {
         setProduct(res.data.products);
         setSh(false);
@@ -151,7 +152,7 @@ const SearchMain = ( allCategories,allProducts) => {
       <View style={styles.headerContainer}>
       <View style={styles.contenu}>
         <TouchableOpacity onPress={() => navigation.navigate("Home")} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#FF6A69" />
+          <Ionicons name="arrow-back" size={24} color="#30A08B" />
         </TouchableOpacity>
         <View style={styles.searchContainer}>
           <TextInput
@@ -196,9 +197,9 @@ const SearchMain = ( allCategories,allProducts) => {
         }
       </View>
     </View>
-    <Text style={styles.galerie__title}>Galeries</Text>
+    <Text style={styles.galerie__title}>Produits</Text>
     {erreur && !products ? (
-              <Text style={{ fontSize: 10, width: "100%", marginTop: 10 }}>
+              <Text style={{ fontSize: 10, width: "100%", marginTop: 10, color:"#30A08B"}}>
                 {erreur} : {searchName}
               </Text>
             ) : (
@@ -297,11 +298,12 @@ const styles = StyleSheet.create({
     marginHorizontal: Platform.OS === 'ios' ?  6 : 3,
   },
   galerie__title: {
-    fontSize: 20,
     letterSpacing: 1,
-    color: '#000',
     textAlign:"left",
     marginVertical: 10,
+    fontSize: 26,
+    fontWeight: 'bold',
+    color: '#B17236',
   },
   galerie__box: {
     width: '100%',
@@ -309,8 +311,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     flexWrap: 'wrap',
-    backgroundColor: '#F0F0F0',
-    marginBottom: 100
+    marginBottom: 78
+
   },
   galerie__box__img: {
     width: '45%',
@@ -320,6 +322,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     overflow: 'hidden',
     position: 'relative',
+    borderWidth:1,
+    borderColor: "#FF9800"
   },
   image: {
     width: '100%',
@@ -345,7 +349,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "auto",
     padding: 3,
-    backgroundColor: "#ffffff56",
+    backgroundColor: "rgba(255, 152, 0, 0.48)",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -353,17 +357,20 @@ const styles = StyleSheet.create({
     },
     ProduitName: {
       fontSize: 12,
+      color: "#FFF"
     },
     prix: {
       fontSize: 12,
-      fontWeight: "bold"
+      fontWeight: "bold",
+      color: "#FFF"
+
     },
     staro: {
       position: "absolute",
       flexDirection: "row",
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: "#ff6A69",
+      backgroundColor: "#30A08B",
       width: 50,
       borderRadius: 30,
       bottom: 4,
@@ -396,7 +403,7 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       alignItems: 'center',
       borderWidth: 1,
-      borderColor: '#FF6A69',
+      borderColor: '#30A08B',
       borderRadius: 30,
       paddingHorizontal: 10,
     },
@@ -409,7 +416,7 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: '#FF6A69',
+      backgroundColor: '#30A08B',
       padding: 8,
       borderTopRightRadius: 30,
       borderBottomRightRadius: 30,
@@ -426,7 +433,7 @@ const styles = StyleSheet.create({
       paddingHorizontal: 1,
     },
     categoryButton: {
-      backgroundColor: '#FF6A69',
+      backgroundColor: '#30A08B',
       borderRadius: 20,
       marginBottom: 5,
       paddingVertical: 5,
@@ -442,11 +449,19 @@ const styles = StyleSheet.create({
       bottom: 90,
       right: 20,
       padding: 10,
-      backgroundColor: "#FF6A69",
+      backgroundColor: "#30A08B",
       borderRadius: 50,
       zIndex: 1,
       justifyContent: 'center',
       alignItems: 'center',
+      shadowColor: "#000",
+      shadowOffset: {
+        width: 0,
+        height: 2,
+        },
+        shadowOpacity: 0.45,
+        shadowRadius: 3.84,
+        elevation: 5
     },
     iconCircle: {
       color: 'white',

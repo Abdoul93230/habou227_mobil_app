@@ -8,7 +8,7 @@ const Footer = () => {
   const currentRouteName = useNavigationState(state => state.routes[state.index].name);
 
   const getColor = (routeName) => {
-    return currentRouteName === routeName ? "#FF6A69" : "black";
+    return currentRouteName === routeName ? "#30A08B" : "#B17236";
   };
 
   return (
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    height: 90,
+    height: 78,
     backgroundColor: '#F5F6F8',
     position: 'absolute',
     bottom: 0,

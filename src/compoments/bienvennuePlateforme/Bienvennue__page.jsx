@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View, Animated, Dimensions, Image, FlatList } from 'react-native';
 import React, { useRef, useEffect, useState } from 'react';
 import axios from 'axios';
+import { API_URL } from "@env";
 
 const Bienvennue__page = ({ categories }) => {
     const scrollX = useRef(new Animated.Value(0)).current;
@@ -18,8 +19,10 @@ const Bienvennue__page = ({ categories }) => {
 
     useEffect(() => {
         axios
-          .get(`https://chagona.onrender.com/productPubget`)
+          .get(`${API_URL}/productPubget`)
           .then((pub) => {
+            // console.log(pub.data);
+            
             if (pub.data.length > 0) {
               setAllPub(pub.data);
             } else {
@@ -29,7 +32,7 @@ const Bienvennue__page = ({ categories }) => {
           .catch((error) => {
             console.log(error);
           });
-      }, []);
+    }, []);
 
     useEffect(() => {
         const marqueeWidth = width * 1;
@@ -107,20 +110,17 @@ const Bienvennue__page = ({ categories }) => {
     );
 }
 
-export default Bienvennue__page;
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
     },
     box__marque: {
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 10,
         maxWidth: '100%',
-        height: 30,
-        backgroundColor: "#FF6A69",
+        height: 35,
+        backgroundColor: "#30A08B", // Couleur saumon plus vive
         overflow: "hidden",
     },
     box__marque__deux: {
@@ -128,8 +128,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 22,
         maxWidth: '100%',
-        height: 30,
-        backgroundColor: "#FF6A69",
+        height: 35,
+        backgroundColor: "#30A08B", // Assortir avec le premier marquee
         overflow: "hidden",
     },
     marquee: {
@@ -137,38 +137,50 @@ const styles = StyleSheet.create({
         width: '300%',
     },
     text__marque__text: {
-        color: "#fff",
-        fontSize: 15,
+        color: "#fff", // Marron plus foncé pour un meilleur contraste
+        fontSize: 16,
+        fontWeight: 'bold',
         paddingHorizontal: 4,
         paddingVertical: 2,
     },
     latestContainer: {
-        top: 12,
+        top: 15,
         alignItems: 'start',
-        marginHorizontal: 10,
+        marginHorizontal: 15,
         position: "relative",
     },
     latestText: {
-        fontSize: 24,
+        fontSize: 26,
         fontWeight: 'bold',
-        color: '#515C70',
+        color: '#B17236', // Bleu royal pour plus d'éclat
     },
     card__menu: {
-        top: 12,
-        height: 220,
-        marginHorizontal: 10,
-        borderRadius: 10,
+        top: 20,
+        height: 230,
+        marginHorizontal: 15,
+        borderRadius: 15,
         position: "relative",
         overflow: 'hidden',
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
     },
     carouselItem: {
-        width: Dimensions.get('window').width,
+        width: Dimensions.get('window').width - 30, // Ajuster la largeur
         height: '100%',
+        marginRight: 10, // Espace entre les éléments
     },
     carouselImage: {
         width: '100%',
         height: '100%',
-        borderRadius: 10,
+        borderRadius: 15,
         resizeMode: 'cover',
     },
 });
+
+export default Bienvennue__page;

@@ -8,14 +8,6 @@ const { width, height } = Dimensions.get('window');
 const Categories = ({categories} ) => {
   const navigation = useNavigation()
   const titre = "Categories";
-  const [Categories, setCategories] = useState([
-    { id: 1, name: "Homme", image: require("../../image/IHFt.jpg") },
-    { id: 2, name: "Électroniques", image: require("../../image/IHFt.jpg") },
-    { id: 3, name: "Bauté", image: require("../../image/IHFt.jpg") },
-    { id: 4, name: "All", image: require("../../image/IHFt.jpg") },
-    { id: 5, name: "Cuisine & Ustensiles", image: require("../../image/IHFt.jpg") },
-    { id: 6, name: "Électroménager", image: require("../../image/IHFt.jpg") },
-  ]);
 
   return (
     <View style={styles.container}>
@@ -23,8 +15,8 @@ const Categories = ({categories} ) => {
       <View style={styles.menu}>
         {categories.map((category,index) => {
           if(index<6 && category.name !== "all"){
-            return  <TouchableOpacity key={index} style={styles.box__img} 
-            onPress={() =>{ navigation.navigate('CategoriDetailPage');
+            return  <TouchableOpacity key={index} style={styles.box__img}
+            onPress={() =>{ navigation.navigate('CategoriDetailPage', { categoryId: category._id });
             }}>
             <Image source={{uri:category.image}} style={styles.categoryImage} />
             <Text style={styles.categoryText}>{category.name}</Text>
@@ -38,7 +30,7 @@ const Categories = ({categories} ) => {
         )}
         <TouchableOpacity style={styles.seeAll} onPress={() => navigation.navigate('Voir tous')}>
           <View style={styles.seeAll__icon}>
-            <AntDesign name='right' size={24} color="#FF6A69" />
+            <AntDesign name='right' size={24} color="#B2905F" />
           </View>
           <Text style={styles.seeAllText}>See All</Text>
         </TouchableOpacity>
@@ -52,7 +44,6 @@ export default Categories;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF00',
     marginBottom:10,
   },
   titre__img: {
@@ -71,7 +62,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 30,
     borderRadius: 50,
-    shadowColor: "#FF6A69",
+    shadowColor: "#B17236",
     shadowOffset: { width: 0, height: 0.2 },
     shadowOpacity: 0.50,
     shadowRadius: 3.84,
@@ -87,6 +78,7 @@ const styles = StyleSheet.create({
   categoryText: {
     fontSize: width * 0.026,
     fontWeight: 'sans serif',
+    textTransform: "capitalize",    
   },
   seeAll: {
     width: 100,

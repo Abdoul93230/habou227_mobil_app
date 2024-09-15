@@ -1,13 +1,31 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, StyleSheet,KeyboardAvoidingView,Platform, ScrollView, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ActivityIndicator,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  Pressable,
+  Image
+} from "react-native";
 import axios from "axios";
-import { User, Lock, MessageSquare, PhoneCall, ChevronRight } from "react-native-feather";
-import { useNavigation } from '@react-navigation/native';
+import { API_URL } from "@env";
+import {
+  User,
+  Lock,
+  MessageSquare,
+  PhoneCall,
+  ChevronRight,
+} from "react-native-feather";
+import { useNavigation } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import LogoProject from "../../src/image/PlashScreen.png"
 // const BackendUrl = process.env.REACT_APP_Backend_Url;
 
 const SignUp = () => {
@@ -20,13 +38,12 @@ const SignUp = () => {
   const [whatsapp, setWhatsapp] = useState(true);
   const regexPhone = /^[0-9]{8,}$/;
 
-
   const handleAlert = (message) => {
     Toast.show({
-      type: 'success',
-      text1: 'success',
+      type: "success",
+      text1: "success",
       text2: message,
-      position: 'top',
+      position: "top",
       visibilityTime: 3000,
       autoHide: true,
       bottomOffset: 40,
@@ -35,10 +52,10 @@ const SignUp = () => {
 
   const handleAlertwar = (message) => {
     Toast.show({
-      type: 'error',
-      text1: 'error',
+      type: "error",
+      text1: "error",
       text2: message,
-      position: 'top',
+      position: "top",
       visibilityTime: 3000,
       autoHide: true,
       bottomOffset: 40,
@@ -58,32 +75,53 @@ const SignUp = () => {
       handleAlertwar("Veuillez entrer une adresse e-mail valide.");
       return false;
     } else if (passwordV === "" || passwordV.length < 6) {
-      handleAlertwar("Veuillez entrer un mot de passe valide au moins 6 caractères.");
+      handleAlertwar(
+        "Veuillez entrer un mot de passe valide au moins 6 caractères."
+      );
       return false;
-    } else if ((phoneNumberV.length > 0 && !regexPhone.test(phoneNumber)) || phoneNumberV.length > 11) {
+    } else if (
+      (phoneNumberV.length > 0 && !regexPhone.test(phoneNumber)) ||
+      phoneNumberV.length > 11
+    ) {
       handleAlertwar("Veuillez entrer un numéro fonctionnel");
       return false;
     } else {
       setIsloading(true);
-      axios.post(`https://chagona.onrender.com/user`, {
-        name: nameV,
-        password: passwordV,
-        email: emailV,
-        phoneNumber: phoneNumberV,
-        whatsapp,
-      })
-      .then((response) => {
-        axios.post(`https://chagona.onrender.com/login`, {
-          email: emailV.length > 0 ? emailV : null,
-          phoneNumber: phoneNumberV.length > 0 ? phoneNumberV : null,
+      axios
+        .post(`${API_URL}/user`, {
+          name: nameV,
           password: passwordV,
-        }, {
-          withCredentials: true,
-          credentials: "include",
+          email: emailV,
+          phoneNumber: phoneNumberV,
+          whatsapp,
         })
-        .then(async(user) => {
-          if (user.status === 200) {
-            const message = `<h1>Nouvel Utilisateur Inscrit sur Habou227</h1>
+        .then((response) => {
+          axios
+            .post(
+              `${API_URL}/login`,
+              {
+                email: emailV.length > 0 ? emailV : null,
+                phoneNumber: phoneNumberV.length > 0 ? phoneNumberV : null,
+                password: passwordV,
+              },
+              {
+                withCredentials: true,
+                credentials: "include",
+              }
+            )
+            .then(async (user) => {
+              if (user.status === 200) {
+                const dateActuelle = new Date();
+                const options = {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                };
+                const dateInscription = dateActuelle.toLocaleDateString(
+                  "fr-FR",
+                  options
+                );
+                const message = `<h1>Nouvel Utilisateur Inscrit sur Habou227</h1>
                 <p>Cher(e)Habou227,</p>
                 <p>Nous avons le plaisir de vous informer qu'un nouvel utilisateur s'est inscrit sur Habou227. Voici les détails de l'utilisateur :</p>
                 <ul>
@@ -109,34 +147,35 @@ const SignUp = () => {
                   .catch((error) => {
                     console.error("Erreur lors de la requête email:", error);
                   });
-            handleAlert(user.data.message);
-            setIsloading(false);
-            navigation.navigate("Home");
-            const jsonValue = JSON.stringify(user.data);
-            // Stocker les données
-            await AsyncStorage.setItem('userEcomme', jsonValue);
-          } else {
-            handleAlert(user.data.message);
-          }
+                handleAlert(user.data.message);
+                navigation.navigate("Home");
+                setIsloading(false);
+                const jsonValue = JSON.stringify(user.data);
+                // Stocker les données
+                await AsyncStorage.setItem("userEcomme", jsonValue);
+              } else {
+                handleAlert(user.data.message);
+              }
+            })
+            .catch((error) => {
+              setIsloading(false);
+              console.log(error);
+              if (error.response.status === 400) {
+                handleAlertwar(error.response.data.message);
+              } else {
+                console.log(error.response);
+              }
+            });
         })
         .catch((error) => {
           setIsloading(false);
+          console.log(error);
           if (error.response.status === 400) {
             handleAlertwar(error.response.data.message);
-          } else {
-            console.log(error.response);
+          } else if (error.response.status === 409) {
+            handleAlertwar(error.response.data.message);
           }
         });
-      })
-      .catch((error) => {
-        setIsloading(false);
-        console.log(error);
-        if (error.response.status === 400) {
-          handleAlertwar(error.response.data.message);
-        } else if (error.response.status === 409) {
-          handleAlertwar(error.response.data.message);
-        }
-      });
     }
   };
 
@@ -156,113 +195,125 @@ const SignUp = () => {
     );
   }
 
-
-
   return (
     <KeyboardAvoidingView
-    style={styles.container}
-    behavior={Platform.OS === "ios" ? "padding" : "height"}
-    keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0} // Ajustez la valeur si nécessaire
-  >
-    <ScrollView contentContainerStyle={styles.scrollViewContent} showsVerticalScrollIndicator={false}>
-      {isloading ? (
-        <View style={styles.loadingContainer}>
-          <Text style={styles.loadingText}>Connection en cours, veuillez patienter...</Text>
-          <ActivityIndicator size="large" color="#FF6969" />
-        </View>
-      ) : (
-        <View style={styles.signUpContainer}>
-          <View style={styles.fieldContainer}>
-            <Text style={styles.label}>Nom d'utilisateur</Text>
-            <View style={styles.inputContainer}>
-              <User color="#515C6F" />
-              <TextInput
-                style={styles.input}
-                placeholder="janedoe12345"
-                value={name}
-                onChangeText={setName}
-              />
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0} // Ajustez la valeur si nécessaire
+    >
+        {isloading ? (
+          <View style={styles.loadingContainer}>
+            <Text style={styles.loadingText}>
+              Connection en cours, veuillez patienter...
+            </Text>
+            <ActivityIndicator size="large" color="#FF6969" />
+          </View>
+        ) : (
+          <View style={styles.signUpContainer}>
+           
+            <View style={styles.fieldContainer}>
+            <View style={{width: "100%", height: 100,}}>
+              <Image source={LogoProject} style={{width: "100%", height: "100%", resizeMode: "center"}}/>
             </View>
-          </View>
-
-          <View style={styles.cont}>
-          <View style={styles.fieldContainer2}>
-            <Text style={styles.label2}>Adresse email</Text>
-            <View style={styles.inputContainer2}>
-              <MessageSquare color="#515C6F" />
-              <TextInput
-                style={styles.input}
-                placeholder="janedoe123@email.com"
-                keyboardType="email-address"
-                value={email}
-                onChangeText={setEmail}
-              />
+              <Text style={styles.label}>Nom d'utilisateur</Text>
+              <View style={styles.inputContainer}>
+                <User color="#B2905F" />
+                <TextInput
+                  style={styles.input}
+                  placeholder="janedoe12345"
+                  value={name}
+                  onChangeText={setName}
+                />
+              </View>
             </View>
-          </View>
 
-          <Text style={styles.orText2}>ou</Text>
+            <View style={styles.cont}>
+                <Text style={styles.label2}>Adresse email (Facultatif)</Text>
+                <View style={styles.inputContainer}>
+                  <MessageSquare color="#B2905F" />
+                  <TextInput
+                    style={styles.input}
+                    placeholder="janedoe123@email.com"
+                    keyboardType="email-address"
+                    value={email}
+                    onChangeText={setEmail}
+                  />
+                </View>
+       
 
-          <View style={styles.fieldContainer2}>
-            <Text style={styles.label2}>Numéro de téléphone</Text>
-            <View style={styles.inputContainer2}>
-              <PhoneCall color="#515C6F" />
-              <TextInput
-                style={styles.input2}
-                placeholder="+227 87727501"
-                keyboardType="phone-pad"
-                value={phoneNumber}
-                onChangeText={setPhoneNumber}
-              />
+              
+
+         
+                <Text style={styles.label2}>Numéro de téléphone</Text>
+                <View style={styles.inputContainer}>
+                  <PhoneCall color="#B2905F" />
+                  <TextInput
+                    style={styles.input}
+                    placeholder="+227 87727501"
+                    keyboardType="phone-pad"
+                    value={phoneNumber}
+                    onChangeText={setPhoneNumber}
+                  />
+                </View>
+    
             </View>
-          </View>
-          </View>
 
-
-
-          <View style={styles.fieldContainer}>
-            <Text style={styles.label}>Mot de passe</Text>
-            <View style={styles.inputContainer}>
-              <Lock color="#515C6F" />
-              <TextInput
-                style={styles.input}
-                placeholder="*******************"
-                secureTextEntry={true}
-                value={password}
-                onChangeText={setPassword}
-              />
+            <View style={styles.fieldContainer}>
+              <Text style={styles.label}>Mot de passe</Text>
+              <View style={styles.inputContainer}>
+                <Lock color="#B2905F" />
+                <TextInput
+                  style={styles.input}
+                  placeholder="*******************"
+                  secureTextEntry={true}
+                  value={password}
+                  onChangeText={setPassword}
+                />
+              </View>
             </View>
-          </View>
 
-          {phoneNumber.length >= 8 && (
-            <>
-              <View style={styles.checkboxContainer}>
-                <Text style={styles.checkboxLabel}>WhatsApp Groupe:</Text>
-                <MyCheckbox checked={whatsapp} onPress={() => setWhatsapp(!whatsapp)} />
+            {phoneNumber.length >= 8 && (
+              <>
+                <View style={styles.checkboxContainer}>
+                  <Text style={styles.checkboxLabel}>WhatsApp Groupe:</Text>
+                  <MyCheckbox
+                    checked={whatsapp}
+                    onPress={() => setWhatsapp(!whatsapp)}
+                  />
+                </View>
+                <Text style={styles.checkboxText}>
+                  Acceptez-vous de faire partie de notre communauté WhatsApp ?
+                </Text>
+              </>
+            )}
+
+            <TouchableOpacity style={{ width: "auto",}}>
+              <Text
+                onPress={() => navigation.navigate("Login")}
+                style={styles.label}
+              >
+                Se connecter ?
+              </Text>
+              <ChevronRight color="#fff" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={validateCredentials}
+            >
+              <Text style={styles.buttonText}>S'inscrire</Text>
+              <View  style={styles.buttonIcon}>
+              <ChevronRight color="#30A08B" />
 
               </View>
-              <Text style={styles.checkboxText}>
-                Acceptez-vous de faire partie de notre communauté WhatsApp ?
-              </Text>
-            </>
-          )}
+            </TouchableOpacity>
 
-          <TouchableOpacity style={{width:50}}>
-            <Text onPress={() => navigation.navigate("Login")} style={{color:"#FF6969"}}>LogIn ?</Text>
-            <ChevronRight color="#fff" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={validateCredentials}>
-            <Text style={styles.buttonText}>Sign Up</Text>
-            <ChevronRight color="#fff" />
-          </TouchableOpacity>
-
-          <Text style={styles.agreementText}>
-            By creating an account, you agree to our{" "}
-            <Text style={styles.linkText}>Terms of Service</Text> and{" "}
-            <Text style={styles.linkText}>Privacy Policy</Text>
-          </Text>
-        </View>
-      )}
-      </ScrollView>
+            <Text style={styles.agreementText}>
+            En créant un compte, vous acceptez nos{" "}
+              <Text style={styles.linkText}>Conditions d'utilisation</Text> and{" "}
+              <Text style={styles.linkText}>Politique de confidentialité</Text>
+            </Text>
+          </View>
+        )}
     </KeyboardAvoidingView>
   );
 };
@@ -272,7 +323,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center", // Centre verticalement
     alignItems: "center", // Centre horizontalement
-    padding: 15,
+    padding: 10,
     backgroundColor: "#fff",
   },
   scrollViewContent: {
@@ -300,24 +351,45 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     color: "#515C6F",
-    marginBottom: 5,
+    marginBottom: 1,
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 5,
-    borderRadius: 5,
-    borderColor: "#FF6969",
+    marginBottom: 15,
+    padding: 10,
+    borderRadius: 10,
+    borderColor: "#2ea28dd0",
     borderWidth: 1,
     backgroundColor: "#fff",
-    elevation: 1,
-    width: '100%', // S'assurer que le conteneur prend toute la largeur disponible
+    elevation: 2, // Augmenter l'élévation pour une ombre plus visible
+    width: "100%",
+    minHeight: 50,
+    
   },
   input: {
     flex: 1,
-    marginLeft: 10,
-    height: 40,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
     fontSize: 16,
+    color: "#515C6F",
+  },
+  // cont:{
+  //   backgroundColor: "#FFF",
+  //   width: "100",
+  //   shadowColor: '#000',
+  //   shadowOffset: { width: 0, height: 2 },
+  //   shadowOpacity: 0.8,
+  //   shadowRadius: 2,
+  //   elevation: 1,
+  // },
+  buttonIcon: {
+    position: "absolute",
+    right: 15,
+    backgroundColor: "#fff",
+    borderRadius: 50,
+    padding: 5,
+    color: "#FF6969",
   },
   orText: {
     textAlign: "center",
@@ -325,18 +397,21 @@ const styles = StyleSheet.create({
     color: "#515C6F",
   },
   button: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#FF6969",
-    paddingVertical: 10,
+
+    backgroundColor: "#2ea28dd0",
     borderRadius: 25,
-    marginTop: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 15,
+    width: "100%",
+    minWidth: "100%",
   },
   buttonText: {
     color: "#fff",
     fontSize: 18,
-    marginRight: 5,
+    fontWeight: "bold",
+    textTransform: "uppercase",
   },
   agreementText: {
     textAlign: "center",
@@ -345,7 +420,7 @@ const styles = StyleSheet.create({
     color: "#515C6F",
   },
   linkText: {
-    color: "#FF6969",
+    color: "#30A08B",
   },
   checkboxContainer: {
     flexDirection: "row",
@@ -361,20 +436,8 @@ const styles = StyleSheet.create({
     color: "#515C6F",
     fontSize: 14,
   },
-  cont: {
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    padding: 15,
-    marginBottom: 15,
-    elevation: 5, // Ombre portée pour Android
-    shadowColor: "#000", // Couleur de l'ombre pour iOS
-    shadowOffset: { width: 0, height: 2 }, // Décalage de l'ombre pour iOS
-    shadowOpacity: 0.3, // Opacité de l'ombre pour iOS
-    shadowRadius: 3.84, // Rayon de l'ombre pour iOS
-  },
-  fieldContainer2: {
-    marginBottom: 10,
-  },
+
+
   label2: {
     fontSize: 16,
     color: "#515C6F",
@@ -389,14 +452,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     backgroundColor: "#fff",
     elevation: 1, // Légère ombre pour Android
-    width: '100%', // S'assurer que le conteneur prend toute la largeur disponible
+    width: "100%", // S'assurer que le conteneur prend toute la largeur disponible
   },
-  input2: {
-    flex: 1,
-    marginLeft: 10,
-    height: 40,
-    fontSize: 16,
-  },
+
   orText2: {
     textAlign: "center",
     marginVertical: 7,
@@ -405,15 +463,15 @@ const styles = StyleSheet.create({
   checkboxBase: {
     width: 24,
     height: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 4,
     borderWidth: 2,
-    borderColor: '#CCC',
-    backgroundColor: 'transparent',
+    borderColor: "#CCC",
+    backgroundColor: "transparent",
   },
   checkboxChecked: {
-    backgroundColor: '#FF6A69',
+    backgroundColor: "#FF6A69",
   },
 });
 

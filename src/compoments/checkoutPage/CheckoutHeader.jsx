@@ -10,7 +10,7 @@ const CheckoutHeader = () => {
     <View style={styles.header}>
       <Image source={Profile} style={styles.headerImage} />
       <TouchableOpacity style={styles.iconClose} onPress={() => navigation.goBack()}>
-        <Ionicons name="close" size={30} color="#FF6A69" />
+        <Ionicons name="close" size={30} color="#B2905F" />
       </TouchableOpacity>
     </View>
   )
@@ -24,17 +24,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: 6,
-    height: 110,
+    height: 93,
     width: "100%",
-    backgroundColor: '#ddd',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    backgroundColor: '#rgba(255, 152, 0, 0.2)',
     paddingHorizontal: 15
   
   },
   headerImage: {
     width: "30%",
     height: 40,
+    top: 15
     
   },
   headerTitle: {
@@ -46,6 +45,7 @@ const styles = StyleSheet.create({
   },
   iconClose: {
     padding: 6,
-    backgroundColor: "transparent"
+    backgroundColor: "transparent",
+    top: 15
   }
 })
