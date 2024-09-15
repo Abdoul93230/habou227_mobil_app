@@ -30,7 +30,7 @@ const Categories = ({categories} ) => {
         )}
         <TouchableOpacity style={styles.seeAll} onPress={() => navigation.navigate('Voir tous')}>
           <View style={styles.seeAll__icon}>
-            <AntDesign name='right' size={24} color="#FF6A69" />
+            <AntDesign name='right' size={24} color="#B2905F" />
           </View>
           <Text style={styles.seeAllText}>See All</Text>
         </TouchableOpacity>
@@ -44,7 +44,6 @@ export default Categories;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF00',
     marginBottom:10,
   },
   titre__img: {
@@ -63,7 +62,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 30,
     borderRadius: 50,
-    shadowColor: "#FF6A69",
+    shadowColor: "#B17236",
     shadowOffset: { width: 0, height: 0.2 },
     shadowOpacity: 0.50,
     shadowRadius: 3.84,
@@ -79,6 +78,7 @@ const styles = StyleSheet.create({
   categoryText: {
     fontSize: width * 0.026,
     fontWeight: 'sans serif',
+    textTransform: "capitalize",    
   },
   seeAll: {
     width: 100,

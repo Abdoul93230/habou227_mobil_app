@@ -459,19 +459,24 @@ if (loading) {
       <Text style={styles.paraMain}>Adresse de livraison</Text>
       <View style={styles.card}>
         <View style={styles.donner}>
-          <Text style={styles.para}>Name : {nom} </Text>
+          <Text style={styles.para}>Name :  </Text>
+          <Text style={{color:"#B2905F"}}>{nom}</Text>
         </View>
         <View style={styles.donner}>
-          <Text style={styles.para}>Region : {region} </Text>
+          <Text style={styles.para}>Region :  </Text>
+          <Text style={{color:"#B2905F"}}>{region}</Text>
         </View>
         <View style={styles.donner}>
-          <Text style={styles.para}>Quartier : {Quartier} </Text>
+          <Text style={styles.para}>Quartier :  </Text>
+          <Text style={{color:"#B2905F"}}>{Quartier}</Text>
         </View>
         <View style={styles.donner}>
-          <Text style={styles.para}>Email : {email} </Text>
+          <Text style={styles.para}>Email : </Text>
+          <Text style={{color:"#B2905F"}}>{email}</Text>
         </View>
         <View style={styles.donner}>
-          <Text style={styles.para}>Tel : {phone} </Text>
+          <Text style={styles.para}>Tel :  </Text>
+          <Text style={{color:"#B2905F"}}>{phone}</Text>
         </View>
       </View>
       <TouchableOpacity style={styles.button} onPress={()=>navigation.navigate("Livraison Page",{ fromCart: true })}>
@@ -482,7 +487,7 @@ if (loading) {
       <Text style={styles.paymentText}>Mode de paiement</Text>
       <TouchableOpacity onPress={()=> navigation.navigate("Paiement Page",{ fromCart: true })} >
         <View style={styles.cardMoney}>
-          <Feather name="credit-card" size={24} color="#FF6A69" />
+          <Feather name="credit-card" size={24} color="#B2905F" />
           <Text style={styles.paraMoney}>
             {choix}
             {choix === "Mobile Money" ? ` ${numero}` : ""}
@@ -551,7 +556,7 @@ if (loading) {
 
       <TouchableOpacity style={styles.proMo} onPress={() => setModalVisible(true)}>
         <View style={styles.cardMoney}>
-          <Feather name="credit-card" size={24} color="#FF6A69" />
+          <Feather name="credit-card" size={24} color="#B17236" />
           <Text style={styles.paraMoney}>Ajouter un code promotionnel</Text>
           <View style={styles.IconCircle}>
             <EvilIcons name="arrow-right" size={30} color="#FFF" style={Platform.OS === 'ios' ? styles.iOS : styles.android}/>
@@ -598,16 +603,17 @@ const styles = StyleSheet.create({
   },
   title: {
     marginHorizontal: 1,
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
-    color: "#515C70",
+    color: '#B17236',
   },
   paraMain: {
     marginHorizontal: 1,
     fontSize: 16,
     textTransform: "uppercase",
-    color: "#515C70",
+    color: "#B2905F",
     marginBottom: 20,
+   
   },
   card: {
     width: "100%",
@@ -621,17 +627,20 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   donner: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
     height: 40,
-    justifyContent: "center",
     paddingHorizontal: 10,
     marginVertical: 5,
     borderRadius: 10,
   },
   para: {
-    color: "#000",
+    color: "#B17236",
+    fontWeight: "bold"
   },
   button: {
-    backgroundColor: '#FF6A69',
+    backgroundColor: '#30A08B',
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
@@ -650,7 +659,7 @@ const styles = StyleSheet.create({
   },
   paymentText: {
     fontSize: 16,
-    color: "#515C70",
+    color: "#B17236",
     fontWeight: 'bold',
     marginBottom: 10,
   },
@@ -670,7 +679,7 @@ const styles = StyleSheet.create({
   },
   paraMoney: {
     fontSize: 16,
-    color: "#515C70",
+    color: "#B2905F",
     flex: 1,
     marginHorizontal: 10,
   },
@@ -679,7 +688,7 @@ const styles = StyleSheet.create({
     height: 30,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#FF6A69",
+    backgroundColor: "#30A08B",
     borderRadius: 15,
   },
   IconCircle2: {
@@ -687,13 +696,13 @@ const styles = StyleSheet.create({
     height: 30,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#FF6A69",
+    backgroundColor: "#30A08B",
     borderRadius: 15,
     position: 'relative',
   },
   android: {
     bottom: 6,
-    position: "absolute"
+    position: "absolute",
   },
   cardItem: {
     backgroundColor: '#FFFF',
@@ -737,11 +746,11 @@ const styles = StyleSheet.create({
   nike: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: "#515C70"
+    color: "#B2905F"
   },
   CFAPrix: {
     fontSize: 16,
-    color: '#FF6A69',
+    color: '#30A08B',
   },
   quantityContainer: {
     flexDirection: 'row',
@@ -756,7 +765,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     fontSize: 16,
     fontWeight: 'bold',
-    color: "#515C70"
+    color: "#B2905F"
   },
   proMo: {
     marginTop: 20
@@ -787,12 +796,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: "#515C70"
+    color: "#30A08B"
   },
   input: {
     width: '100%',
     height: 40,
-    borderColor: '#ccc',
+    borderColor: '#30A08B',
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
@@ -800,7 +809,7 @@ const styles = StyleSheet.create({
     color: "#515C70"
   },
   modalButton: {
-    backgroundColor: '#FF6A69',
+    backgroundColor: '#B2905F',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
@@ -814,6 +823,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5', // Fond de la page de chargement
+    backgroundColor: '#30A08B', // Fond de la page de chargement
   },
 });

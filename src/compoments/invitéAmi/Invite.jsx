@@ -1,4 +1,5 @@
-import { StyleSheet, Text,Linking,Platform, View, Image, TextInput, TouchableOpacity, Dimensions, Animated, Easing, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text,Linking,Platform, View, Image, TextInput, TouchableOpacity, Dimensions, Animated, Easing, ActivityIndicator,KeyboardAvoidingView } from 'react-native';
+
 import React, { useState, useEffect, useRef } from 'react';
 import { FontAwesome5 } from '@expo/vector-icons';
 import Produit from "../../image/Vnike2.jpg";
@@ -21,9 +22,9 @@ const Invite = () => {
 
   const { height } = Dimensions.get('window');
 
-  const imageOpacity = useRef(new Animated.Value(0)).current;
-  const formOpacity = useRef(new Animated.Value(0)).current;
-  const buttonTranslateY = useRef(new Animated.Value(30)).current;
+  const [imageOpacity] = useState(new Animated.Value(1)); // Assuming you handle opacity changes elsewhere
+  const [formOpacity] = useState(new Animated.Value(1)); // Assuming you handle opacity changes elsewhere
+  const [buttonTranslateY] = useState(new Animated.Value(0));
   const handleAlert = (message) => {
     Toast.show({
       type: 'success',
@@ -166,7 +167,10 @@ const Invite = () => {
 
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+    style={styles.container}
+    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
       <Animated.View style={[styles.containerTop, { opacity: imageOpacity }]}>
         <Image source={Produit} style={styles.image} />
       </Animated.View>
@@ -204,7 +208,7 @@ const Invite = () => {
         </View>
         </TouchableOpacity>
       </Animated.View>
-    </View>
+    </KeyboardAvoidingView>
   )
 }
 
@@ -232,33 +236,33 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 20,
-    backgroundColor: "#FFF",
+    backgroundColor: "#fff",
   },
   textInput: {
     width: "100%",
     height: 170,
-    borderColor: "#dcdcdc",
+    borderColor: "#B2905F",
     borderWidth: 1,
     paddingLeft: 10,
     borderRadius: 10,
-    bottom: 25,
     backgroundColor: "#f9f9f9",
     fontSize: 16,
     color: "#333",
+    marginBottom: 25,
   },
   emailContainer: {
     width: "100%",
-    bottom: 12,
+    marginBottom: 12,
   },
   text: {
     fontSize: 18,
     marginBottom: 5,
-    color: "#333",
+    color: "#B17236",
   },
   emailInput: {
     width: "100%",
     height: 40,
-    borderColor: "#dcdcdc",
+    borderColor: "#B2905F",
     borderWidth: 1,
     paddingLeft: 10,
     borderRadius: 10,
@@ -269,7 +273,7 @@ const styles = StyleSheet.create({
   submitButton: {
     width: "100%",
     height: 43,
-    backgroundColor: "#ff6f61",
+    backgroundColor: "#30A08B",
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
@@ -287,6 +291,6 @@ const styles = StyleSheet.create({
   whatsappText: {
     fontSize: 18,
     marginRight: 10,
-    color: "#333",
+    color: "#B2905F",
   }
 });

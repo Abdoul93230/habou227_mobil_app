@@ -3,7 +3,6 @@ import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { API_URL } from "@env";
 
-
 // const BackendUrl = "https://chagona.onrender.com";
 // console.log("")
 export const getProducts = () => async (dispatch) => {

@@ -50,17 +50,17 @@ const styles = StyleSheet.create({
   totalLabel: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#B2905F',
   },
   totalAmount: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#000',
+    color: '#30A08B',
     marginVertical: 4,
   },
   shippingInfo: {
     fontSize: 14,
-    color: '#777',
+    color: '#B2905F',
   },
   footerAction: {
     flex: 1,
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   },
   buttonCheck: {
     flexDirection: 'row',
-    backgroundColor: "#FF6A69",
+    backgroundColor: "#30A08B",
     padding: 10,
     borderRadius: 10,
     alignItems: "center",

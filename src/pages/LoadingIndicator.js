@@ -9,7 +9,7 @@ const LoadingIndicator = ({ loading, children }) => {
         visible={loading}
         textContent={'Loading...'}
         textStyle={styles.spinnerTextStyle}
-        color="#FF6969"
+        color="#30A08B"
       />
       {!loading && children}
     </View>
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   spinnerTextStyle: {
-    color: '#FFF',
+    color: '#B2905F',
   },
 });
 

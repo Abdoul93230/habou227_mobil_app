@@ -184,12 +184,12 @@ const DetailProduitFooter = ({produit,color,taille,id,chgNbr}) => {
       </TouchableOpacity> */}
 
       <TouchableOpacity style={styles.buttonAddWhatsp} onPress={Discuite}>
-        <Ionicons name="logo-whatsapp" size={20} color="#27AA19" />
+        <Ionicons name="logo-whatsapp" size={20} color="#30A08B" />
         <Text style={styles.buttonTextAddWhatsp}>Discuter</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.buttonAddWhatsp} onPress={AddProduct}>
-        <FontAwesome name="shopping-cart" size={20} color="#F0F0F0" />
+        <FontAwesome name="shopping-cart" size={20} color="#30A08B" />
         <Text style={styles.buttonTextAddWhatsp}>Ajouter au panier</Text>
       </TouchableOpacity>
 
@@ -308,12 +308,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    height: 100,
+    height: 78,
     paddingHorizontal: 10,
     borderColor: "#ccc",
-    borderTopWidth: 1,
     elevation: 5,
-    backgroundColor: "#c1c1c1ad",
+    backgroundColor: "#F5F6F8",
   },
   containerFooter2: {
     position: 'absolute',
@@ -323,37 +322,40 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    height: 100,
+    height: 78,
     paddingHorizontal: 10,
     borderColor: "#ccc",
     borderTopWidth: 1,
     elevation: 5,
-    backgroundColor: "#DDDDDD",
+    backgroundColor: "rgba(255, 153, 0, 0.56)",
   },
   button: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#B2905F",
     flexDirection: 'row',
     alignItems: 'center',
     padding: 7,
     borderRadius: 30,
   },
   buttonAddWhatsp: {
-    backgroundColor: "#FF6A69",
+    backgroundColor: "rgba(255, 152, 0, 0.2)",
     flexDirection: 'row',
+    justifyContent: "center",
     alignItems: 'center',
     padding: 7,
     borderRadius: 30,
+    width: "43%",
   },
   buttonText: {
     textTransform: "uppercase",
-    color: '#000000c2',
+    color: '#30A08B',
     fontSize: 12,
     marginLeft: 5,
   },
   buttonTextAddWhatsp: {
     textTransform: "uppercase",
-    color: '#FFF',
-    fontSize: 12,
+    color: '#30A08B',
+    fontWeight:"bold",
+    fontSize: 11,
     marginLeft: 5,
   },
 });

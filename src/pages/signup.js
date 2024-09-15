@@ -10,6 +10,7 @@ import {
   Platform,
   ScrollView,
   Pressable,
+  Image
 } from "react-native";
 import axios from "axios";
 import { API_URL } from "@env";
@@ -24,7 +25,7 @@ import { useNavigation } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from "react-native-vector-icons/Ionicons";
-
+import LogoProject from "../../src/image/PlashScreen.png"
 // const BackendUrl = process.env.REACT_APP_Backend_Url;
 
 const SignUp = () => {
@@ -208,10 +209,6 @@ const SignUp = () => {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0} // Ajustez la valeur si nécessaire
     >
-      <ScrollView
-        contentContainerStyle={styles.scrollViewContent}
-        showsVerticalScrollIndicator={false}
-      >
         {isloading ? (
           <View style={styles.loadingContainer}>
             <Text style={styles.loadingText}>
@@ -221,10 +218,14 @@ const SignUp = () => {
           </View>
         ) : (
           <View style={styles.signUpContainer}>
+           
             <View style={styles.fieldContainer}>
+            <View style={{width: "100%", height: 100,}}>
+              <Image source={LogoProject} style={{width: "100%", height: "100%", resizeMode: "center"}}/>
+            </View>
               <Text style={styles.label}>Nom d'utilisateur</Text>
               <View style={styles.inputContainer}>
-                <User color="#515C6F" />
+                <User color="#B2905F" />
                 <TextInput
                   style={styles.input}
                   placeholder="janedoe12345"
@@ -235,10 +236,9 @@ const SignUp = () => {
             </View>
 
             <View style={styles.cont}>
-              <View style={styles.fieldContainer2}>
-                <Text style={styles.label2}>Adresse email</Text>
-                <View style={styles.inputContainer2}>
-                  <MessageSquare color="#515C6F" />
+                <Text style={styles.label2}>Adresse email (Facultatif)</Text>
+                <View style={styles.inputContainer}>
+                  <MessageSquare color="#B2905F" />
                   <TextInput
                     style={styles.input}
                     placeholder="janedoe123@email.com"
@@ -247,29 +247,29 @@ const SignUp = () => {
                     onChangeText={setEmail}
                   />
                 </View>
-              </View>
+       
 
-              <Text style={styles.orText2}>ou</Text>
+              
 
-              <View style={styles.fieldContainer2}>
+         
                 <Text style={styles.label2}>Numéro de téléphone</Text>
-                <View style={styles.inputContainer2}>
-                  <PhoneCall color="#515C6F" />
+                <View style={styles.inputContainer}>
+                  <PhoneCall color="#B2905F" />
                   <TextInput
-                    style={styles.input2}
+                    style={styles.input}
                     placeholder="+227 87727501"
                     keyboardType="phone-pad"
                     value={phoneNumber}
                     onChangeText={setPhoneNumber}
                   />
                 </View>
-              </View>
+    
             </View>
 
             <View style={styles.fieldContainer}>
               <Text style={styles.label}>Mot de passe</Text>
               <View style={styles.inputContainer}>
-                <Lock color="#515C6F" />
+                <Lock color="#B2905F" />
                 <TextInput
                   style={styles.input}
                   placeholder="*******************"
@@ -295,12 +295,12 @@ const SignUp = () => {
               </>
             )}
 
-            <TouchableOpacity style={{ width: 50 }}>
+            <TouchableOpacity style={{ width: "auto",}}>
               <Text
                 onPress={() => navigation.navigate("Login")}
-                style={{ color: "#FF6969" }}
+                style={styles.label}
               >
-                LogIn ?
+                Se connecter ?
               </Text>
               <ChevronRight color="#fff" />
             </TouchableOpacity>
@@ -308,18 +308,20 @@ const SignUp = () => {
               style={styles.button}
               onPress={validateCredentials}
             >
-              <Text style={styles.buttonText}>Sign Up</Text>
-              <ChevronRight color="#fff" />
+              <Text style={styles.buttonText}>S'inscrire</Text>
+              <View  style={styles.buttonIcon}>
+              <ChevronRight color="#30A08B" />
+
+              </View>
             </TouchableOpacity>
 
             <Text style={styles.agreementText}>
-              By creating an account, you agree to our{" "}
-              <Text style={styles.linkText}>Terms of Service</Text> and{" "}
-              <Text style={styles.linkText}>Privacy Policy</Text>
+            En créant un compte, vous acceptez nos{" "}
+              <Text style={styles.linkText}>Conditions d'utilisation</Text> and{" "}
+              <Text style={styles.linkText}>Politique de confidentialité</Text>
             </Text>
           </View>
         )}
-      </ScrollView>
     </KeyboardAvoidingView>
   );
 };
@@ -329,7 +331,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center", // Centre verticalement
     alignItems: "center", // Centre horizontalement
-    padding: 15,
+    padding: 10,
     backgroundColor: "#fff",
   },
   scrollViewContent: {
@@ -357,24 +359,45 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     color: "#515C6F",
-    marginBottom: 5,
+    marginBottom: 1,
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 5,
-    borderRadius: 5,
-    borderColor: "#FF6969",
+    marginBottom: 15,
+    padding: 10,
+    borderRadius: 10,
+    borderColor: "#2ea28dd0",
     borderWidth: 1,
     backgroundColor: "#fff",
-    elevation: 1,
-    width: "100%", // S'assurer que le conteneur prend toute la largeur disponible
+    elevation: 2, // Augmenter l'élévation pour une ombre plus visible
+    width: "100%",
+    minHeight: 50,
+    
   },
   input: {
     flex: 1,
-    marginLeft: 10,
-    height: 40,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
     fontSize: 16,
+    color: "#515C6F",
+  },
+  // cont:{
+  //   backgroundColor: "#FFF",
+  //   width: "100",
+  //   shadowColor: '#000',
+  //   shadowOffset: { width: 0, height: 2 },
+  //   shadowOpacity: 0.8,
+  //   shadowRadius: 2,
+  //   elevation: 1,
+  // },
+  buttonIcon: {
+    position: "absolute",
+    right: 15,
+    backgroundColor: "#fff",
+    borderRadius: 50,
+    padding: 5,
+    color: "#FF6969",
   },
   orText: {
     textAlign: "center",
@@ -382,18 +405,21 @@ const styles = StyleSheet.create({
     color: "#515C6F",
   },
   button: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#FF6969",
-    paddingVertical: 10,
+
+    backgroundColor: "#2ea28dd0",
     borderRadius: 25,
-    marginTop: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 15,
+    width: "100%",
+    minWidth: "100%",
   },
   buttonText: {
     color: "#fff",
     fontSize: 18,
-    marginRight: 5,
+    fontWeight: "bold",
+    textTransform: "uppercase",
   },
   agreementText: {
     textAlign: "center",
@@ -402,7 +428,7 @@ const styles = StyleSheet.create({
     color: "#515C6F",
   },
   linkText: {
-    color: "#FF6969",
+    color: "#30A08B",
   },
   checkboxContainer: {
     flexDirection: "row",
@@ -418,20 +444,8 @@ const styles = StyleSheet.create({
     color: "#515C6F",
     fontSize: 14,
   },
-  cont: {
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    padding: 15,
-    marginBottom: 15,
-    elevation: 5, // Ombre portée pour Android
-    shadowColor: "#000", // Couleur de l'ombre pour iOS
-    shadowOffset: { width: 0, height: 2 }, // Décalage de l'ombre pour iOS
-    shadowOpacity: 0.3, // Opacité de l'ombre pour iOS
-    shadowRadius: 3.84, // Rayon de l'ombre pour iOS
-  },
-  fieldContainer2: {
-    marginBottom: 10,
-  },
+
+
   label2: {
     fontSize: 16,
     color: "#515C6F",
@@ -448,12 +462,7 @@ const styles = StyleSheet.create({
     elevation: 1, // Légère ombre pour Android
     width: "100%", // S'assurer que le conteneur prend toute la largeur disponible
   },
-  input2: {
-    flex: 1,
-    marginLeft: 10,
-    height: 40,
-    fontSize: 16,
-  },
+
   orText2: {
     textAlign: "center",
     marginVertical: 7,

@@ -8,7 +8,7 @@ const SuivieCommandesHeader = () => {
   return (
     <View style={styles.container}>
     <TouchableOpacity style={styles.menuButton} onPress={() => navigation.navigate('Commande Page')}>
-      <Ionicons name="chevron-back-outline" size={24} color="#FF3232" />
+      <Ionicons name="chevron-back-outline" size={24} color="#FFF" />
     </TouchableOpacity>
     <Text style={styles.title}>Suivie commandes #001</Text>
   </View>
@@ -21,18 +21,16 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     paddingVertical: 15,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: 'rgba(255, 152, 0, 0.2)',
     alignItems: 'center', 
     justifyContent: "flex-start", 
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
     paddingHorizontal: 12,
     flexDirection: 'row',
-    height: 90,
+    height: 93,
 
   },
   menuButton: {
-    backgroundColor: '#F7D946',
+    backgroundColor: '#B17236',
     padding: 8, 
     borderRadius: 5,
     marginRight: 10, 
@@ -41,7 +39,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18, 
     fontWeight: 'bold', 
-    color: '#333', 
+    color: '#B17236', 
     top: 20,
   },
   

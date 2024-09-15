@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from 'react-native';
 import Ordi from '../../image/ordinateur14.jpg';
 import { useNavigation } from '@react-navigation/native';
 
-
+const { width, height } = Dimensions.get('window');
 const Produits = ({ products, name }) => {
     const navigation = useNavigation()
   return (
@@ -36,11 +36,11 @@ const Produits = ({ products, name }) => {
 export default Produits;
 
 const styles = StyleSheet.create({
+  //Produit composant
   container: {
     flex: 1,
     marginTop: 7,
     marginHorizontal: 10,
-    backgroundColor: "#f0f0f099",
     borderTopEndRadius: 20,
     borderTopLeftRadius: 20,
   },
@@ -51,12 +51,12 @@ const styles = StyleSheet.create({
   navProduct: {
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#E1FAFA",
+    backgroundColor: "#FFF8E1",
   },
   title__product: {
     fontSize: 18,
     letterSpacing: 1,
-    color: '#000',
+    color: '#30A08B',
     marginVertical: 10,
   },
   box__menu: {
@@ -70,10 +70,12 @@ const styles = StyleSheet.create({
     width: "30%",
     height: 120,
     borderRadius: 12,
-    backgroundColor: "#DDD",
+    backgroundColor: "#FFF8E1",
     marginVertical: 10,
     justifyContent: "flex-end",
     overflow: "hidden",
+    borderColor: "#FF9800",
+    borderWidth: 1,
   },
   image: {
     width: "100%",
@@ -82,7 +84,8 @@ const styles = StyleSheet.create({
   },
   footer: {
     height: 35,
-    backgroundColor: "#676767b0", // Couleur de fond avec opacité
+    // backgroundColor: "rgba(255, 152, 0, 0.48)",
+    backgroundColor: "#30a08bb5",
     justifyContent: "center",
     alignItems: "center",
     borderBottomLeftRadius: 12,
@@ -94,7 +97,8 @@ const styles = StyleSheet.create({
     right: 0,
   },
   footerText: {
-    color: "#FFF",
+    color: "#fff",
+    fontWeight: "bold",
     textAlign: "center",
     fontSize: 12,
   },

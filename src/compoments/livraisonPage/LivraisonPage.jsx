@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Platform, ScrollView,ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Platform, ScrollView,ActivityIndicator, KeyboardAvoidingView } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { NativeBaseProvider, Box, Select, CheckIcon, Center } from 'native-base';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -7,6 +7,7 @@ import { API_URL } from "@env";
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 
+const colors = ['#B17236', '#B2905F', '#30A08B'];
 
 const LivraisonPage = () => {
   const [service, setService] = useState("");
@@ -178,7 +179,7 @@ const LivraisonPage = () => {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#FF6A69" />
+        <ActivityIndicator size="large" color="#30A08B" />
         <Text style={styles.loadingText}>Chargement...</Text>
       </View>
     );
@@ -186,6 +187,9 @@ const LivraisonPage = () => {
 
   return (
     <NativeBaseProvider>
+      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
+
+
       <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.container}>
         <Text style={styles.title}>Adresse de livraison</Text>
@@ -197,6 +201,7 @@ const LivraisonPage = () => {
       </Text>
       {/* <Center style={{borderWidth:0}}> */}
         {/* <Box style={[styles.dropdown,styles.input]}> */}
+        <View style={styles.selectContainer}>
           <Select
           style={[styles.input2]}
             selectedValue={region}
@@ -215,6 +220,8 @@ const LivraisonPage = () => {
             <Select.Item label="Tillaberi" value="Tillaberi" />
             <Select.Item label="Tahoua" value="Tahoua" />
           </Select>
+
+          </View>
         {/* </Box> */}
       {/* </Center> */}
     </View>
@@ -257,8 +264,10 @@ const LivraisonPage = () => {
         </View>
       </View>
       </ScrollView>
+      </KeyboardAvoidingView>
+
     </NativeBaseProvider>
-  );
+  )
 }
 
 export default LivraisonPage;
@@ -266,31 +275,27 @@ export default LivraisonPage;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFF",
-    padding: 10,
+    padding: 7,
+  },
+  selectContainer: {
+    height: 40,
+    borderColor: colors[0], // Color of the border
+    borderWidth: 1,
+    borderRadius: 5,
+    overflow: 'hidden',
   },
   title: {
-    fontSize: 20,
-    marginVertical: 1,
-    padding: 5,
-    fontWeight: "bold",
-    color: "#515C70",
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginTop: 15,
+    zIndex: 1000,
+    color: "#B17236"
   },
   cardAddress: {
     marginHorizontal: 0,
     marginVertical: 10,
     padding: 20,
     width: "100%",
-    backgroundColor: "#FFF",
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
   },
   formGroup: {
     marginBottom: 15,
@@ -298,21 +303,20 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     marginBottom: 5,
-    color: "#515C70",
+    color:colors[0],
   },
   regionText: {
     color: '#515C70',
   },
   input: {
     height: 40,
-    borderColor: '#ddd',
+    borderColor: colors[0],
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
   },
   input2: {
     height: 40,
-    borderColor: '#ddd',
     fontSize: 16,
     borderRadius: 5,
     paddingHorizontal: 10,
@@ -328,16 +332,18 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
   },
 
-  buttonContainer: {
-    marginTop: 20,
-    alignItems: 'center',
-    width: "100%",
-  },
+
   button: {
-    backgroundColor: '#FF6A69',
-    paddingVertical: 10,
-    width: "100%",
-    borderRadius: 5,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+    borderRadius: 15,
+    backgroundColor: colors[2],
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   buttonText: {
     color: '#FFF',
