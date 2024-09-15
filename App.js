@@ -47,6 +47,7 @@ import OTPPage from "./src/pages/OTPPage";
 import VerificationNumPage from "./src/pages/VerificationNumPage";
 import ChangePassword from "./src/pages/ChangePassword";
 import { API_URL } from "@env";
+import PlashScreen from "./SplashScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -68,6 +69,7 @@ export default function App() {
       try {
         const jsonValue = await AsyncStorage.getItem("userEcomme");
         const user = JSON.parse(jsonValue);
+        
         if (user) {
           axios.defaults.headers.common[
             "Authorization"
@@ -185,12 +187,13 @@ export default function App() {
             </Stack.Navigator>
           ) : (
             <View style={styles.container}>
-              <ActivityIndicator
+            <PlashScreen />
+              {/* <ActivityIndicator
                 size="small"
                 color="#FF6969"
                 style={styles.spinner}
               />
-              <Text>En cours de vérification...</Text>
+              <Text>En cours de vérification...</Text> */}
             </View>
           )}
           <Toast config={toastConfig} ref={(ref) => Toast.setRef(ref)} />
@@ -201,12 +204,12 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#fff",
-  },
+  // container: {
+  //   flex: 1,
+  //   justifyContent: "center",
+  //   alignItems: "center",
+  //   backgroundColor: "#fff",
+  // },
   spinner: {
     borderWidth: 4,
     borderColor: "rgba(0, 0, 0, 0.1)",

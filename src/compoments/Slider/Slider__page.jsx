@@ -22,7 +22,7 @@ const ProductsSli = ({ products, name }) => {
 
         <TouchableOpacity onPress={() => navigation.navigate('Category', { name })} style={styles.link}>
           <Text style={styles.more}>View More</Text>
-          <Icon name="chevrons-right" size={20} />
+          <Icon name="chevrons-right" size={20} color="#30A08B" />
           <View style={styles.before} />
           <View style={styles.after} />
         </TouchableOpacity>
@@ -34,6 +34,8 @@ const ProductsSli = ({ products, name }) => {
           paginationStyle={styles.pagination}
           loop={true}
           showsPagination={true}
+          dot={<View style={styles.dot} />}
+          activeDot={<View style={styles.activeDot} />}
           style={styles.swiper}
         >
           {Array(Math.ceil(products.length / 3)).fill().map((_, i) => (
@@ -55,11 +57,11 @@ const ProductsSli = ({ products, name }) => {
                     <Text style={styles.name}>{param.name.slice(0, 9)}...</Text>
                     {param.prixPromo > 0 ? (
                       <>
-                        <Text style={styles.oldPrice}>f {param.prix}</Text>
-                        <Text style={styles.newPrice}>f {param.prixPromo}</Text>
+                        <Text style={styles.oldPrice}>F {param.prix}</Text>
+                        <Text style={styles.newPrice}>F {param.prixPromo}</Text>
                       </>
                     ) : (
-                      <Text style={styles.newPrice}>f {param.prix}</Text>
+                      <Text style={styles.newPrice}>F {param.prix}</Text>
                     )}
                   </View>
                 </View>
@@ -96,17 +98,20 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   title: {
-    textTransform: 'capitalize',
+    textTransform: 'uppercase',
      fontSize: width * 0.03,
+      color: "#30A08B"
+
   },
   more: {
-    textTransform: 'capitalize',
+    textTransform: "uppercase",
+    color: "#30A08B"
   },
   before: {
     position: 'absolute',
     top: 0,
     left: 0,
-    backgroundColor: '#FF6969',
+    backgroundColor: '#FF9800',
     width: '90%',
     height: 2,
   },
@@ -114,7 +119,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     right: 0,
-    backgroundColor: '#FF6969',
+    backgroundColor: '#FF9800',
     width: '90%',
     height: 2,
   },
@@ -129,6 +134,7 @@ const styles = StyleSheet.create({
   },
   pagination: {
     bottom: -8,
+    color: "#B17236"
   },
   slide: {
     flexDirection: 'row',
@@ -136,7 +142,7 @@ const styles = StyleSheet.create({
   },
   carde: {
     height: 170,
-    shadowColor: '#000',
+    shadowColor: '#B2905F',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
     shadowRadius: 2,
@@ -154,7 +160,7 @@ const styles = StyleSheet.create({
     right: 5,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 145, 0, 0.815)',
+    backgroundColor: '#30a08ba7',
     borderRadius: 5,
     padding: 2,
     zIndex:1
@@ -192,9 +198,23 @@ const styles = StyleSheet.create({
     fontSize: width * 0.025,
   },
   newPrice: {
-    color: '#5c6c86',
+    color: '#30A08B',
     marginVertical: 1,
     fontSize: width * 0.028,
+  },
+  dot: {
+    backgroundColor: '#B2905F', // Couleur des points non sélectionnés
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginHorizontal: 3,
+  },
+  activeDot: {
+    backgroundColor: '#30A08B', // Couleur du point sélectionné
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginHorizontal: 3,
   },
 });
 

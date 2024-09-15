@@ -227,28 +227,44 @@ const ProfilePage = () => {
         </View>
       </View>
 
-      <View style={styles.card}>
-        <TouchableOpacity style={styles.cardRow} onPress={() => navigation.navigate("Inviter les amis")}>
-          <AntDesign name="addusergroup" size={24} color="black" />
-          <Text style={styles.title}>Invite Friends</Text>
-          <AntDesign name='right' size={24} color="black" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.cardRow} onPress={() => navigation.navigate('Service Page')}>
-          <AntDesign name="questioncircleo" size={24} color="black" />
-          <Text style={styles.title}>Service client</Text>
-          <AntDesign name='right' size={24} color="black" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.cardRow} onPress={() => navigation.navigate('Commande Page')}>
-          <MaterialCommunityIcons name="shopping-outline" size={24} color="black" />
-          <Text style={styles.title}>Ma commande</Text>
-          <AntDesign name='right' size={24} color="black" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.cardRow} onPress={() => navigation.navigate('Suggestion Page')}>
-          <AntDesign name="plussquareo" size={24} color="black" />
-          <Text style={styles.title}>Faire une suggestion</Text>
-          <AntDesign name='right' size={24} color="black" />
-        </TouchableOpacity>
-      </View>
+      <View style={styles.cardContainer}>
+      <TouchableOpacity style={styles.card} onPress={() => navigation.navigate("Inviter les amis")}>
+        <View style={styles.iconContainer}>
+          <AntDesign name="addusergroup" size={24} color="#FFF" />
+        </View>
+        <Text style={styles.title}>Invite Friends</Text>
+        <View style={styles.arrowContainer}>
+          <AntDesign name='right' size={18} color="#FFF" />
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('Service Page')}>
+        <View style={styles.iconContainer}>
+          <AntDesign name="questioncircleo" size={24} color="#FFF" />
+        </View>
+        <Text style={styles.title}>Service client</Text>
+        <View style={styles.arrowContainer}>
+          <AntDesign name='right' size={18} color="#FFF" />
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('Commande Page')}>
+        <View style={styles.iconContainer}>
+          <MaterialCommunityIcons name="shopping-outline" size={24} color="#FFF" />
+        </View>
+        <Text style={styles.title}>Ma commande</Text>
+        <View style={styles.arrowContainer}>
+          <AntDesign name='right' size={18} color="#FFF" />
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('Suggestion Page')}>
+        <View style={styles.iconContainer}>
+          <AntDesign name="plussquareo" size={24} color="#FFF" />
+        </View>
+        <Text style={styles.title}>Faire une suggestion</Text>
+        <View style={styles.arrowContainer}>
+          <AntDesign name='right' size={18} color="#FFF" />
+        </View>
+      </TouchableOpacity>
+    </View>
 
       <Modal
         animationType="none"
@@ -296,37 +312,54 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingHorizontal: 10,
   },
+  cardContainer: {
+    width: '100%',
+    padding: 7,
+  },
+  card: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 8,
+    backgroundColor: "#B2905F",  
+    marginVertical: 10,
+    borderRadius: 15, 
+    paddingHorizontal: 20,
+    elevation: 8,  
+    shadowColor: '#000', 
+    shadowOffset: { width: 0, height: 4 }, 
+    shadowOpacity: 0.3,  
+    shadowRadius: 8, 
+  },
+  iconContainer: {
+    backgroundColor: '#B17236', 
+    borderRadius: 50,
+    padding: 10,
+  },
+  title: {
+    flex: 1,
+    fontSize: 16,
+    marginLeft: 15,
+    color: '#FFF',
+  },
+  arrowContainer: {
+    backgroundColor: '#30A08B',  // Couleur de fond des flèches
+    borderRadius: 50,
+    padding: 5,
+  },
+
+
+
+
   profile: {
     width: '100%',
     height: 120,
-    // backgroundColor: '#ccc',
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
     borderRadius: 10,
     marginVertical: 15,
-  },
-  card: {
-    width: '100%',
-    backgroundColor: '#fff',
-    padding: 10,
-    borderRadius: 10,
-    marginVertical: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  cardRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 10,
-    backgroundColor: "#F5F5F5",
-    marginVertical: 5,
-    borderRadius: 10,
-    paddingHorizontal: 15,
+    backgroundColor: '#F8F9FA', // Couleur de fond légère pour la carte
   },
   imgProfile: {
     width: 100,
@@ -334,13 +367,11 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     overflow: 'hidden',
     marginRight: 15,
-    shadowColor: '#000',
+    shadowColor: '#B2905F', // Couleur de l'ombre en accord avec la palette
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
     elevation: 5,
-
-
   },
   image: {
     width: '100%',
@@ -354,34 +385,30 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 5,
-    color: "#515C70",
+    color: '#B17236', // Couleur du nom
   },
   email: {
     fontSize: 14,
-    color: '#666',
+    color: '#B2905F', // Couleur de l'email
     marginBottom: 10,
   },
   BtnEdit: {
     paddingVertical: 10,
     paddingHorizontal: 15,
-    backgroundColor: '#C9CDD4',
+    backgroundColor: '#30A08B', 
     borderRadius: 30,
     alignItems: 'center',
     width: 170,
     borderWidth: 1,
-    borderColor: '#515C70',
+    borderColor: '#B2905F', 
   },
   editText: {
-    color: '#515C70',
-    textTransform: "uppercase",
-    fontWeight: "bold",
+    color: 'white',
+    textTransform: 'uppercase',
+    fontWeight: 'bold',
   },
-  title: {
-    flex: 1,
-    fontSize: 16,
-    marginLeft: 10,
-    color: '#000',
-  },
+
+
 
 
 
@@ -389,7 +416,7 @@ const styles = StyleSheet.create({
   ///////////modal change Image /////
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)', 
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -416,38 +443,49 @@ const styles = StyleSheet.create({
   },
   inputLabel: {
     fontSize: 16,
-    color: '#555',
+    color: '#B17236',
     marginBottom: 5,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#B2905F',
     marginBottom: 15,
     paddingVertical: 8,
     paddingHorizontal: 10,
     fontSize: 16,
     borderRadius: 5,
+    backgroundColor: '#F9F9F9',
     shadowColor: "#000",
-    shadowOffset: { width: 0,  height: 2, },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-
   },
   inputAndroid: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#B2905F', 
     marginBottom: 15,
     paddingVertical: 8,
     paddingHorizontal: 10,
     fontSize: 16,
     borderRadius: 5,
-    shadowColor: "#000",
-    shadowOffset: { width: 0,  height: 2, },
-    shadowOpacity: 0.5,
-    shadowRadius: 3.4,
-    elevation: 0,
-
+    backgroundColor: '#F9F9F9',
+  },
+  imgProfile: {
+    borderRadius: 100,
+    overflow: 'hidden',
+    marginBottom: 15,
+  },
+  image: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+  },
+  changePasswordText: {
+    fontSize: 16,
+    color: '#30A08B', 
+    marginTop: 10,
+    textDecorationLine: 'underline',
   },
   submit: {
     flexDirection: 'row',
@@ -461,10 +499,10 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   buttonCancel: {
-    backgroundColor: '#C9CDD4',
+    backgroundColor: '#B2905F',
   },
   buttonSubmit: {
-    backgroundColor: '#FF6A69',
+    backgroundColor: '#30A08B', 
   },
   buttonText: {
     color: '#fff',

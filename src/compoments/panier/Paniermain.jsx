@@ -152,20 +152,20 @@ const Paniermain = ({chgTotal}) => {
 
               {product.prixPromo > 0 ? (
                 <>
-                  <Text style={styles.panierText33}>cfa {product.prix}</Text>
-                  <Text style={styles.panierText3}>cfa {product.prixPromo}</Text>
+                  <Text style={styles.panierText33}>CFA {product.prix}</Text>
+                  <Text style={styles.panierText3}>CFA {product.prixPromo}</Text>
                 </>
               ) : (
-                <Text style={styles.panierText3}>cfa {product.prix}</Text>
+                <Text style={styles.panierText3}>CFA {product.prix}</Text>
               )}
 
               <View style={styles.countNumber}>
                 <TouchableOpacity onPress={() => incrementQuantity(index)}>
-                  <EvilIcons name="plus" size={24} color="black" style={Platform.OS === 'ios' ? styles.iOS : styles.android} />
+                  <EvilIcons name="plus" size={24} color="#B17236" style={Platform.OS === 'ios' ? styles.iOS : styles.android} />
                 </TouchableOpacity>
                 <Text style={styles.countNumberText}>{card.quantity}</Text>
                 <TouchableOpacity onPress={() => decrementQuantity(index)}>
-                  <EvilIcons name="minus" size={24} color="black" style={Platform.OS === 'ios' ? styles.iOS : styles.android} />
+                  <EvilIcons name="minus" size={24} color="#B17236" style={Platform.OS === 'ios' ? styles.iOS : styles.android} />
                 </TouchableOpacity>
               </View>
               <View style={styles.result}>
@@ -236,14 +236,15 @@ const styles = StyleSheet.create({
   panierText1: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: '#B2905F',
   },
   panierText3: {
     fontSize: 16,
-    color: '#FF6A69',
+    color: '#30A08B',
   },
   panierText33: {
     fontSize: 13,
-    color: '#FF6A69',
+    color: '#B2905F',
     textDecorationLine: "line-through"
   },
   countNumber: {
@@ -261,7 +262,8 @@ const styles = StyleSheet.create({
   countNumberText: {
     fontSize: 18,
     fontWeight: 'bold',
-    textAlign: "center"
+    textAlign: "center",
+    color: "#B2905F"
   },
   android: {
     bottom: 2,
@@ -271,7 +273,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   prix: {
-    color: '#FF6A69',
+    color: '#30A08B',
     fontSize: 16,
     fontWeight: 'bold',
   },
@@ -280,7 +282,7 @@ const styles = StyleSheet.create({
     height: 30,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#FF6A69",
+    backgroundColor: "#30A08B",
     borderRadius: 15,
     marginRight: 12
   },

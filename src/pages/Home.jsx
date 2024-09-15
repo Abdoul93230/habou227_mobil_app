@@ -197,18 +197,26 @@ const styles = StyleSheet.create({
     height: "auto"
   },
   contenu: {
-    marginBottom: 90,
+    marginBottom: 79,
   },
   icon: {
     position: "absolute",
     bottom: 90,
     right: 20,
     padding: 10,
-    backgroundColor: "#FF6A69",
+    backgroundColor: "#30A08B",
     borderRadius: 50,
     zIndex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+      },
+      shadowOpacity: 0.45,
+      shadowRadius: 3.84,
+      elevation: 5
   },
   iconCircle: {
     color: 'white',

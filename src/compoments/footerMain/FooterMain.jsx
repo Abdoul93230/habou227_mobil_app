@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     height: 55,
-    backgroundColor: '#2F2F30',
+    backgroundColor: '#B2905F',
     paddingVertical: 8,
   },
   footerButton: {
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
   },
   footerSecondary: {
     width: '100%',
-    backgroundColor: '#131313',
+    backgroundColor: '#30A08B',
     paddingVertical: 15,
     paddingHorizontal: 10,
     
@@ -130,10 +130,10 @@ const styles = StyleSheet.create({
   footerRight: {
     width: '100%',
     padding: 5,
-    backgroundColor: "#2F2F30"
+    backgroundColor: "#B2905F"
   },
   footerSecondaryTexte: {
-    color: "#808080",
+    color: "#FFF",
     fontSize: 12,
     textAlign: 'center',
   }

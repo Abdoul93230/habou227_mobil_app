@@ -8,8 +8,9 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
-  ScrollView,
+  Image
 } from "react-native";
+import LogoProject from "../../src/image/PlashScreen.png"
 import { ChevronRight, Lock, Phone, User } from "react-native-feather";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -27,7 +28,7 @@ function LogIn({ chg, creer }) {
   const navigation = useNavigation();
   const regexMail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const regexPhone = /^[0-9]{8,}$/;
-
+  
   const handleAlert = (message) => {
     Toast.show({
       type: "success",
@@ -51,6 +52,7 @@ function LogIn({ chg, creer }) {
       bottomOffset: 40,
     });
   };
+
 
   const connect = async () => {
     setIsloading(true);
@@ -125,10 +127,7 @@ function LogIn({ chg, creer }) {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0} // Ajustez la valeur si nécessaire
     >
-      <ScrollView
-        contentContainerStyle={styles.scrollViewContent}
-        showsVerticalScrollIndicator={false}
-      >
+   
         {isloading ? (
           <View style={styles.loadingContainer}>
             <Text style={styles.loadingText}>
@@ -138,11 +137,13 @@ function LogIn({ chg, creer }) {
           </View>
         ) : (
           <View style={styles.container}>
+               <View style={{width: "100%", height: 100,}}>
+              <Image source={LogoProject} style={{width: "100%", height: "100%", resizeMode: "center"}}/>
+            </View>
             <View style={styles.inputGroup}>
               <View style={styles.inputContainer}>
                 <User style={styles.icon} />
                 <View style={styles.inputWrapper}>
-                  <Text style={styles.label}>Email/UserEmail</Text>
                   <TextInput
                     style={styles.input}
                     value={email}
@@ -152,16 +153,15 @@ function LogIn({ chg, creer }) {
                   />
                 </View>
               </View>
-              <Text style={styles.orText}>or</Text>
+              <Text style={styles.orText}>OU</Text>
               <View style={styles.inputContainer}>
                 <Phone style={styles.icon} />
                 <View style={styles.inputWrapper}>
-                  <Text style={styles.label}>Phone Number</Text>
                   <TextInput
                     style={styles.input}
                     value={phoneNumber}
                     onChangeText={setPhoneNumber}
-                    placeholder="+227 87701000"
+                    placeholder="Numéro de téléphone"
                     keyboardType="phone-pad"
                   />
                 </View>
@@ -170,12 +170,11 @@ function LogIn({ chg, creer }) {
             <View style={styles.inputContainer}>
               <Lock style={styles.icon} />
               <View style={styles.inputWrapper}>
-                <Text style={styles.label}>Password</Text>
                 <TextInput
                   style={styles.input}
                   value={password}
                   onChangeText={setPassword}
-                  placeholder="*******************"
+                  placeholder="Mot de passe"
                   secureTextEntry
                 />
               </View>
@@ -186,28 +185,27 @@ function LogIn({ chg, creer }) {
                 style={styles.buttonFT}
                 onPress={() => navigation.navigate("forgotPassword")}
               >
-                Forgot Password ?
+                Mot de passe oublié ?
               </Text>
               {/* </TouchableOpacity> */}
             </View>
             <TouchableOpacity style={styles.button} onPress={connect}>
-              <Text style={styles.buttonText}>Log In</Text>
+              <Text style={styles.buttonText}>Se connecter</Text>
               <View style={styles.buttonIcon}>
-                <ChevronRight style={{ color: "#FF6969" }} />
+                <ChevronRight style={{ color: "#30A08B" }} />
               </View>
             </TouchableOpacity>
             <Text style={styles.signUpText}>
-              Don't have an account? Swipe right to{" "}
+            Vous n'avez pas de compte ? Faites glisser votre doigt vers la droite pour{" "}
               <Text
                 style={styles.signUpLink}
                 onPress={() => navigation.navigate("Signup")}
               >
-                create a new account
+                créer un nouveau compte
               </Text>
             </Text>
           </View>
         )}
-      </ScrollView>
     </KeyboardAvoidingView>
   );
 }
@@ -215,9 +213,8 @@ function LogIn({ chg, creer }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center", // Centre verticalement
-    alignItems: "center", // Centre horizontalement
-    padding: 20,
+    justifyContent: "center",
+    padding: 10,
     backgroundColor: "#fff",
   },
   scrollViewContent: {
@@ -225,7 +222,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   inputGroup: {
-    width: "100%", // S'assurer que le groupe prend toute la largeur disponible
+    width: "100%",
     marginVertical: 10,
   },
   inputContainer: {
@@ -233,16 +230,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 15,
     padding: 10,
-    borderRadius: 5,
-    borderColor: "#FF6969",
+    borderRadius: 10,
+    borderColor: "#2ea28dd0",
     borderWidth: 1,
     backgroundColor: "#fff",
-    elevation: 1,
-    width: "100%", // S'assurer que le conteneur prend toute la largeur disponible
+    elevation: 2, 
+    width: "100%",
+    minHeight: 50, 
   },
   icon: {
     marginRight: 10,
-    color: "#515C6F",
+    color: "#B2905F",
   },
   inputWrapper: {
     flex: 1,
@@ -251,14 +249,24 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#515C6F",
     marginBottom: 5,
+    fontWeight: 'bold',
   },
   input: {
-    borderBottomWidth: 1,
-    borderBottomColor: "#515C6F",
+    flex: 1,
     paddingVertical: 5,
     paddingHorizontal: 10,
     fontSize: 16,
     color: "#515C6F",
+    minHeight: 40, // Hauteur minimale pour plus de confort
+  },
+  inputFocused: {
+    borderBottomColor: "#FF6969",
+    borderBottomWidth: 2,
+    backgroundColor: "#f9f9f9",
+  },
+  inputError: {
+    borderBottomColor: "#FF0000",
+    borderBottomWidth: 2,
   },
   orText: {
     textAlign: "center",
@@ -266,14 +274,15 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   button: {
-    backgroundColor: "#FF6969",
+    backgroundColor: "#2ea28dd0",
     borderRadius: 25,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     padding: 15,
     marginVertical: 20,
-    width: "100%", // S'assurer que le bouton prend toute la largeur disponible
+    width: "100%",
+    minWidth: "100%",
   },
   buttonText: {
     color: "#fff",
@@ -295,13 +304,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   signUpLink: {
-    color: "#FF6969",
+    color: "#B17235",
     fontWeight: "bold",
   },
   loadingContainer: {
     flex: 1,
-    justifyContent: "center", // Centre verticalement
-    alignItems: "center", // Centre horizontalement
+    justifyContent: "center",
+    alignItems: "center",
   },
   loadingText: {
     textAlign: "center",
@@ -311,8 +320,7 @@ const styles = StyleSheet.create({
   },
   buttonFD: {
     width: "100%",
-    display: "flex",
-    justifyContent: "flex-start",
+    textAlign: "left"
   },
   buttonF: {
     textAlign: "left",
@@ -321,7 +329,9 @@ const styles = StyleSheet.create({
   },
   buttonFT: {
     textAlign: "left",
-    width: "150px",
+    fontSize: 16,
+    color: "#515C6F",
+    marginBottom: 5,
   },
 });
 

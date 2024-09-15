@@ -36,7 +36,7 @@ const Galerie__page = ({ products }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.galerie__title}>Galeries</Text>
+      <Text style={styles.galerie__title}>Produits</Text>
       <View style={styles.galerie__box}>
         {produits.map((item) => (
           <TouchableOpacity
@@ -66,8 +66,9 @@ const styles = StyleSheet.create({
   },
   galerie__title: {
     fontSize: 20,
+    fontWeight: "bold",
     letterSpacing: 1,
-    color: '#000',
+    color: '#B17236',
     marginVertical: 10,
   },
   galerie__box: {
@@ -76,7 +77,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     flexWrap: 'wrap',
-    backgroundColor: '#F0F0F0',
+    // backgroundColor: '#F0F0F0',
+
   },
   galerie__box__img: {
     width: '45%',
@@ -87,7 +89,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     position: 'relative',
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#FF9800',
+    
   },
   image: {
     width: '100%',

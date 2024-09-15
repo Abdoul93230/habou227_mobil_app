@@ -196,7 +196,7 @@ const ProductDet = () => {
 
       <TouchableOpacity style={styles.commenteBox} onPress={handleCommentBoxToggle}>
         <View style={styles.commente}>
-          <Text style={{fontSize: 12}}>Commenter?</Text>
+          <Text style={{fontSize: 12, color: "#30A08B"}}>Commenter?</Text>
         </View>
       </TouchableOpacity>
 
@@ -217,7 +217,7 @@ const ProductDet = () => {
             <View style={styles.satrIcon}>
           {[1, 2, 3, 4, 5].map((star) => (
             <TouchableOpacity key={star} onPress={() => handleRating(star)}>
-              <AntDesign name='staro' size={18} color={star <= rating ? '#FF6A69' : 'black'} />
+              <AntDesign name='staro' size={20} color={star <= rating ? '#30A08B' : '#B2905F'} />
             </TouchableOpacity>
           ))}
         </View>
@@ -229,8 +229,8 @@ const ProductDet = () => {
               <Text style={styles.loadingText}>Chargement...</Text>
             </View></>
            :<><View style={styles.btn}>
-           <Button title="Envoyer" onPress={ envoyer} />
-           <Button title="Fermer" onPress={handleCommentBoxToggle} />
+           <Button title="Fermer" color={"#B2905F"} onPress={handleCommentBoxToggle} />
+           <Button title="Envoyer" color={'#30A08B'} onPress={ envoyer} />
          </View></>
           }
 
@@ -265,8 +265,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     textAlign: "center",
-    shadowColor: "#000",
-    shadowOffset: {  width: 2, height: Platform.OS ===  'ios' ? 2 : 2, },
+    shadowColor: "#FF9800",
+    shadowOffset: {  width: 0, height: Platform.OS ===  'ios' ? 2 : 2, },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: Platform.OS === 'android' ?  5 : 0,
@@ -287,11 +287,12 @@ const styles = StyleSheet.create({
   cardTitle: {
   fontSize: 18,
   marginBottom: 10,
+  color: "#30A08B"
 },
   textInput: {
   width: '100%',
   height: 100,
-  borderColor: '#CCCCCC',
+  borderColor: '#ccc',
   borderWidth: 1,
   borderRadius: 5,
   padding: 10,
@@ -307,13 +308,14 @@ satrIcon: {
   flexDirection: "row",
   justifyContent: "space-between",
   alignItems: "center",
-  width: "40%",
+  width: "60%",
   marginLeft:8,
   marginTop:6
 },
 noteProduit: {
   fontSize: 18,
   textAlign: "center",
+  color: "#B2905F"
 },
 btn: {
   width: "90%",

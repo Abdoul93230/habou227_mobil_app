@@ -17,6 +17,7 @@ import Toast from 'react-native-toast-message';
 
 const { width } = Dimensions.get('window');
 const BackendUrl = `${API_URL}`;
+
 function MyCheckbox({ checked, onPress }) {
   return (
     <Pressable
@@ -38,6 +39,8 @@ const PaiementPage = () => {
   const [operateur, setOperateur] = useState("");
   const [cvc, setCvc] = useState("");
   const [choix, setChoix] = useState("");
+
+
   const regexPhone = /^[0-9]{8,}$/;
   const handlePress = (paymentMethod) => {
     setSelectedPayment(paymentMethod);
@@ -400,12 +403,13 @@ const PaiementPage = () => {
             <View style={styles.compteText}>
               <Text style={styles.numeroText}>Compte mobile Money</Text>
               <View style={styles.PhoneInput}>
-                <Center style={styles.dropdown}>
-                  <Box>
+              
                     <Select
+                    style={{borderColor: "#30A08B", borderWidth: 0, overflow: "hidden"}}
                       selectedValue={operateur==='227' || operateur==='229'?operateur:'227'}
                       minWidth="100"
-                      minHeight="10"
+                      minHeight="20"
+                      borderColor={"#30A08B"}
                       accessibilityLabel="Choisir une région"
 
                       mt={0}
@@ -419,8 +423,7 @@ const PaiementPage = () => {
 
 
                     </Select>
-                  </Box>
-                </Center>
+              
                 <View style={styles.dropdownInput}>
                 <TextInput
                 value={numero.length>8&&(numero.substring(0, 3)==='227' || numero.substring(0, 3)==='229')?numero.substring(3, numero.length):numero}
@@ -451,7 +454,7 @@ const PaiementPage = () => {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#FF6A69" />
+        <ActivityIndicator size="large" color="#30A08B" />
         <Text style={styles.loadingText}>Chargement...</Text>
       </View>
     );
@@ -533,10 +536,11 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   title: {
-    fontSize: 20,
-    marginVertical: 10,
+    fontSize: 22,
     fontWeight: 'bold',
-    color: '#515C70',
+    marginTop: 15,
+    zIndex: 1000,
+    color: "#B17236"
   },
   livraisoncard: {
     backgroundColor: '#fff',
@@ -559,7 +563,7 @@ const styles = StyleSheet.create({
   box: {
     width: width * 0.44,
     height: 120,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: '#30A08B',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -568,7 +572,7 @@ const styles = StyleSheet.create({
   },
 
   selectedBox: {
-    borderColor: '#FF6A69',
+    borderColor: '#B2905F',
     borderWidth: 2,
   },
   image: {
@@ -589,11 +593,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 4,
     borderWidth: 2,
-    borderColor: '#CCC',
+    borderColor: '#B17236',
     backgroundColor: 'transparent',
   },
   checkboxChecked: {
-    backgroundColor: '#FF6A69',
+    // backgroundColor: '#B2905F',
   },
   boxImage: {
     width: '70%',
@@ -605,6 +609,7 @@ const styles = StyleSheet.create({
     width: '100%',
     textAlign: 'center',
     marginVertical: 3,
+    color: "#FFF"
   },
 
   // master card
@@ -625,8 +630,9 @@ const styles = StyleSheet.create({
   numeroText: {
     fontSize: 15,
     fontWeight: "bold",
-    color: "#515C70",
-    marginVertical: 12
+    marginVertical: 12,
+    zIndex: 1000,
+    color: "#B17236"
   },
 
   input: {
@@ -657,11 +663,15 @@ const styles = StyleSheet.create({
     marginVertical: 4
   },
   btnSoumettre: {
-    padding: 12,
-    backgroundColor: '#FF6A69',
+    padding: 15,
+    backgroundColor: '#30A08B',
     width: "100%",
-    borderRadius: 10,
-    marginTop: 20
+    borderRadius: 15,
+    marginTop: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   soumettreText: {
     fontSize: 15,
@@ -723,9 +733,9 @@ const styles = StyleSheet.create({
     marginTop: 20
   },
   PhoneInput: {
-    height: 40,
+    height: 45,
     width: "100%",
-    borderColor: '#ddd',
+    borderColor: '#30A08B',
     borderWidth: 1,
     borderRadius: 5,
     marginTop: 15,
