@@ -1,15 +1,16 @@
-import { StyleSheet, Text, View, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Dimensions, ScrollView, ActivityIndicator } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { API_URL } from "@env";
 import { useNavigation } from '@react-navigation/native';
+import Footer from '../footer/Footer';
 const { width, height } = Dimensions.get('window');
 
 const Commande = () => {
   const navigation = useNavigation()
   const [myAllComande, setMyAllCommandes] = useState(null);
-  const [rond, setRond] = useState(false);
+  const [rond, setRond] = useState(true);
   const [selectedButton, setSelectedButton] = useState('En cours'); // État initial
 
 
@@ -20,14 +21,14 @@ const Commande = () => {
     const fetchData = async()=>{
       const jsonValue = await AsyncStorage.getItem('userEcomme');
         const user = JSON.parse(jsonValue);
-    setRond(true)
+    // setRond(true)
     axios
       .get(`${API_URL}/getCommandesByClefUser/${user.id}`)
       .then((res) => {
         setRond(false)
         setMyAllCommandes(res.data.commandes);
       })
-      .catch((error) => {console.log(error)
+      .catch((error) => {console.log(error,'er')
         setRond(false)
       });
     }
@@ -55,7 +56,19 @@ const Commande = () => {
     return formattedDay;
   }
 
+  if (rond) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#FF6A69" />
+        <Text style={styles.loadingText}>Chargement...</Text>
+      </View>
+    );
+  }
+
+
   return (
+    <>
+
     <View style={styles.container}>
       <Text style={styles.commande}>Ma commande</Text>
       <View style={styles.toucheCommande}>
@@ -152,7 +165,10 @@ const Commande = () => {
           </>
         )}
       </ScrollView>
+
     </View>
+    <Footer />
+    </>
   );
 };
 
@@ -288,5 +304,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#555',
     height: '100%', // Ajuste la hauteur pour bien s'adapter à la carte
     marginHorizontal: width * 0.02,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f5f5f5', // Fond de la page de chargement
   },
 });

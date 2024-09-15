@@ -68,7 +68,7 @@ export default function App() {
       try {
         const jsonValue = await AsyncStorage.getItem("userEcomme");
         const user = JSON.parse(jsonValue);
-        if (user) {
+        if (JSON.parse(jsonValue)) {
           axios.defaults.headers.common[
             "Authorization"
           ] = `Bearer ${user.token}`;
@@ -76,6 +76,7 @@ export default function App() {
             withCredentials: true,
           });
           setIsAuthenticated(true);
+          // console.log(response.data)
         }
       } catch (error) {
         console.error("Erreur lors de la vérification:", error);

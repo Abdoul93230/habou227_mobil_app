@@ -5,8 +5,17 @@ import { useNavigation , useNavigationState} from '@react-navigation/native';
 
 
 const { width, height } = Dimensions.get('window');
-const DetailProduit = ({produit}) => {
+const DetailProduit = ({produit,nbr}) => {
   const navigation = useNavigation();
+
+
+
+
+
+
+
+
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -37,7 +46,7 @@ const DetailProduit = ({produit}) => {
           <View style={styles.cartContainer}>
             <Feather name="shopping-cart" size={24} color="#000000c2" />
             <View style={styles.cartBadge}>
-              <Text style={styles.cartCount}>0</Text>
+              <Text style={styles.cartCount}>{nbr}</Text>
             </View>
           </View>
         </TouchableOpacity>

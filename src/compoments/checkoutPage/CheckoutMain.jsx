@@ -1,5 +1,5 @@
 import React, { useEffect, useState,forwardRef, useImperativeHandle } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Alert, Image, Modal, TextInput, TouchableWithoutFeedback, Platform } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Alert, Image, Modal, TextInput, TouchableWithoutFeedback, Platform,ActivityIndicator } from 'react-native';
 import { Feather, EvilIcons, Ionicons } from '@expo/vector-icons';
 import Items from "../../image/macbook cote.png";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,14 +9,14 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import Toast from 'react-native-toast-message';
 
-const CheckoutMain = forwardRef (({chgTotal,chgReduction},ref)=>{
+const CheckoutMain =  forwardRef(({chgTotal,chgReduction},ref)=>{
   const [user, setUser] = useState(null);
   const [codeValide, setCodeValide] = useState(null);
   const [produits, setProduits] = useState(null);
   const [produitIds, setProduitIds] = useState(null);
   const [Vide, setVide] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [promoCode, setPromoCode] = useState('');
   const [nom, setNom] = useState("");
   const [email, setEmail] = useState("");
@@ -97,8 +97,10 @@ const CheckoutMain = forwardRef (({chgTotal,chgReduction},ref)=>{
   };
 
 
+
   useEffect(() => {
     // setLoading(true);
+
     const fetchData = async () => {
       try {
         const jsonValue = await AsyncStorage.getItem('userEcomme');
@@ -115,8 +117,10 @@ const CheckoutMain = forwardRef (({chgTotal,chgReduction},ref)=>{
                 setQuartier(shippingAd.data.address.quartier);
                 setRegion(shippingAd.data.address.region);
                 setPlus(shippingAd.data.address.description);
+                setLoading(false)
               })
               .catch((error) => {
+                setLoading(false)
                 console.log(error.response);
               });
 
@@ -143,7 +147,7 @@ const CheckoutMain = forwardRef (({chgTotal,chgReduction},ref)=>{
         }
 
       } catch (error) {
-        // setLoading(false);
+        setLoading(false);
         console.log(error);
       }
     };
@@ -195,6 +199,9 @@ const CheckoutMain = forwardRef (({chgTotal,chgReduction},ref)=>{
       calculateTotal(updatedProducts);
     }
   };
+
+
+
 
   useEffect(() => {
     const getPanier = async () => {
@@ -251,194 +258,189 @@ function generateUniqueID() {
 }
 // //////////////////////////////////////////////////////////////////////////////////////////
 
-useImperativeHandle(ref,()=>({
+const Plasser = async() => {
 
+  const local = await AsyncStorage.getItem("panier");
 
-   Plasser : async() => {
-    console.log('cliker')
-    const local = await AsyncStorage.getItem("panier");
+  setLoading(true);
+  if (local=== null || JSON.parse(local)?.length === 0) {
+    handleAlertwar("Aucun produit n'est selectionner.");
+    setLoading(false);
+    // navigue('/home')
+    navigation.navigate('Home')
+    return;
+  }
+  if (phone?.length <= 0) {
+    setLoading(false);
+    // navigue("/More/shipping_address?fromCart=true");
+    navigation.navigate("Livraison Page",{ fromCart: true })
+    return;
+  }
+  if (choix?.length <= 0) {
+    setLoading(false);
+    // navigue("/More/payment_method?fromCart=true");
+    navigation.navigate("Paiement Page",{ fromCart: true })
 
-    setLoading(true);
-    if (local=== null || JSON.parse(local)?.length === 0) {
-      handleAlertwar("Aucun produit n'est selectionner.");
-      setLoading(false);
-      // navigue('/home')
-      navigation.navigate('Home')
-      return;
-    }
-    if (phone?.length <= 0) {
-      setLoading(false);
-      // navigue("/More/shipping_address?fromCart=true");
-      navigation.navigate("Livraison Page")
-      return;
-    }
-    if (choix?.length <= 0) {
-      setLoading(false);
-      // navigue("/More/payment_method?fromCart=true");
-      navigation.navigate("Paiement Page")
+    return;
+  }
 
-      return;
-    }
-
-    if (local) {
-      const pane = JSON.parse(local);
-      let prod = [];
-      for (let i = 0; i < produits.length; i++) {
-        let ob = {
-          produit: produits[i]?.id,
-          quantite: produits[i]?.quantity,
-          tailles: produits[i]?.sizes,
-          couleurs: produits[i]?.colors,
-        };
-        prod.push(ob);
-      }
-      let data = {
-        clefUser: user.id,
-        nbrProduits: prod,
-        prix: total,
+  if (local) {
+    const pane = JSON.parse(local);
+    let prod = [];
+    for (let i = 0; i < produits.length; i++) {
+      let ob = {
+        produit: produits[i]?.id,
+        quantite: produits[i]?.quantity,
+        tailles: produits[i]?.sizes,
+        couleurs: produits[i]?.colors,
       };
-      if (codeValide) {
-        if (codeValide.isValide) {
-          data.codePro = true;
-          data.idCodePro = codeValide?._id;
-        }
+      prod.push(ob);
+    }
+    let data = {
+      clefUser: user.id,
+      nbrProduits: prod,
+      prix: total,
+    };
+    if (codeValide) {
+      if (codeValide.isValide) {
+        data.codePro = true;
+        data.idCodePro = codeValide?._id;
       }
+    }
 
-      // console.log(data);
-      if (choix.length > 0) {
-        const uniqueID = generateUniqueID();
-        const dataToSend = {
-          name: user?.name,
-          currency: "XOF",
-          country: "NE",
-          total: total ? total : "",
-          transaction_id: uniqueID,
-          choix: choix,
-          numeroCard: numeroCard,
-          phone: numero,
-        };
-        data.reference = uniqueID;
+    // console.log(data);
+    if (choix.length > 0) {
+      const uniqueID = generateUniqueID();
+      const dataToSend = {
+        name: user?.name,
+        currency: "XOF",
+        country: "NE",
+        total: total ? total : "",
+        transaction_id: uniqueID,
+        choix: choix,
+        numeroCard: numeroCard,
+        phone: numero,
+      };
+      data.reference = uniqueID;
 
-        if (
-          choix === "Visa" ||
-          choix === "Master Card" ||
-          choix === "Mobile Money"
-        ) {
-          axios
-            .post(`${API_URL}/payments`, dataToSend)
-            .then((response) => {
-              const ref = response.data.data.reference;
-              handleAlert("success");
-              axios
-                .get(`${BackendUrl}/payments/`)
-                .then((res) => {
-                  // setAllPayment(res.data.data);
+      if (
+        choix === "Visa" ||
+        choix === "Master Card" ||
+        choix === "Mobile Money"
+      ) {
+        axios
+          .post(`${API_URL}/payments`, dataToSend)
+          .then((response) => {
+            const ref = response.data.data.reference;
+            handleAlert("success");
+            axios
+              .get(`${API_URL}/payments/`)
+              .then((res) => {
+                // setAllPayment(res.data.data);
 
-                  if (
-                    res.data.data.find((item) => item.reference === ref)
-                      .status != "Failed"
-                    // ||
-                    // res.data.data.find((item) => item.reference === ref)
-                    //   .status != "Initiated"
-                  ) {
-                    axios
-                      .post(`${API_URL}/createCommande`, data)
-                      .then(async(resp) => {
-                        handleAlert(resp.data.message);
-                        setLoading(false);
-                        // localStorage.removeItem("panier");
-                        await AsyncStorage.removeItem('panier');
-                        if (codeValide) {
-                          if (codeValide.isValide) {
-                            axios
-                              .put(`${API_URL}/updateCodePromo`, {
-                                codePromoId: codeValide._id,
-                                isValide: false,
-                              })
-                              .then(() => {
-                                // console.log("fait")
-                              })
-                              .catch((error) => console.log(error));
-                          }
-                        }
-                        // navigation.navigate("Cart")
-                        navigation.navigate("Succes")
-                      })
-                      .catch((error) => {
-                        setLoading(false);
-                        console.log("errrr", error);
-                      });
-                    console.log("Réponse de l'API:", response);
-                  } else {
-                    setLoading(false);
-                    handleAlertwar(
-                      "le payment na pas pu etre effectuer veuiller ressayer !"
-                    );
-                    return;
-                  }
-                })
-                .catch((error) => {
-                  setLoading(false);
-                  console.log(error);
-                });
-            })
-            .catch((error) => {
-              setLoading(false);
-              console.log(
-                "Erreur lors de la requête:",
-                error.response ? error.response.data : error.message,
-                error
-              );
-            });
-        } else if (choix === "Payment a domicile") {
-          axios
-            .post(`${API_URL}/createCommande`, data)
-            .then(async(res) => {
-              handleAlert(res.data.message);
-              setLoading(false);
-              await AsyncStorage.removeItem('panier');
-              if (codeValide) {
-                if (codeValide.isValide) {
+                if (
+                  res.data.data.find((item) => item.reference === ref)
+                    .status != "Failed"
+                  // ||
+                  // res.data.data.find((item) => item.reference === ref)
+                  //   .status != "Initiated"
+                ) {
                   axios
-                    .put(`${API_URL}/updateCodePromo`, {
-                      codePromoId: codeValide._id,
-                      isValide: false,
-                    })
-                    .then(() => {
+                    .post(`${API_URL}/createCommande`, data)
+                    .then(async(resp) => {
+                      handleAlert(resp.data.message);
                       setLoading(false);
-                      // console.log("fait")
+                      // localStorage.removeItem("panier");
+                      await AsyncStorage.removeItem('panier');
+                      if (codeValide) {
+                        if (codeValide.isValide) {
+                          axios
+                            .put(`${API_URL}/updateCodePromo`, {
+                              codePromoId: codeValide._id,
+                              isValide: false,
+                            })
+                            .then(() => {
+                              // console.log("fait")
+                            })
+                            .catch((error) => console.log(error));
+                        }
+                      }
+                      // navigation.navigate("Cart")
+                      navigation.navigate("Succes")
                     })
                     .catch((error) => {
                       setLoading(false);
-                      console.log(error);
+                      console.log("errrr", error);
                     });
+                  console.log("Réponse de l'API:", response);
+                } else {
+                  setLoading(false);
+                  handleAlertwar(
+                    "le payment na pas pu etre effectuer veuiller ressayer !"
+                  );
+                  return;
                 }
+              })
+              .catch((error) => {
+                setLoading(false);
+                console.log(error);
+              });
+          })
+          .catch((error) => {
+            setLoading(false);
+            console.log(
+              "Erreur lors de la requête:",
+              error.response ? error.response.data : error.message,
+              error
+            );
+          });
+      } else if (choix === "Payment a domicile") {
+        axios
+          .post(`${API_URL}/createCommande`, data)
+          .then(async(res) => {
+            handleAlert(res.data.message);
+            setLoading(false);
+            await AsyncStorage.removeItem('panier');
+            if (codeValide) {
+              if (codeValide.isValide) {
+                axios
+                  .put(`${API_URL}/updateCodePromo`, {
+                    codePromoId: codeValide._id,
+                    isValide: false,
+                  })
+                  .then(() => {
+                    setLoading(false);
+                    // console.log("fait")
+                  })
+                  .catch((error) => {
+                    setLoading(false);
+                    console.log(error);
+                  });
               }
-              // navigation.navigate("Cart")
-              navigation.navigate("Succes")
-            })
-            .catch((error) => {
-              setLoading(false);
-              console.log("errrr", error);
-            });
-        }
-      } else {
-        setLoading(false);
-        handleAlertwar("les infos du payment ne sont pas encore mis");
-        return;
+            }
+            // navigation.navigate("Cart")
+            navigation.navigate("Succes")
+          })
+          .catch((error) => {
+            setLoading(false);
+            console.log("errrr", error);
+          });
       }
+    } else {
+      setLoading(false);
+      handleAlertwar("les infos du payment ne sont pas encore mis");
+      return;
     }
   }
-
-
-
-}))
+}
 
 // //////////////////////////////////////////////////////////////////////////////////////////
 // //////////////////////////////////////////////////////////////////////////////////////////
 
 
-
+useImperativeHandle(ref, () => ({
+  Plasser
+}));
 
 if (loading) {
   return (
@@ -472,13 +474,13 @@ if (loading) {
           <Text style={styles.para}>Tel : {phone} </Text>
         </View>
       </View>
-      <TouchableOpacity style={styles.button} onPress={()=>navigation.navigate("Livraison Page")}>
+      <TouchableOpacity style={styles.button} onPress={()=>navigation.navigate("Livraison Page",{ fromCart: true })}>
         <Text style={styles.buttonText}>Voir les données</Text>
       </TouchableOpacity>
 
       <View style={styles.paymentContainer}>
       <Text style={styles.paymentText}>Mode de paiement</Text>
-      <TouchableOpacity onPress={()=>navigation.navigate("Paiement Page")} >
+      <TouchableOpacity onPress={()=> navigation.navigate("Paiement Page",{ fromCart: true })} >
         <View style={styles.cardMoney}>
           <Feather name="credit-card" size={24} color="#FF6A69" />
           <Text style={styles.paraMoney}>

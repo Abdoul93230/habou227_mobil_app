@@ -5,7 +5,7 @@ import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from 'react-native';
 
-const DetailProduitFooter = ({produit,color,taille,id}) => {
+const DetailProduitFooter = ({produit,color,taille,id,chgNbr}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [produitsL, setProduitsL] = useState(0);
   const [nbrCol, setNbrCol] = useState(null);
@@ -60,6 +60,7 @@ const DetailProduitFooter = ({produit,color,taille,id}) => {
         });
 
         await AsyncStorage.setItem('panier', JSON.stringify(updatedProducts));
+        chgNbr()
         handleAlert("La quantité du produit a été incrémentée dans le panier !");
         const local = await AsyncStorage.getItem('panier');
         setProduitsL(local ? JSON.parse(local) : []);
@@ -101,6 +102,7 @@ const DetailProduitFooter = ({produit,color,taille,id}) => {
       ];
 
       await AsyncStorage.setItem('panier', JSON.stringify(updatedProducts));
+      chgNbr()
       handleAlert("Produit ajouté au panier !");
       const local = await AsyncStorage.getItem('panier');
       setProduitsL(local ? JSON.parse(local) : []);

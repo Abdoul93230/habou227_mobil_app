@@ -1,4 +1,4 @@
-import {Platform, StyleSheet, View, ScrollView, ActivityIndicator, Text, TouchableOpacity, Modal, TextInput, Button  } from 'react-native';
+import {Platform, StyleSheet, View, ScrollView, ActivityIndicator, Text, TouchableOpacity, Modal, TextInput, Button } from 'react-native';
 import React, { useEffect, useState, useRef } from 'react';
 import DetailProduit from "../compoments/detailProduit/DetailProduit";
 import DetailProduitFooter from '../compoments/detailProduit/DetailProduitFooter';
@@ -25,6 +25,7 @@ const ProductDet = () => {
   const [color, setColor] = useState(null);
   const [taille, setTaille] = useState(null);
   const [nbrCol, setNbrCol] = useState(null);
+  const [nbr, setNbr] = useState(null);
   const [commente, setCommente] = useState("");
   const [Allcommente, setAllCommente] = useState([]);
   const DATA_Types = useSelector((state) => state.products.types);
@@ -46,6 +47,24 @@ const ProductDet = () => {
     setTaille(tail)
 
   }
+
+  const getPanier = async () => {
+    // console.log('panier')
+    try {
+      const local = await AsyncStorage.getItem("panier");
+      if (local) {
+        setNbr(JSON.parse(local));
+      } else {
+        setNbr(null);
+      }
+    } catch (error) {
+      console.error("Error fetching panier from AsyncStorage", error);
+    }
+  };
+  useEffect(() => {
+    getPanier();
+  }, []);
+
   useEffect(() => {
     setLoading(true);
     const fetchData = async () => {
@@ -187,11 +206,11 @@ const ProductDet = () => {
 
   return (
     <View style={styles.container}>
-      <DetailProduit produit = {VP} />
+      <DetailProduit produit = {VP} nbr={nbr?nbr.length:0} />
       <ScrollView ref={scrollViewRef} showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollViewContent}>
-        <DetailProduitMain chgColor={chgColor} chgTail={chgTail} produit = {VP} id={id} Allcommente={Allcommente} />
+        <DetailProduitMain chgNbr={getPanier} chgColor={chgColor} chgTail={chgTail} produit = {VP} id={id} Allcommente={Allcommente} />
       </ScrollView>
-      <DetailProduitFooter produit = {VP} color={color} taille={taille} id={id} />
+      <DetailProduitFooter chgNbr={getPanier} produit = {VP} color={color} taille={taille} id={id} />
 
 
       <TouchableOpacity style={styles.commenteBox} onPress={handleCommentBoxToggle}>

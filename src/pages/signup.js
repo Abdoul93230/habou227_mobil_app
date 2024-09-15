@@ -67,24 +67,31 @@ const SignUp = () => {
     const passwordV = password.trim();
     const phoneNumberV = phoneNumber.trim();
 
-    if (nameV === "" || name.length < 3) {
-      handleAlertwar("Veuillez entrer un nom valide au moins 3 string.");
+    if (nameV === "" || nameV.length < 3) {
+      handleAlertwar("Veuillez entrer un nom valide au moins 3 caractères.");
       return false;
     } else if (emailV.length !== 0 && !validateEmail(emailV)) {
       handleAlertwar("Veuillez entrer une adresse e-mail valide.");
       return false;
-    } else if (passwordV === "" || passwordV.length < 6) {
-      handleAlertwar(
-        "Veuillez entrer un mot de passe valide au moins 6 caractères."
-      );
-      return false;
-    } else if (
+    }  else if (
       (phoneNumberV.length > 0 && !regexPhone.test(phoneNumber)) ||
       phoneNumberV.length > 11
     ) {
       handleAlertwar("Veuillez entrer un numéro fonctionnel");
       return false;
-    } else {
+    }else if (phoneNumberV.length === 0 && emailV.length === 0) {
+      handleAlertwar(
+        "Veuillez entrer une address mail ou un numero"
+      );
+      return false;
+    }
+    else if (passwordV === "" || passwordV.length < 6) {
+      handleAlertwar(
+        "Veuillez entrer un mot de passe valide au moins 6 caractères."
+      );
+      return false;
+    }
+     else {
       setIsloading(true);
       axios
         .post(`${API_URL}/user`, {
@@ -110,6 +117,9 @@ const SignUp = () => {
             )
             .then(async (user) => {
               if (user.status === 200) {
+                const jsonValue = JSON.stringify(user.data);
+                // Stocker les données
+                await AsyncStorage.setItem("userEcomme", jsonValue);
                 const dateActuelle = new Date();
                 const options = {
                   year: "numeric",
@@ -141,7 +151,7 @@ const SignUp = () => {
                 };
 
                 axios
-                  .post(`https://chagona.onrender.com/sendMail`, emailData)
+                  .post(`${API_URL}/sendMail`, emailData)
                   .then((response) => {})
                   .catch((error) => {
                     console.error("Erreur lors de la requête email:", error);
@@ -149,9 +159,7 @@ const SignUp = () => {
                 handleAlert(user.data.message);
                 navigation.navigate("Home");
                 setIsloading(false);
-                const jsonValue = JSON.stringify(user.data);
-                // Stocker les données
-                await AsyncStorage.setItem("userEcomme", jsonValue);
+
               } else {
                 handleAlert(user.data.message);
               }

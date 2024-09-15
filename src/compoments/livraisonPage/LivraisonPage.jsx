@@ -4,10 +4,10 @@ import { NativeBaseProvider, Box, Select, CheckIcon, Center } from 'native-base'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { API_URL } from "@env";
+import { useNavigation, useRoute } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 
 
-const BackendUrl = `${API_URL}`;
 const LivraisonPage = () => {
   const [service, setService] = useState("");
   const regexPhone = /^[0-9]{8,}$/;
@@ -19,6 +19,10 @@ const LivraisonPage = () => {
   const [plus, setPlus] = useState("");
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { fromCart } = route.params || false; // Utilise des valeurs par défaut pour éviter les erreurs
+
 
 
 
@@ -59,7 +63,7 @@ const LivraisonPage = () => {
         setUser(userData);
         if (userData) {
           axios
-      .get(`${BackendUrl}/getAddressByUserKey/${userData.id}`)
+      .get(`${API_URL}/getAddressByUserKey/${userData.id}`)
       .then((shippingAd) => {
         setEmail(shippingAd.data.address.email);
         setNom(shippingAd.data.address.name);
@@ -126,14 +130,17 @@ const LivraisonPage = () => {
     }
     // setRond(true)
     axios
-      .post(`${BackendUrl}/createOrUpdateAddress`, obj)
+      .post(`${API_URL}/createOrUpdateAddress`, obj)
       .then((shipping) => {
         // setRond(false)
 
         handleAlert(shipping.data.message);
-
+        if (fromCart) {
+          navigation.navigate("Checkout",{ fromCart: true })
+          return;
+        }
         axios
-          .get(`${BackendUrl}/getAddressByUserKey/${user.id}`)
+          .get(`${API_URL}/getAddressByUserKey/${user.id}`)
           .then((shippingAd) => {
             setEmail(shippingAd.data.address.email);
             setNom(shippingAd.data.address.name);
@@ -151,7 +158,7 @@ const LivraisonPage = () => {
         // setRond(false)
         if (error.response.status === 400) {
           setLoading(false);
-          handleAlertwar(error.response.data.err);
+          handleAlertwar(error.response.data.message);
         }
         console.log(error.response);
       });

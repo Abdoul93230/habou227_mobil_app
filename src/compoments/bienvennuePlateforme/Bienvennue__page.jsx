@@ -20,11 +20,12 @@ const Bienvennue__page = ({ categories }) => {
         axios
           .get(`${API_URL}/productPubget`)
           .then((pub) => {
-            if (pub.data.length > 0) {
+            // console.log(pub.data.length)
+            // if (pub.data.length > 0) {
               setAllPub(pub.data);
-            } else {
-              setAllPub([]);
-            }
+            // } else {
+            //   setAllPub([]);
+            // }
           })
           .catch((error) => {
             console.log(error);

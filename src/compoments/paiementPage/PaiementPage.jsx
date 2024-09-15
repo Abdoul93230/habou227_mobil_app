@@ -14,9 +14,9 @@ import axios from 'axios';
 import { API_URL } from "@env";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 const { width } = Dimensions.get('window');
-const BackendUrl = `${API_URL}`;
 function MyCheckbox({ checked, onPress }) {
   return (
     <Pressable
@@ -38,6 +38,10 @@ const PaiementPage = () => {
   const [operateur, setOperateur] = useState("");
   const [cvc, setCvc] = useState("");
   const [choix, setChoix] = useState("");
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { fromCart } = route.params || false; // Utilise des valeurs par défaut pour éviter les erreurs
+
   const regexPhone = /^[0-9]{8,}$/;
   const handlePress = (paymentMethod) => {
     setSelectedPayment(paymentMethod);
@@ -81,7 +85,7 @@ const PaiementPage = () => {
         if (userData) {
 
           axios
-      .get(`${BackendUrl}/getMoyentPaymentByClefUser/${userData?.id}`)
+      .get(`${API_URL}/getMoyentPaymentByClefUser/${userData?.id}`)
       .then((res) => {
         // console.log(res.data.paymentMethod)
         setOperateur('227');
@@ -247,10 +251,14 @@ const PaiementPage = () => {
       }
       setLoading(true)
       axios
-        .post(`${BackendUrl}/createMoyentPayment`, data)
+        .post(`${API_URL}/createMoyentPayment`, data)
         .then((res) => {
           handleAlert(res.data.message);
           setLoading(false)
+          if (fromCart) {
+            navigation.navigate("Checkout",{ fromCart: true })
+            return;
+          }
           // const fromCartParam = new URLSearchParams(location.search).get(
           //   "fromCart"
           // );

@@ -17,7 +17,7 @@ import axios from "axios";
 import { API_URL } from "@env";
 import Toast from "react-native-toast-message";
 
-const BackendUrl = process.env.REACT_APP_Backend_Url;
+
 
 function LogIn({ chg, creer }) {
   const [email, setEmail] = useState("");
@@ -60,27 +60,31 @@ function LogIn({ chg, creer }) {
       handleAlertwar(message);
     };
 
-    if (email.length !== 0 && !regexMail.test(email)) {
+    if (email.length === 0 && phoneNumber.length===0) {
+      handleError("Veuillez entrer des informations valide.");
+      return;
+    }
+    if (email.length !== 0 && !regexMail.test(email.trim())) {
       handleError("Veuillez entrer une adresse e-mail valide.");
       return;
     }
 
     if (
       phoneNumber.length > 0 &&
-      (!regexPhone.test(phoneNumber) || phoneNumber.length > 11)
+      (!regexPhone.test(phoneNumber.trim()) || phoneNumber.trim().length > 11)
     ) {
       handleError("Veuillez entrer un numéro de téléphone valide.");
       return;
     }
-    if (password === "" || password.length < 6) {
+    if (password === "" || password.trim().length < 6) {
       handleError("Votre mot de passe doit contenir au moins 6 caractères.");
       return;
     }
 
     const loginData = {
-      email: email.length > 0 ? email : null,
-      phoneNumber: phoneNumber.length > 0 ? phoneNumber : null,
-      password: password,
+      email: email.trim().length > 0 ? email.trim() : null,
+      phoneNumber: phoneNumber.trim().length > 0 ? phoneNumber.trim() : null,
+      password: password.trim(),
     };
 
     try {

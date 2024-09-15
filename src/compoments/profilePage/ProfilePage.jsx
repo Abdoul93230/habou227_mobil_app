@@ -114,9 +114,11 @@ const ProfilePage = () => {
           }
           if (error.response.data.data?.keyPattern?.email) {
             handleAlertwar("Un utilisateur avec le même email existe déjà ");
+            setEmail('')
           }
           if (error.response.data.data?.keyPattern?.phoneNumber) {
             handleAlertwar("Un utilisateur avec le même Numero existe déjà ");
+            setPhone('')
           }
           console.log(error.response);
           closeModal()
@@ -161,7 +163,7 @@ const ProfilePage = () => {
             })
             .then((Profiler) => {
               setLoading(false);
-              // console.log(Profiler);
+              // console.log(Profiler.data);
               if (
                 Profiler.data.data.image &&
                 Profiler.data.data.image !==

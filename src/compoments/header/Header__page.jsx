@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { StyleSheet, Text, View, TouchableOpacity, Image, Animated,Platform } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image, Animated,Platform,DeviceEventEmitter } from 'react-native';
 import { Feather, Entypo } from '@expo/vector-icons';
 import Profil from "../../image/logo.png";
 import io from "socket.io-client";
@@ -23,8 +23,10 @@ const Header__page = () => {
       useNativeDriver: true,
     }).start();
   }, [fadeAnimHeader]);
-  const [produits, setProduits] = useState(0);
+  const [produits, setProduits] = useState(null);
   useEffect(() => {
+
+    // console.log("ouié&")
     const getPanier = async () => {
       try {
         const local = await AsyncStorage.getItem("panier");
@@ -39,7 +41,7 @@ const Header__page = () => {
     };
 
     getPanier();
-  }, []);
+  }, );
 
   useEffect(() => {
 

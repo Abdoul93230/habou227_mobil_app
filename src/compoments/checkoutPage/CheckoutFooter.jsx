@@ -7,7 +7,7 @@ import { Feather } from '@expo/vector-icons';
 import { useNavigation, useNavigationState } from '@react-navigation/native';
 
 
-const CheckoutFooter = ({onButtonClick,total,reduction}) => {
+const CheckoutFooter = ({total,reduction,onFooterClick}) => {
     const navigation = useNavigation();
 
 
@@ -25,7 +25,7 @@ const CheckoutFooter = ({onButtonClick,total,reduction}) => {
         </View>
       </View>
       <View style={styles.footerAction}>
-        <TouchableOpacity style={styles.buttonCheck} onPress={() => {onPress={onButtonClick}}}>
+        <TouchableOpacity style={styles.buttonCheck} onPress={onFooterClick}>
         <Feather name="arrow-right-circle" size={24} color="white" />
           <Text style={styles.buttonText}>Passer la commande</Text>
         </TouchableOpacity>

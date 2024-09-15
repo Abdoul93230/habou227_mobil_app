@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Dimensions, Animated, Easing } from 'react-native';
+import { StyleSheet, Text,Linking,Platform, View, Image, TextInput, TouchableOpacity, Dimensions, Animated, Easing, ActivityIndicator } from 'react-native';
 import React, { useState, useEffect, useRef } from 'react';
 import { FontAwesome5 } from '@expo/vector-icons';
 import Produit from "../../image/Vnike2.jpg";
@@ -6,14 +6,18 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 import axios from 'axios';
 import { API_URL } from "@env";
+import { useNavigation } from '@react-navigation/native';
 
 const Invite = () => {
   const regexMail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const navigation = useNavigation()
   const [message, setMessage] = useState("Salut [Nom de votre ami], Je viens de découvrir un super site de commerce électronique avec des produits de haute qualité à des prix compétitifs. Si tu t'inscris en utilisant mon lien de parrainage, tu bénéficieras d'une réduction sur ta première commande, et moi aussi ! Ne rate pas cette occasion, rejoins-moi sur ce site génial ! Amicalement, [Ton nom]");
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(null);
   const [user, setUser] = useState(null);
   const [emailP, setEmailP] = useState(null);
   const [name, setName] = useState(null);
+
 
   const { height } = Dimensions.get('window');
 
@@ -62,7 +66,7 @@ const Invite = () => {
           .then((response) => {
             const data = response.data.user;
             if (!emailP) {
-              setEmailP(data.email);
+              setEmailP(data.email?data.email:userData.name);
             }
           })
           .catch((error) => {
@@ -70,11 +74,12 @@ const Invite = () => {
           });
       }
     }
+    fetchData()
   },[]);
 
   const envoyer = async (e) => {
     e.preventDefault();
-    if (!regexMail.test(email) && number.length < 8) {
+    if (!regexMail.test(email)) {
       handleAlertwar("Format de l'email non valide !");
       return;
     }
@@ -96,7 +101,7 @@ const Invite = () => {
           setLoading(false);
           // Attendre quelques secondes avant de naviguer
           setTimeout(() => {
-            navigue("/Profile");
+            navigation.navigate("Profile");
           }, 3000);
         } catch (error) {
           console.error("Erreur lors de la requête:", error);
@@ -134,6 +139,32 @@ const Invite = () => {
     ]).start();
   }, [imageOpacity, formOpacity, buttonTranslateY]);
 
+  const shareProductViaWhatsApp = (productName, productURL, messages) => {
+    const message = `Découvrez ce site incroyable : ${productName} \n\n ${messages} \n\n${productURL}`;
+    const encodedMessage = encodeURIComponent(message);
+
+    // Vérifier si l'utilisateur est sur mobile (Android ou iOS)
+    if (Platform.OS === 'android' || Platform.OS === 'ios') {
+      // Utiliser le schéma WhatsApp pour mobile
+      const whatsappAppURL = `whatsapp://send?text=${encodedMessage}`;
+      Linking.openURL(whatsappAppURL)
+        .catch(() => {
+          handleAlertwar("WhatsApp n'est pas installé sur cet appareil.");
+        });
+    } else {
+      // Si ce n'est pas sur mobile, gérer différemment ou simplement afficher un message
+      alert("Cette fonctionnalité n'est disponible que sur mobile.");
+    }
+  };
+
+  const shareURL = () => {
+    const currentURL = "https://habou227.onrender.com";
+    // Utilisez la fonction de partage ici avec l'URL actuelle
+    shareProductViaWhatsApp("habou227", currentURL, message);
+  };
+
+
+
   return (
     <View style={styles.container}>
       <Animated.View style={[styles.containerTop, { opacity: imageOpacity }]}>
@@ -157,13 +188,21 @@ const Invite = () => {
         </View>
         <Animated.View style={{ transform: [{ translateY: buttonTranslateY }], width: "100%", }}>
           <TouchableOpacity style={styles.submitButton} onPress={envoyer}>
-            <Text style={styles.submitButtonText}>Soumettre</Text>
+          {loading ? (
+        // Affiche le spinner si en cours de soumission
+        <ActivityIndicator size="small" color="#FFFFFF" />
+      ) : (
+        // Sinon, affiche le texte "Soumettre"
+        <Text style={styles.submitButtonText}>Soumettre</Text>
+      )}
           </TouchableOpacity>
         </Animated.View>
+        <TouchableOpacity onPress={shareURL}>
         <View style={styles.whatsappContainer}>
           <Text style={styles.whatsappText}>Via WhatsApp</Text>
           <FontAwesome5 name="whatsapp" size={24} color="#25D366" />
         </View>
+        </TouchableOpacity>
       </Animated.View>
     </View>
   )

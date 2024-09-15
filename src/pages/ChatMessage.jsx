@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ScrollView, Button } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Button, ActivityIndicator } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Chat__header from '../compoments/chatMessage/Chat__header';
 import Chat__footer from '../compoments/chatMessage/Chat__footer';
@@ -10,6 +10,7 @@ import { Audio } from 'expo-av';
 import io from "socket.io-client";
 
 const ChatMessage = () => {
+  const [loading, setLoading] = useState(true);
   const [user, setUser] = useState()
   // const [name, setName] = useState()
   const [recording, setRecording] = React.useState();
@@ -40,8 +41,10 @@ const ChatMessage = () => {
             .get(`${API_URL}/getUserMessagesByClefUser/${userData.id}`)
             .then((response) => {
               setAllMessage(response.data);
+              setLoading(false)
             })
             .catch((error) => {
+              setLoading(false)
               console.log(error);
             });
 
@@ -183,6 +186,7 @@ const ChatMessage = () => {
     if (message.length <= 0) {
       return;
     }
+    setLoading(true)
     axios
       .post(`${API_URL}/createUserMessage`, {
         message: message,
@@ -190,6 +194,7 @@ const ChatMessage = () => {
         provenance: provenance,
       })
       .then((res) => {
+        setLoading(false)
         // alert(res.data);
         socket.emit("new_message_u", {
           data: {
@@ -208,12 +213,21 @@ const ChatMessage = () => {
             console.log(erro);
           });
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {console.log(error)
+        setLoading(false)
+      });
   };
 
 
 
-
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#FF6A69" />
+        <Text style={styles.loadingText}>Chargement...</Text>
+      </View>
+    );
+  }
 
 
   return (
@@ -236,5 +250,11 @@ const styles = StyleSheet.create({
   },
   contenu: {
     marginBottom: 100,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f5f5f5', // Fond de la page de chargement
   },
 });
