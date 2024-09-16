@@ -200,7 +200,8 @@ const styles = StyleSheet.create({
   newPrice: {
     color: '#30A08B',
     marginVertical: 1,
-    fontSize: width * 0.028,
+    fontSize: width * 0.029,
+    fontWeight: '500'
   },
   dot: {
     backgroundColor: '#B2905F', // Couleur des points non sélectionnés

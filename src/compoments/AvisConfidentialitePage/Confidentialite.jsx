@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: "#515C70",
+    color: "#B2905F",
     marginTop: 10,
     marginLeft: 10,
   },
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginHorizontal: 10,
     marginVertical: 10,
-    shadowColor: "#000",
+    shadowColor: "#B2905F",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   introductionText: {
-    color: "#000",
+    color: "#30A08B",
     fontSize: 18,
     fontWeight: 'bold',
   },

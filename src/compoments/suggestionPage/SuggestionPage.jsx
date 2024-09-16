@@ -40,7 +40,7 @@ const SuggestionPage = () => {
 
   return (
     <KeyboardAvoidingView 
-    behavior={Platform.OS  === "ios" ? "padding" : "height"}
+    behavior={Platform.OS  === "ios" ? "height" : "height"}
     style={styles.container}>
       <Animated.View style={[styles.containerTop, { opacity: imageOpacity }]}>
         <Image source={Produit} style={styles.image} />
