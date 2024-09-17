@@ -12,10 +12,10 @@ const Chat__header = () => {
       <View style={styles.header}>
         <View style={styles.contenu}>
         <TouchableOpacity style={styles.backIcon} onPress={() => navigation.goBack()}>
-          <AntDesign name="left" size={24} color="#FF6A69"/>
-          <Text style={styles.backText}>Back</Text>
+          <AntDesign name="left" size={25} color="#30A08B"/>
+          <Text style={styles.backText}>Retour</Text>
         </TouchableOpacity>
-          <Text style={styles.Chat}>Chat</Text>
+          <Text style={styles.Chat}>Messagerie</Text>
         
         <View style={styles.centerContainer}>
           <Image source={Profil} style={styles.ChatImage} />
@@ -38,7 +38,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: '#ccc',
     backgroundColor: '#F1F1F1',
-
   },
   contenu: {
     flexDirection: 'row',
@@ -54,23 +53,23 @@ const styles = StyleSheet.create({
   },
   backText: {
     marginLeft: 5,
-    fontSize: 16,
-    color: '#FF6A69',
+    fontSize: 17,
+    color: '#30A08B',
   },
   Chat: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#FF6A69',
+    color: '#30A08B',
     marginLeft: 10,
     },
   centerContainer: {
-   marginHorizontal: 12
+   marginHorizontal: 12,
   },
   ChatImage: {
     width: 60,
     height: 60,
     borderRadius: 30,
     borderWidth: 1,
-    borderColor: 'black',
+    borderColor: '#30A08B',
   },
 });

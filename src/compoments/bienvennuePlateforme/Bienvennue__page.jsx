@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Animated, Dimensions, Image, FlatList } from 'react-native';
+import { StyleSheet, Text, View, Animated, Dimensions, Image, FlatList, Platform } from 'react-native';
 import React, { useRef, useEffect, useState } from 'react';
 import axios from 'axios';
 import { API_URL } from "@env";
@@ -160,19 +160,28 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         position: "relative",
         overflow: 'hidden',
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
+        ...Platform.select({
+            ios: {
+                shadowColor: "#B2905F",
+                shadowOffset: { width: 0, height: 1},
+                shadowOpacity: 0.25,
+                shadowRadius: 3.84,
+                elevation: 5,
+            },
+            android: {
+                shadowColor: "#B2905F",
+                shadowOffset: {width: 0, height: 0.30},
+                shadowOpacity: 0.10,
+                shadowRadius: 5,
+                elevation: 1,
+            }
+
+        })
     },
     carouselItem: {
         width: Dimensions.get('window').width - 30, // Ajuster la largeur
         height: '100%',
-        marginRight: 10, // Espace entre les éléments
+        marginRight: 10, 
     },
     carouselImage: {
         width: '100%',

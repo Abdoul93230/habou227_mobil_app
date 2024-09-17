@@ -160,16 +160,18 @@ const styles = StyleSheet.create({
       justifyContent: "space-between",
       paddingHorizontal: 12,
       width: "100%",   
-      paddingBottom: 10,
+      paddingBottom: Platform.OS === 'ios' ? 10 : 30,
       backgroundColor: "rgba(255, 152, 0, 0.2)" 
   },
   profileLogo: {
-      width: width * 0.25, 
+      width: Platform.OS === "ios" ? width * 0.35 : width * 5/11, 
       height: height * 0.047, 
       borderColor: '#FF9800', // Orange assorti à la bordure du header
       justifyContent: 'center', 
       alignItems: 'center', 
       overflow: 'hidden', 
+      top: Platform.OS === 'ios' ? 0 : 15,
+      right: 20
   },
   image: {
       width: '100%',
@@ -181,9 +183,11 @@ const styles = StyleSheet.create({
       justifyContent: "space-between",
       alignItems: 'center',
       width: 85,
+      
   },
   iconContainer: {
       position: 'relative',
+      top: Platform.OS === 'ios' ? 0 : 15,
   },
   circleBTN: {
       position: 'absolute',

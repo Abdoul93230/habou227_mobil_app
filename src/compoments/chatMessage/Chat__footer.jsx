@@ -4,13 +4,11 @@ import { Ionicons, FontAwesome, MaterialIcons, MaterialCommunityIcons } from '@e
 import * as ImagePicker from 'expo-image-picker';
 import { Audio } from 'expo-av';
 import { CameraView, useCameraPermissions } from 'expo-camera';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Chat__footer = ({ onSendMessage,startRecording,stopRecording }) => {
+const Chat__footer = ({ onSendMessage }) => {
   const [message, setMessage] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const [recording, setRecording] = useState(null);
-  const [recordings, setRecordings] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [permissionResponse, requestPermission] = Audio.usePermissions();
   const [facing, setFacing] = useState('back');
@@ -18,12 +16,8 @@ const Chat__footer = ({ onSendMessage,startRecording,stopRecording }) => {
 
   useEffect(() => {
     getPermissionAsync();
+    
   }, []);
-
-
-
-
-
 
   const getPermissionAsync = async () => {
     if (Platform.OS !== 'web') {
@@ -48,7 +42,6 @@ const Chat__footer = ({ onSendMessage,startRecording,stopRecording }) => {
 
     if (!result.cancelled) {
       console.log(result.uri);
-      // Vous pouvez maintenant utiliser l'URI de l'image sélectionnée
     }
   };
 
@@ -67,39 +60,39 @@ const Chat__footer = ({ onSendMessage,startRecording,stopRecording }) => {
 
 
 
-  // async function startRecording() {
-  //   try {
-  //     const permission = await Audio.requestPermissionsAsync();
-  //     if (permission.status === 'granted') {
-  //       await Audio.setAudioModeAsync({
-  //         allowsRecordingIOS: true,
-  //         playsInSilentModeIOS: true,
-  //       });
-  //       const { recording } = await Audio.Recording.createAsync(Audio.RecordingOptionsPresets.HIGH_QUALITY);
-  //       setRecording(recording);
-  //       setIsRecording(true);
-  //     } else {
-  //       alert('Permission d\'enregistrement audio refusée');
-  //     }
-  //   } catch (err) {
-  //     console.error('Failed to start recording', err);
-  //   }
-  // }
+  async function startRecording() {
+    try {
+      if (permissionResponse.status !== 'granted') {
+        console.log('Requesting permission..');
+        await requestPermission();
+      }
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: true,
+        playsInSilentModeIOS: true,
+      });
 
-  // async function stopRecording() {
-  //   setIsRecording(false);
-  //   await recording.stopAndUnloadAsync();
-  //   const uri = recording.getURI();
+      console.log('Starting recording..');
+      const { recording } = await Audio.Recording.createAsync( Audio.RecordingOptionsPresets.HIGH_QUALITY
+      );
+      setRecording(recording);
+      console.log('Recording started');
+    } catch (err) {
+      console.error('Failed to start recording', err);
+    }
+  }
 
-  //   setRecording(null);
-
-  //   // Sauvegarder l'enregistrement dans AsyncStorage
-  //   const newRecordings = [...recordings, uri];
-  //   setRecordings(newRecordings);
-  //   await AsyncStorage.setItem('recordings', JSON.stringify(newRecordings));
-
-  //   // console.log('Enregistrement sauvegardé à', uri);
-  // }
+  async function stopRecording() {
+    console.log('Stopping recording..');
+    setRecording(undefined);
+    await recording.stopAndUnloadAsync();
+    await Audio.setAudioModeAsync(
+      {
+        allowsRecordingIOS: false,
+      }
+    );
+    const uri = recording.getURI();
+    console.log('Recording stopped and stored at', recording);
+  }
 
 
 
@@ -107,32 +100,21 @@ const Chat__footer = ({ onSendMessage,startRecording,stopRecording }) => {
 
 
   const handleAudioRecord = async () => {
-    if (isRecording) {
-      await stopRecording();
-    } else {
-      await startRecording();
-    }
-    setIsRecording(!isRecording)
-  };
-
-  const playRecording = async (uri) => {
-    try {
-      const { sound } = await Audio.Sound.createAsync({ uri });
-
-      if (sound) {
-        await sound.playAsync();
+    
+      if (isRecording===false) {
+        setIsRecording(true)
+        startRecording()
+        
       } else {
-        console.log('Sound object is undefined');
+        setIsRecording(false);
+        stopRecording()
       }
-    } catch (error) {
-      console.error('Error while playing sound:', error);
-    }
+    
   };
-
 
   const handleSendMessage = () => {
     if (message.trim().length > 0) {
-      onSendMessage(message);
+      onSendMessage(message, 'user');
       setMessage('');
     }
   };
@@ -151,12 +133,12 @@ const Chat__footer = ({ onSendMessage,startRecording,stopRecording }) => {
   if (!permissionC.granted) {
     // Camera permissions are not granted yet.
     return (
-      <View style={styles.container}>
+      <View style={styles.containere}>
         <Text style={styles.autorisationText}>
           Nous avons besoin de votre autorisation pour montrer la caméra
         </Text>
         <TouchableOpacity onPress={requestPermissionC} style={styles.cancelButton}>
-          <Text style={styles.cancelButtonText}>Autoriser la canera et le micro</Text>
+          <Text style={styles.cancelButtonText}>Autoriser la camera et le micro</Text>
         </TouchableOpacity>
       </View>
     );
@@ -190,11 +172,9 @@ const Chat__footer = ({ onSendMessage,startRecording,stopRecording }) => {
             multiline
           />
           <TouchableOpacity onPress={handleAudioRecord} style={styles.iconButton}>
-            {isRecording ? (
-              <MaterialIcons name="voice-over-off" size={24} />
-            ) : (
-              <MaterialIcons name="keyboard-voice" size={24} />
-            )}
+            {
+              isRecording ? (<MaterialIcons name="voice-over-off" size={24} />):<MaterialIcons name="keyboard-voice" size={24} />
+            }
           </TouchableOpacity>
           <TouchableOpacity style={styles.sendButton} onPress={handleSendMessage}>
             <Ionicons name="send" size={24} color="white" />
@@ -243,6 +223,11 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: '100%',
   },
+  containere: {
+    paddingVertical: 10,
+    borderTopEndRadius: 30,
+    borderTopLeftRadius: 30,
+  },
   chatFooter: {
     backgroundColor: '#fff',
     alignItems: 'center',
@@ -279,9 +264,9 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    justifyContent: 'flex-end', // Position the modal at the bottom
+    justifyContent: 'flex-end',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', 
   },
   modalContent: {
     width: '100%',
@@ -310,23 +295,23 @@ const styles = StyleSheet.create({
 
   },
   autorisationText: {
+    color: '#30A08B',
+    fontWeight: '500',
     textAlign: 'center',
-    bottom: Platform.OS === 'ios' ? 0 : 40,
+    bottom: Platform.OS === 'ios' ? 0 : 40, 
   },
   cancelButton: {
-    width: Platform.OS === 'ios' ?  '90%' : "100%",
+    width: Platform.OS === 'ios' ?  '100%' : "100%",
     padding: 15,
-    backgroundColor: '#FF6A69',
+    backgroundColor: '#B17236',
     borderRadius: 25,
     alignItems: 'center',
-    // bottom: Platform.OS === 'ios' ? 0 : 30,
     margin: "auto",
-    marginBottom:3
   },
   cancelButtonAndroid: {
     width: Platform.OS === 'ios' ?  '10%' : "100%",
     padding: 15,
-    backgroundColor: '#FF6A69',
+    backgroundColor: '#30A08B',
     borderRadius: 25,
     alignItems: 'center',
     bottom: Platform.OS === 'ios' ? 0 : 0,
@@ -335,5 +320,7 @@ const styles = StyleSheet.create({
   cancelButtonText: {
     color: '#fff',
     fontSize: 16,
+    fontWeight: '600',
+    
   },
 });

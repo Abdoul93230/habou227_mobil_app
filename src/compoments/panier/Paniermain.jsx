@@ -179,7 +179,7 @@ const Paniermain = ({chgTotal}) => {
         );
       })}
 
-<View style={styles.container2}>
+    <View style={styles.container2}>
       {(produits?.length<=0 || Vide) && (
         <>
           <Text style={styles.emptyText}>Aucune produit sélectionné, veuillez vous rendre dans la section Orders pour vos commandes !</Text>
@@ -187,7 +187,7 @@ const Paniermain = ({chgTotal}) => {
             style={styles.button}
             onPress={() => navigation.navigate('Commande Page')}
           >
-            <EvilIcons name="cart" size={24} color="#fff" />
+            <EvilIcons name="cart" size={25} color="#fff" />
             <Text style={styles.buttonText}>Orders</Text>
           </TouchableOpacity>
         </>
@@ -290,25 +290,29 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 150,
+    height: 600,
+    
   },
   emptyText: {
     fontSize: 16,
     color: '#333',
+    fontWeight: '300',
     marginBottom: 20,
     textAlign: 'center',
+    justifyContent: 'center',
   },
   button: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FF6A69',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+    backgroundColor: '#30A08B',
+    paddingVertical: 12,
+    paddingHorizontal: 25,
     borderRadius: 5,
   },
   buttonText: {
     color: '#fff',
     fontSize: 16,
     marginLeft: 10,
+    fontWeight: '600'
   },
 });

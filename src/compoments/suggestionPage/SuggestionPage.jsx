@@ -100,8 +100,13 @@ const SuggestionPage = () => {
   }, [imageOpacity, formOpacity, buttonTranslateY]);
 
   return (
+<<<<<<< HEAD
     <KeyboardAvoidingView
     behavior={Platform.OS  === "ios" ? "padding" : "height"}
+=======
+    <KeyboardAvoidingView 
+    behavior={Platform.OS  === "ios" ? "height" : "height"}
+>>>>>>> 9c76883299a9447ec7346dfc180fd0400b886817
     style={styles.container}>
       <Animated.View style={[styles.containerTop, { opacity: imageOpacity }]}>
         <Image source={Produit} style={styles.image} />

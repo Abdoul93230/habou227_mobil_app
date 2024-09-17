@@ -11,7 +11,7 @@ const ReviewList = ({ randomComments, DATA_Products }) => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.container}>
       {randomComments.length > 0 ? (
         randomComments.map((param, index) => {
           const etoiles = param.etoil;
@@ -33,7 +33,7 @@ const ReviewList = ({ randomComments, DATA_Products }) => {
                         key={star}
                         name='star'
                         size={18}
-                        color={star <= etoiles ? '#FF6A69' : 'black'}
+                        color={star <= etoiles ? '#30A08B' : '#B2905F'}
                       />
                     ))}
                   </View>
@@ -42,7 +42,7 @@ const ReviewList = ({ randomComments, DATA_Products }) => {
                   </View>
                 </View>
                 <View style={styles.date}>
-                  <Text>{formatDate(param.date)}</Text>
+                  <Text style={{color: "#30A08B"}}>{formatDate(param.date)}</Text>
                 </View>
               </View>
               <View style={styles.commantaire}>
@@ -74,7 +74,7 @@ const ReviewList = ({ randomComments, DATA_Products }) => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    padding: 10,
+    padding: 5,
   },
   reviewsContent: {
     width: '100%',
@@ -107,6 +107,7 @@ const styles = StyleSheet.create({
   },
   textName: {
     fontSize: 26,
+    color: "#30A08B"
   },
   messageContainer: {
     flex: 1,
@@ -120,6 +121,9 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 16,
     textAlign: 'left',
+    color: "#B2905F",
+    fontWeight: "bold",
+    top: 4
   },
   date: {
     justifyContent: 'center',
@@ -135,7 +139,6 @@ const styles = StyleSheet.create({
   cardeimg: {
     flexDirection: 'row',
     marginTop: 10,
-    display:"flex",
     justifyContent:"space-around",
     alignItems:"center"
   },

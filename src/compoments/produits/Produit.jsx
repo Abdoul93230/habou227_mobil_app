@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 7,
-    marginHorizontal: 10,
+    marginHorizontal: 5,
     borderTopEndRadius: 20,
     borderTopLeftRadius: 20,
   },
@@ -51,13 +51,15 @@ const styles = StyleSheet.create({
   navProduct: {
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#FFF8E1",
+    backgroundColor: "#FECC85",
+    borderRadius: 10,
   },
   title__product: {
     fontSize: 18,
     letterSpacing: 1,
     color: '#30A08B',
     marginVertical: 10,
+    textTransform: 'capitalize',
   },
   box__menu: {
     flexDirection: "row",
@@ -84,8 +86,12 @@ const styles = StyleSheet.create({
   },
   footer: {
     height: 35,
+<<<<<<< HEAD
     // backgroundColor: "rgba(255, 152, 0, 0.48)",
     backgroundColor: "#30a08bb5",
+=======
+    backgroundColor: "#30a08b89", 
+>>>>>>> 9c76883299a9447ec7346dfc180fd0400b886817
     justifyContent: "center",
     alignItems: "center",
     borderBottomLeftRadius: 12,
