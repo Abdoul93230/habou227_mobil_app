@@ -31,7 +31,7 @@ const Footer = () => {
       </TouchableOpacity>
       <TouchableOpacity style={styles.footerIcon} onPress={() => navigation.navigate('More')}>
         <Feather name="menu" size={24} color={getColor('More')} />
-        <Text style={{ color: getColor('More') }}>More</Text>
+        <Text style={{ color: getColor('More') }}>Plus</Text>
       </TouchableOpacity>
     </View>
   );

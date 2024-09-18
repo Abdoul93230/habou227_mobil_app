@@ -137,9 +137,9 @@ function LogIn({ chg, creer }) {
           </View>
         ) : (
           <View style={styles.container}>
-               <View style={{width: "100%", height: 100,}}>
-              <Image source={LogoProject} style={{width: "100%", height: "100%", resizeMode: "center"}}/>
-            </View>
+              <View style={{width: "100%", height:Platform.OS === 'ios' ? 100 : 200}}>
+               <Image source={LogoProject} style={{width: "100%", height: "100%", resizeMode: "center"}}/>
+              </View>
             <View style={styles.inputGroup}>
               <View style={styles.inputContainer}>
                 <User style={styles.icon} />

@@ -212,7 +212,7 @@ const SignUp = () => {
           <View style={styles.signUpContainer}>
            
             <View style={styles.fieldContainer}>
-            <View style={{width: "100%", height: 100,}}>
+            <View style={{width: "100%", height:Platform.OS === 'ios' ? 100 : 200,}}>
               <Image source={LogoProject} style={{width: "100%", height: "100%", resizeMode: "center"}}/>
             </View>
               <Text style={styles.label}>Nom d'utilisateur</Text>
