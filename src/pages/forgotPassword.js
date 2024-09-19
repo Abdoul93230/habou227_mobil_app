@@ -48,10 +48,11 @@ function ForgotPassword() {
             Enter the email address you used to create your account and we will
             email you a link to reset your password
           </Text>
-          <View style={styles.inputContainer}>
-            <Feather name="mail" size={24} color="#515C6F" />
-            <View style={styles.rightContainer}>
+          <View>
               <Text style={styles.label}>Email</Text>
+
+            <View style={styles.rightContainer}>
+              <Feather name="mail" size={24} color="#B2905F" />
               <TextInput
                 style={styles.input}
                 placeholder="janedoe123@email.com"
@@ -63,9 +64,11 @@ function ForgotPassword() {
             </View>
           </View>
           <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-            <Text style={styles.buttonText}>Send email</Text>
+   
+              <Text style={styles.buttonText}>Send email</Text>
+       
             <View style={styles.iconContainer}>
-              <Feather name="chevron-right" size={24} color="#FF6969" />
+              <Feather name="chevron-right" size={24} color="#B2905F" />
             </View>
           </TouchableOpacity>
         </View>
@@ -82,57 +85,60 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   instructions: {
-    color: "#515C6F",
-    fontSize: 15,
+    color: "#B2905F",
+    fontSize: 19,
     lineHeight: 20,
     fontWeight: "300",
     textAlign: "center",
     marginBottom: 30,
   },
-  inputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "white",
-    borderRadius: 10,
-    padding: 10,
-    marginBottom: 20,
-  },
   rightContainer: {
-    flex: 1,
-    marginLeft: 10,
+    flexDirection: "row",
+    borderWidth: 1,
+    borderColor: "#30A08B",
+    alignItems: "center",
+    padding: 5,
+    overflow: "hidden",
+    borderRadius: 10
+
+
   },
   label: {
     fontSize: 18,
     fontWeight: "300",
     textTransform: "uppercase",
     color: "#515C6F",
+    bottom: 5
   },
   input: {
     width: "100%",
-    padding: 5,
-    borderBottomWidth: 1,
+    padding: 10,
     borderBottomColor: "#515C6F",
     color: "#515C6F",
+    fontSize: 19,
   },
   button: {
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "#FF6969",
+    backgroundColor: "#30A08B",
     borderRadius: 26,
     padding: 15,
     marginTop: 20,
   },
   buttonText: {
+    flex: 1,
+    textAlign: "center",
     color: "white",
     fontWeight: "bold",
     textTransform: "uppercase",
   },
   iconContainer: {
-    marginLeft: 10,
+    left: 0,
     backgroundColor: "white",
     borderRadius: 50,
     padding: 5,
+    
   },
   loadingContainer: {
     flex: 1,
