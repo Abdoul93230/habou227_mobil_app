@@ -2,9 +2,11 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
 import { shuffle } from "lodash";
 import Ordi from '../image/Vnike2.jpg';
+import { useNavigation } from '@react-navigation/native';
 
 const Galerie__page = ({ products }) => {
   const [selectedImageIds, setSelectedImageIds] = useState([]);
+  const navigation = useNavigation();
   function getRandomElements(array) {
     const shuffledArray = shuffle(array);
     return shuffledArray.slice(0, 6);
@@ -40,9 +42,10 @@ const Galerie__page = ({ products }) => {
       <View style={styles.galerie__box}>
         {produits.map((item) => (
           <TouchableOpacity
-            key={item._id}
+            key={item?._id}
             style={styles.galerie__box__img}
-            onPress={() => handleImageClick(item._id)}
+            // onPress={() => handleImageClick(item._id)}
+            onPress={() => navigation.navigate('Détail-Produit', { id: item?._id })}
           >
             <Image source={{uri:item.image1}} style={styles.image} />
             {selectedImageIds.includes(item._id) && (

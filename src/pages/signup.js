@@ -10,7 +10,7 @@ import {
   Platform,
   ScrollView,
   Pressable,
-  Image
+  Image,
 } from "react-native";
 import axios from "axios";
 import { API_URL } from "@env";
@@ -25,7 +25,7 @@ import { useNavigation } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import LogoProject from "../../src/image/PlashScreen.png"
+import LogoProject from "../../src/image/PlashScreen.png";
 // const BackendUrl = process.env.REACT_APP_Backend_Url;
 
 const SignUp = () => {
@@ -44,7 +44,7 @@ const SignUp = () => {
       text1: "success",
       text2: message,
       position: "top",
-      visibilityTime: 3000,
+      visibilityTime: 4000,
       autoHide: true,
       bottomOffset: 40,
     });
@@ -56,7 +56,7 @@ const SignUp = () => {
       text1: "error",
       text2: message,
       position: "top",
-      visibilityTime: 3000,
+      visibilityTime: 4000,
       autoHide: true,
       bottomOffset: 40,
     });
@@ -74,25 +74,21 @@ const SignUp = () => {
     } else if (emailV.length !== 0 && !validateEmail(emailV)) {
       handleAlertwar("Veuillez entrer une adresse e-mail valide.");
       return false;
-    }  else if (
+    } else if (
       (phoneNumberV.length > 0 && !regexPhone.test(phoneNumber)) ||
       phoneNumberV.length > 11
     ) {
       handleAlertwar("Veuillez entrer un numéro fonctionnel");
       return false;
-    }else if (phoneNumberV.length === 0 && emailV.length === 0) {
-      handleAlertwar(
-        "Veuillez entrer une address mail ou un numero"
-      );
+    } else if (phoneNumberV.length === 0 && emailV.length === 0) {
+      handleAlertwar("Veuillez entrer une address mail ou un numero");
       return false;
-    }
-    else if (passwordV === "" || passwordV.length < 6) {
+    } else if (passwordV === "" || passwordV.length < 6) {
       handleAlertwar(
         "Veuillez entrer un mot de passe valide au moins 6 caractères."
       );
       return false;
-    }
-     else {
+    } else {
       setIsloading(true);
       axios
         .post(`${API_URL}/user`, {
@@ -160,7 +156,6 @@ const SignUp = () => {
                 handleAlert(user.data.message);
                 navigation.navigate("Home");
                 setIsloading(false);
-
               } else {
                 handleAlert(user.data.message);
               }
@@ -209,119 +204,112 @@ const SignUp = () => {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0} // Ajustez la valeur si nécessaire
     >
-        {isloading ? (
-          <View style={styles.loadingContainer}>
-            <Text style={styles.loadingText}>
-              Connection en cours, veuillez patienter...
-            </Text>
-            <ActivityIndicator size="large" color="#FF6969" />
+      {isloading ? (
+        <View style={styles.loadingContainer}>
+          <Text style={styles.loadingText}>
+            Connection en cours, veuillez patienter...
+          </Text>
+          <ActivityIndicator size="large" color="#30A08B" />
+        </View>
+      ) : (
+        <View style={styles.signUpContainer}>
+          <View style={styles.fieldContainer}>
+            <View style={{ width: "100%", height: 100 }}>
+              <Image
+                source={LogoProject}
+                style={{ width: "100%", height: "100%", resizeMode: "center" }}
+              />
+            </View>
+            <Text style={styles.label}>Nom d'utilisateur</Text>
+            <View style={styles.inputContainer}>
+              <User color="#B2905F" />
+              <TextInput
+                style={styles.input}
+                placeholder="janedoe12345"
+                value={name}
+                onChangeText={setName}
+              />
+            </View>
           </View>
-        ) : (
-          <View style={styles.signUpContainer}>
-           
-            <View style={styles.fieldContainer}>
-            <View style={{width: "100%", height: 100,}}>
-              <Image source={LogoProject} style={{width: "100%", height: "100%", resizeMode: "center"}}/>
+
+          <View style={styles.cont}>
+            <Text style={styles.label2}>Adresse email (Facultatif)</Text>
+            <View style={styles.inputContainer}>
+              <MessageSquare color="#B2905F" />
+              <TextInput
+                style={styles.input}
+                placeholder="janedoe123@email.com"
+                keyboardType="email-address"
+                value={email}
+                onChangeText={setEmail}
+              />
             </View>
-              <Text style={styles.label}>Nom d'utilisateur</Text>
-              <View style={styles.inputContainer}>
-                <User color="#B2905F" />
-                <TextInput
-                  style={styles.input}
-                  placeholder="janedoe12345"
-                  value={name}
-                  onChangeText={setName}
+
+            <Text style={styles.label2}>Numéro de téléphone</Text>
+            <View style={styles.inputContainer}>
+              <PhoneCall color="#B2905F" />
+              <TextInput
+                style={styles.input}
+                placeholder="+227 87727501"
+                keyboardType="phone-pad"
+                value={phoneNumber}
+                onChangeText={setPhoneNumber}
+              />
+            </View>
+          </View>
+
+          <View style={styles.fieldContainer}>
+            <Text style={styles.label}>Mot de passe</Text>
+            <View style={styles.inputContainer}>
+              <Lock color="#B2905F" />
+              <TextInput
+                style={styles.input}
+                placeholder="*******************"
+                secureTextEntry={true}
+                value={password}
+                onChangeText={setPassword}
+              />
+            </View>
+          </View>
+
+          {phoneNumber.length >= 8 && (
+            <>
+              <View style={styles.checkboxContainer}>
+                <Text style={styles.checkboxLabel}>WhatsApp Groupe:</Text>
+                <MyCheckbox
+                  checked={whatsapp}
+                  onPress={() => setWhatsapp(!whatsapp)}
                 />
               </View>
-            </View>
-
-            <View style={styles.cont}>
-                <Text style={styles.label2}>Adresse email (Facultatif)</Text>
-                <View style={styles.inputContainer}>
-                  <MessageSquare color="#B2905F" />
-                  <TextInput
-                    style={styles.input}
-                    placeholder="janedoe123@email.com"
-                    keyboardType="email-address"
-                    value={email}
-                    onChangeText={setEmail}
-                  />
-                </View>
-       
-
-              
-
-         
-                <Text style={styles.label2}>Numéro de téléphone</Text>
-                <View style={styles.inputContainer}>
-                  <PhoneCall color="#B2905F" />
-                  <TextInput
-                    style={styles.input}
-                    placeholder="+227 87727501"
-                    keyboardType="phone-pad"
-                    value={phoneNumber}
-                    onChangeText={setPhoneNumber}
-                  />
-                </View>
-    
-            </View>
-
-            <View style={styles.fieldContainer}>
-              <Text style={styles.label}>Mot de passe</Text>
-              <View style={styles.inputContainer}>
-                <Lock color="#B2905F" />
-                <TextInput
-                  style={styles.input}
-                  placeholder="*******************"
-                  secureTextEntry={true}
-                  value={password}
-                  onChangeText={setPassword}
-                />
-              </View>
-            </View>
-
-            {phoneNumber.length >= 8 && (
-              <>
-                <View style={styles.checkboxContainer}>
-                  <Text style={styles.checkboxLabel}>WhatsApp Groupe:</Text>
-                  <MyCheckbox
-                    checked={whatsapp}
-                    onPress={() => setWhatsapp(!whatsapp)}
-                  />
-                </View>
-                <Text style={styles.checkboxText}>
-                  Acceptez-vous de faire partie de notre communauté WhatsApp ?
-                </Text>
-              </>
-            )}
-
-            <TouchableOpacity style={{ width: "auto",}}>
-              <Text
-                onPress={() => navigation.navigate("Login")}
-                style={styles.label}
-              >
-                Se connecter ?
+              <Text style={styles.checkboxText}>
+                Acceptez-vous de faire partie de notre communauté WhatsApp ?
               </Text>
-              <ChevronRight color="#fff" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={validateCredentials}
+            </>
+          )}
+
+          <TouchableOpacity style={{ width: "auto" }}>
+            <Text
+              onPress={() => navigation.navigate("Login")}
+              style={styles.label}
             >
-              <Text style={styles.buttonText}>S'inscrire</Text>
-              <View  style={styles.buttonIcon}>
-              <ChevronRight color="#30A08B" />
-
-              </View>
-            </TouchableOpacity>
-
-            <Text style={styles.agreementText}>
-            En créant un compte, vous acceptez nos{" "}
-              <Text style={styles.linkText}>Conditions d'utilisation</Text> and{" "}
-              <Text style={styles.linkText}>Politique de confidentialité</Text>
+              Se connecter ?
             </Text>
-          </View>
-        )}
+            <ChevronRight color="#fff" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={validateCredentials}>
+            <Text style={styles.buttonText}>S'inscrire</Text>
+            <View style={styles.buttonIcon}>
+              <ChevronRight color="#30A08B" />
+            </View>
+          </TouchableOpacity>
+
+          <Text style={styles.agreementText}>
+            En créant un compte, vous acceptez nos{" "}
+            <Text style={styles.linkText}>Conditions d'utilisation</Text> and{" "}
+            <Text style={styles.linkText}>Politique de confidentialité</Text>
+          </Text>
+        </View>
+      )}
     </KeyboardAvoidingView>
   );
 };
@@ -373,7 +361,6 @@ const styles = StyleSheet.create({
     elevation: 2, // Augmenter l'élévation pour une ombre plus visible
     width: "100%",
     minHeight: 50,
-    
   },
   input: {
     flex: 1,
@@ -405,7 +392,6 @@ const styles = StyleSheet.create({
     color: "#515C6F",
   },
   button: {
-
     backgroundColor: "#2ea28dd0",
     borderRadius: 25,
     flexDirection: "row",
@@ -445,7 +431,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 
-
   label2: {
     fontSize: 16,
     color: "#515C6F",
@@ -475,11 +460,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 4,
     borderWidth: 2,
-    borderColor: "#CCC",
+    borderColor: "#B2905F",
     backgroundColor: "transparent",
   },
   checkboxChecked: {
-    backgroundColor: "#FF6A69",
+    backgroundColor: "#30A08B",
   },
 });
 

@@ -8,17 +8,15 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
-  Image
+  Image,
 } from "react-native";
-import LogoProject from "../../src/image/PlashScreen.png"
+import LogoProject from "../../src/image/PlashScreen.png";
 import { ChevronRight, Lock, Phone, User } from "react-native-feather";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { API_URL } from "@env";
 import Toast from "react-native-toast-message";
-
-
 
 function LogIn({ chg, creer }) {
   const [email, setEmail] = useState("");
@@ -28,7 +26,7 @@ function LogIn({ chg, creer }) {
   const navigation = useNavigation();
   const regexMail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const regexPhone = /^[0-9]{8,}$/;
-  
+
   const handleAlert = (message) => {
     Toast.show({
       type: "success",
@@ -53,7 +51,6 @@ function LogIn({ chg, creer }) {
     });
   };
 
-
   const connect = async () => {
     setIsloading(true);
 
@@ -62,7 +59,7 @@ function LogIn({ chg, creer }) {
       handleAlertwar(message);
     };
 
-    if (email.length === 0 && phoneNumber.length===0) {
+    if (email.length === 0 && phoneNumber.length === 0) {
       handleError("Veuillez entrer des informations valide.");
       return;
     }
@@ -131,85 +128,91 @@ function LogIn({ chg, creer }) {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0} // Ajustez la valeur si nécessaire
     >
-   
-        {isloading ? (
-          <View style={styles.loadingContainer}>
-            <Text style={styles.loadingText}>
-              Connection en cours Veuillez Patientez....
-            </Text>
-            <ActivityIndicator size="large" color="#FF6969" />
+      {isloading ? (
+        <View style={styles.loadingContainer}>
+          <Text style={styles.loadingText}>
+            Connection en cours Veuillez Patientez....
+          </Text>
+          <ActivityIndicator size="large" color="#30A08B" />
+        </View>
+      ) : (
+        <View style={styles.container}>
+          <View style={{ width: "100%", height: 100 }}>
+            <Image
+              source={LogoProject}
+              style={{ width: "100%", height: "100%", resizeMode: "center" }}
+            />
           </View>
-        ) : (
-          <View style={styles.container}>
-               <View style={{width: "100%", height: 100,}}>
-              <Image source={LogoProject} style={{width: "100%", height: "100%", resizeMode: "center"}}/>
-            </View>
-            <View style={styles.inputGroup}>
-              <View style={styles.inputContainer}>
-                <User style={styles.icon} />
-                <View style={styles.inputWrapper}>
-                  <TextInput
-                    style={styles.input}
-                    value={email}
-                    onChangeText={setEmail}
-                    placeholder="janedoe123@email.com"
-                    keyboardType="email-address"
-                  />
-                </View>
-              </View>
-              <Text style={styles.orText}>OU</Text>
-              <View style={styles.inputContainer}>
-                <Phone style={styles.icon} />
-                <View style={styles.inputWrapper}>
-                  <TextInput
-                    style={styles.input}
-                    value={phoneNumber}
-                    onChangeText={setPhoneNumber}
-                    placeholder="Numéro de téléphone"
-                    keyboardType="phone-pad"
-                  />
-                </View>
-              </View>
-            </View>
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Adresse email</Text>
             <View style={styles.inputContainer}>
-              <Lock style={styles.icon} />
+              <User style={styles.icon} />
               <View style={styles.inputWrapper}>
                 <TextInput
                   style={styles.input}
-                  value={password}
-                  onChangeText={setPassword}
-                  placeholder="Mot de passe"
-                  secureTextEntry
+                  value={email}
+                  onChangeText={setEmail}
+                  placeholder="janedoe123@email.com"
+                  keyboardType="email-address"
                 />
               </View>
             </View>
-            <View style={styles.buttonFD}>
-              {/* <TouchableOpacity style={styles.buttonF}> */}
-              <Text
-                style={styles.buttonFT}
-                onPress={() => navigation.navigate("forgotPassword")}
-              >
-                Mot de passe oublié ?
-              </Text>
-              {/* </TouchableOpacity> */}
-            </View>
-            <TouchableOpacity style={styles.button} onPress={connect}>
-              <Text style={styles.buttonText}>Se connecter</Text>
-              <View style={styles.buttonIcon}>
-                <ChevronRight style={{ color: "#30A08B" }} />
+            <Text style={styles.orText}>OU</Text>
+            <Text style={styles.label}>Numéro de téléphone</Text>
+            <View style={styles.inputContainer}>
+              <Phone style={styles.icon} />
+              <View style={styles.inputWrapper}>
+                <TextInput
+                  style={styles.input}
+                  value={phoneNumber}
+                  onChangeText={setPhoneNumber}
+                  placeholder="Numéro de téléphone"
+                  keyboardType="phone-pad"
+                />
               </View>
-            </TouchableOpacity>
-            <Text style={styles.signUpText}>
-            Vous n'avez pas de compte ? Faites glisser votre doigt vers la droite pour{" "}
-              <Text
-                style={styles.signUpLink}
-                onPress={() => navigation.navigate("Signup")}
-              >
-                créer un nouveau compte
-              </Text>
-            </Text>
+            </View>
           </View>
-        )}
+          <Text style={styles.label}>Mot de passe</Text>
+          <View style={styles.inputContainer}>
+            <Lock style={styles.icon} />
+            <View style={styles.inputWrapper}>
+              <TextInput
+                style={styles.input}
+                value={password}
+                onChangeText={setPassword}
+                placeholder="Mot de passe"
+                secureTextEntry
+              />
+            </View>
+          </View>
+          <View style={styles.buttonFD}>
+            {/* <TouchableOpacity style={styles.buttonF}> */}
+            <Text
+              style={styles.buttonFT}
+              onPress={() => navigation.navigate("forgotPassword")}
+            >
+              Mot de passe oublié ?
+            </Text>
+            {/* </TouchableOpacity> */}
+          </View>
+          <TouchableOpacity style={styles.button} onPress={connect}>
+            <Text style={styles.buttonText}>Se connecter</Text>
+            <View style={styles.buttonIcon}>
+              <ChevronRight style={{ color: "#30A08B" }} />
+            </View>
+          </TouchableOpacity>
+          <Text style={styles.signUpText}>
+            Vous n'avez pas de compte ? Faites glisser votre doigt vers la
+            droite pour{" "}
+            <Text
+              style={styles.signUpLink}
+              onPress={() => navigation.navigate("Signup")}
+            >
+              créer un nouveau compte
+            </Text>
+          </Text>
+        </View>
+      )}
     </KeyboardAvoidingView>
   );
 }
@@ -238,9 +241,9 @@ const styles = StyleSheet.create({
     borderColor: "#2ea28dd0",
     borderWidth: 1,
     backgroundColor: "#fff",
-    elevation: 2, 
+    elevation: 2,
     width: "100%",
-    minHeight: 50, 
+    minHeight: 50,
   },
   icon: {
     marginRight: 10,
@@ -250,10 +253,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   label: {
-    fontSize: 16,
+    fontSize: 14,
     color: "#515C6F",
     marginBottom: 5,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   input: {
     flex: 1,
@@ -324,7 +327,7 @@ const styles = StyleSheet.create({
   },
   buttonFD: {
     width: "100%",
-    textAlign: "left"
+    textAlign: "left",
   },
   buttonF: {
     textAlign: "left",

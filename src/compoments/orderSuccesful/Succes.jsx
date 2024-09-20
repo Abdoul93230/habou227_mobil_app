@@ -8,7 +8,7 @@ const Succes = () => {
   return (
     <View style={styles.container}>
       <View style={styles.succes}>
-        <AntDesign name="check" size={40} color="#FF6A69" />
+        <AntDesign name="check" size={40} color="#30A08B" />
       </View>
       <Text style={styles.text}>Commande passée !</Text>
       <Text style={styles.paragraphe}>
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#FF6A69',
+    color: '#30A08B',
     marginTop: 20,
     textAlign: 'center',
   },
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   btnOrder: {
     width: 210,
     height: 50,
-    backgroundColor: '#FF6A69',
+    backgroundColor: '#30A08B',
     borderRadius: 30,
     marginTop: 20,
     flexDirection: 'row',

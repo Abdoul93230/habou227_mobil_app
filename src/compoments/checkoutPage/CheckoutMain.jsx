@@ -1,5 +1,5 @@
 import React, { useEffect, useState,forwardRef, useImperativeHandle } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Alert, Image, Modal, TextInput, TouchableWithoutFeedback, Platform,ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Alert, Image, Modal, TextInput, TouchableWithoutFeedback, Platform,ActivityIndicator,KeyboardAvoidingView } from 'react-native';
 import { Feather, EvilIcons, Ionicons } from '@expo/vector-icons';
 import Items from "../../image/macbook cote.png";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -65,7 +65,7 @@ const CheckoutMain =  forwardRef(({chgTotal,chgReduction},ref)=>{
     if (promoCode.length === 0) {
       setLoading(false)
       handleAlertwar("code invalide.");
-      setModalVisible(!modalVisible);
+      setModalVisible(false);
       return;
     }
     // setRond(true)
@@ -82,17 +82,17 @@ const CheckoutMain =  forwardRef(({chgTotal,chgReduction},ref)=>{
         if (code.data.data.isValide) {
           setCodeValide(code.data.data);
           chgReduction(code.data.data.prixReduiction)
-          setModalVisible(!modalVisible);
+          setModalVisible(false);
           handleAlert('Code Appliquer')
         } else {
           handleAlertwar("Ce code la est expirer.");
-          setModalVisible(!modalVisible);
+          setModalVisible(false);
         }
       })
       .catch((error) => {
         setLoading(false)
         handleAlertwar("Ce code de promo n'exite pas");
-        setModalVisible(!modalVisible);
+        setModalVisible(false);
       });
   };
 
@@ -445,8 +445,8 @@ useImperativeHandle(ref, () => ({
 if (loading) {
   return (
     <View style={styles.loadingContainer}>
-      <ActivityIndicator size="large" color="#FF6A69" />
-      <Text style={styles.loadingText}>Chargement...</Text>
+      <ActivityIndicator style={styles.loadingText} size="large" color="#30A08B" />
+      <Text>Chargement...</Text>
     </View>
   );
 }
@@ -572,7 +572,13 @@ if (loading) {
       >
        <TouchableWithoutFeedback onPress={handleApplyPromoCode}>
             <View style={styles.modalContainer}>
+          <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0} // Ajustez la valeur si nécessaire
+    >
           <View style={styles.modalContent}>
+      
             <Text style={styles.modalTitle}>Ajouter un code promotionnel</Text>
             <TextInput
               style={styles.input}
@@ -584,6 +590,7 @@ if (loading) {
               <Text style={styles.modalButtonText}>Appliquer</Text>
             </TouchableOpacity>
           </View>
+    </KeyboardAvoidingView>
         </View>
         </TouchableWithoutFeedback>
 
@@ -729,7 +736,7 @@ const styles = StyleSheet.create({
     height: 90,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FF6A69',
+    backgroundColor: '#30A08B',
     borderRadius: 50,
     elevation: 2,
   },
@@ -823,6 +830,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#30A08B', // Fond de la page de chargement
+    backgroundColor: '#fff', // Fond de la page de chargement
+    // height:500,
   },
+  loadingText:{
+    marginTop:250
+  }
 });

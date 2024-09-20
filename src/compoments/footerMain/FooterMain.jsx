@@ -36,25 +36,31 @@ const FooterMain = () => {
       <View style={styles.footerSecondary}>
         <View style={{borderBottomWidth: 1, borderColor: '#F0F0F0',}}>
         <View style={styles.footerRow}>
-          <TouchableOpacity onPress={() => handlePress('HELP CENTER')}>
+          {/* <TouchableOpacity onPress={() => handlePress('HELP CENTER')}>
             <Text style={styles.footerSecondaryText}>HELP CENTER</Text>
+          </TouchableOpacity> */}
+          {/* <TouchableOpacity onPress={() => handlePress('CONTACT US')}>
+            <Text style={styles.footerSecondaryText}>CONTACT US</Text>
+          </TouchableOpacity> */}
+          {/* <TouchableOpacity onPress={() => handlePress('TERMS & CONDITIONS')}>
+            <Text style={styles.footerSecondaryText}>TERMS & CONDITIONS</Text>
+          </TouchableOpacity> */}
+        </View>
+        <View style={styles.footerRow}>
+          {/* <TouchableOpacity onPress={() => handlePress('PRIVACY NOTICE')}>
+            <Text style={styles.footerSecondaryText}>PRIVACY NOTICE</Text>
+          </TouchableOpacity> */}
+          {/* <TouchableOpacity onPress={() => handlePress('COOKIE NOTICE')}>
+            <Text style={styles.footerSecondaryText}>COOKIE NOTICE</Text>
+          </TouchableOpacity> */}
+          <TouchableOpacity onPress={() => handlePress('BECOME A SELLER')}>
+            <Text style={styles.footerSecondaryText}>BECOME A SELLER</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => handlePress('CONTACT US')}>
             <Text style={styles.footerSecondaryText}>CONTACT US</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => handlePress('TERMS & CONDITIONS')}>
-            <Text style={styles.footerSecondaryText}>TERMS & CONDITIONS</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.footerRow}>
-          <TouchableOpacity onPress={() => handlePress('PRIVACY NOTICE')}>
-            <Text style={styles.footerSecondaryText}>PRIVACY NOTICE</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handlePress('COOKIE NOTICE')}>
-            <Text style={styles.footerSecondaryText}>COOKIE NOTICE</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handlePress('BECOME A SELLER')}>
-            <Text style={styles.footerSecondaryText}>BECOME A SELLER</Text>
+          <TouchableOpacity onPress={() => handlePress('HELP CENTER')}>
+            <Text style={styles.footerSecondaryText}>HELP CENTER</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.footerRow}>
@@ -96,7 +102,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    height: 55,
+    height: 20,
     backgroundColor: '#B2905F',
     paddingVertical: 8,
   },

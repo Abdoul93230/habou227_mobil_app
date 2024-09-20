@@ -565,7 +565,7 @@ const DetailProduitMain = ({produit,chgColor, chgTail,id,Allcommente,chgNbr}) =>
             key={star}
             name='star'
             size={18}
-            color={star <= rating[index] ? '#30A08B' : '#B2905F'} // Couleur des étoiles
+            color={star <= param.etoil ? '#30A08B' : '#B2905F'} // Couleur des étoiles
           />
         ))}
           </View>

@@ -30,6 +30,7 @@ import store from "./src/redux/store";
 import CategoriDetailPage from "./src/pages/CategoriDetailPage";
 import LogIn from "./src/pages/login";
 import SignUp from "./src/pages/signup";
+import ResetPassword from "./src/pages/ResetPassword";
 import axios from "axios";
 import {
   getCategories,
@@ -50,7 +51,6 @@ import { API_URL } from "@env";
 import PlashScreen from "./SplashScreen";
 
 const Stack = createNativeStackNavigator();
-
 
 export default function App() {
   const [isAuthChecked, setIsAuthChecked] = useState(false);
@@ -95,7 +95,7 @@ export default function App() {
         <NavigationContainer>
           {isAuthChecked ? (
             <Stack.Navigator
-              initialRouteName={isAuthenticated?"Home":"Login"}
+              initialRouteName={isAuthenticated ? "Home" : "Login"}
               screenOptions={{ headerShown: false }}
             >
               <Stack.Screen name="Login" component={LogIn} />
@@ -175,6 +175,7 @@ export default function App() {
               />
               <Stack.Screen name="Connexion" component={ConnexionPage} />
               <Stack.Screen name="Inscription" component={InscriptionPage} />
+              <Stack.Screen name="ResetPassword" component={ResetPassword} />
               <Stack.Screen name="OTP" component={OTPPage} />
               <Stack.Screen
                 name="Vérifier votre numéro de téléphone"
@@ -187,7 +188,7 @@ export default function App() {
             </Stack.Navigator>
           ) : (
             <View style={styles.container}>
-            <PlashScreen />
+              <PlashScreen />
               {/* <ActivityIndicator
                 size="small"
                 color="#FF6969"

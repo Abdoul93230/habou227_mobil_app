@@ -1,4 +1,4 @@
-import {Platform, StyleSheet, View, ScrollView, ActivityIndicator, Text, TouchableOpacity, Modal, TextInput, Button } from 'react-native';
+import {Platform, StyleSheet, View, ScrollView, ActivityIndicator, Text, TouchableOpacity, Modal, TextInput, Button, KeyboardAvoidingView } from 'react-native';
 import React, { useEffect, useState, useRef } from 'react';
 import DetailProduit from "../compoments/detailProduit/DetailProduit";
 import DetailProduitFooter from '../compoments/detailProduit/DetailProduitFooter';
@@ -146,7 +146,7 @@ const ProductDet = () => {
       setsSend(false)
       return;
     }
-    if (!rating) {
+    if (!rating || rating===0) {
       handleAlertwar("veuiller noter ce produit s'il vous plait.");
       setsSend(false)
       return;
@@ -167,8 +167,9 @@ const ProductDet = () => {
       .then((resp) => {
         handleAlert(resp.data.message);
         setIsCommentBoxVisible(false);
-        setRating(null);
+        // setRating(null);
         setCommente("");
+        setRating(0);
 
         axios
           .get(`${API_URL}/getAllCommenteProduitById/${id}`)
@@ -198,7 +199,7 @@ const ProductDet = () => {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#FF6A69" />
+        <ActivityIndicator size="large" color="#30A08B" />
         <Text style={styles.loadingText}>Chargement...</Text>
       </View>
     );
@@ -220,7 +221,9 @@ const ProductDet = () => {
       </TouchableOpacity>
 
       <Modal visible={isCommentBoxVisible} transparent={true} animationType="slide">
-      <View style={styles.modalContainer}>
+      <KeyboardAvoidingView
+      behavior={Platform.OS  === "ios" ? "height" : "height"}
+      style={styles.modalContainer}>
         <View style={styles.commentCard}>
           <Text style={styles.cardTitle}>Ajouter un commentaire</Text>
           <TextInput
@@ -234,8 +237,8 @@ const ProductDet = () => {
             <Text style={styles.noteProduit}>Notez ce produit</Text>
 
             <View style={styles.satrIcon}>
-          {[1, 2, 3, 4, 5].map((star) => (
-            <TouchableOpacity key={star} onPress={() => handleRating(star)}>
+          {[1, 2, 3, 4, 5].map((star,index) => (
+            <TouchableOpacity key={index} onPress={() => handleRating(star)}>
               <AntDesign name='staro' size={20} color={star <= rating ? '#30A08B' : '#B2905F'} />
             </TouchableOpacity>
           ))}
@@ -244,7 +247,7 @@ const ProductDet = () => {
           {
             send?
               <><View style={styles.loadingContainer2}>
-              <ActivityIndicator size="large" color="#FF6A69" />
+              <ActivityIndicator size="large" color="#30A08B" />
               <Text style={styles.loadingText}>Chargement...</Text>
             </View></>
            :<><View style={styles.btn}>
@@ -255,7 +258,7 @@ const ProductDet = () => {
 
 
         </View>
-      </View>
+      </KeyboardAvoidingView>
 </Modal>
     </View>
 
@@ -274,7 +277,7 @@ const styles = StyleSheet.create({
   },
   commenteBox: {
     position: 'absolute',
-    transform: [{ translateY: 330 }], // Adjust this value to center the box vertically
+    transform: [{ translateY: 320 }], // Adjust this value to center the box vertically
   },
   commente: {
     width: 80,

@@ -86,12 +86,8 @@ const styles = StyleSheet.create({
   },
   footer: {
     height: 35,
-<<<<<<< HEAD
     // backgroundColor: "rgba(255, 152, 0, 0.48)",
     backgroundColor: "#30a08bb5",
-=======
-    backgroundColor: "#30a08b89", 
->>>>>>> 9c76883299a9447ec7346dfc180fd0400b886817
     justifyContent: "center",
     alignItems: "center",
     borderBottomLeftRadius: 12,
