@@ -153,23 +153,24 @@ useEffect(() => {
 export default Header__page;
 
 const styles = StyleSheet.create({
-  //Header composant 
+  //Header composant
   header: {
       flexDirection: "row",
       alignItems: 'center',
       justifyContent: "space-between",
       paddingHorizontal: 12,
-      width: "100%",   
+      width: "100%",
       paddingBottom: Platform.OS === 'ios' ? 10 : 30,
-      backgroundColor: "rgba(255, 152, 0, 0.2)" 
+      // backgroundColor: "rgba(255, 152, 0, 0.2)"
+      backgroundColor: "red"
   },
   profileLogo: {
-      width: Platform.OS === "ios" ? width * 0.35 : width * 5/11, 
-      height: height * 0.047, 
+      width: Platform.OS === "ios" ? width * 0.35 : width * 5/11,
+      height: height * 0.047,
       borderColor: '#FF9800', // Orange assorti à la bordure du header
-      justifyContent: 'center', 
-      alignItems: 'center', 
-      overflow: 'hidden', 
+      justifyContent: 'center',
+      alignItems: 'center',
+      overflow: 'hidden',
       top: Platform.OS === 'ios' ? 0 : 15,
       right: 20
   },
@@ -183,7 +184,7 @@ const styles = StyleSheet.create({
       justifyContent: "space-between",
       alignItems: 'center',
       width: 85,
-      
+
   },
   iconContainer: {
       position: 'relative',

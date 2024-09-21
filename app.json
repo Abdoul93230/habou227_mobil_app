@@ -5,7 +5,7 @@
         "projectId": "85ac32cd-a107-41ab-850a-eb22d50b7d7b"
       }
     },
-    "name": "NomDeTonApp",
+    "name": "IHAM baobab",
     "slug": "iham-baobab",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -29,6 +29,12 @@
     "web": {
       "favicon": "./src/image/PlashScreen.png"
     },
-    "owner": "abdoulrazak"
+    "owner": "abdoulrazak",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/85ac32cd-a107-41ab-850a-eb22d50b7d7b"
+    }
   }
 }
