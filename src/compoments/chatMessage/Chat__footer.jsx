@@ -146,7 +146,6 @@ const Chat__footer = ({ onSendMessage }) => {
 
   function toggleCameraFacing() {
     setFacing(current => (current === 'back' ? 'front' : 'back'));
-    // console.log('yfuy')
   }
 
 

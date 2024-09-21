@@ -919,7 +919,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
     color: '#B17236',
     fontWeight: 'bold',
-    
+
   },
 
   text: {
@@ -933,6 +933,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 30,
+    marginTop:Platform.OS==="android"?-10:0
   },
   button: {
     backgroundColor: '#B2905F',

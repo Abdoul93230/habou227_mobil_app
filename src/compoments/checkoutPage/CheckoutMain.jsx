@@ -578,7 +578,7 @@ if (loading) {
       keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0} // Ajustez la valeur si nécessaire
     >
           <View style={styles.modalContent}>
-      
+
             <Text style={styles.modalTitle}>Ajouter un code promotionnel</Text>
             <TextInput
               style={styles.input}
@@ -620,7 +620,7 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     color: "#B2905F",
     marginBottom: 20,
-   
+
   },
   card: {
     width: "100%",
@@ -708,7 +708,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   android: {
-    bottom: 6,
+    bottom: 0,
     position: "absolute",
   },
   cardItem: {

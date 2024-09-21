@@ -94,7 +94,7 @@ const ProductDet = () => {
               setAllCommente(coments.data);
               // setAllCommente(DATA_Commentes?.filter(item=>item.clefProduct===id)?DATA_Commentes?.filter(item=>item.clefProduct===id):[]);
 
-              console.log()
+              // console.log()
             })
             .catch((error) => {
               console.log(error);
@@ -356,6 +356,7 @@ loadingContainer2: {
   justifyContent: 'center',
   alignItems: 'center',
   backgroundColor: '#f5f5f5', // Fond de la page de chargement
+  top:Platform.OS==="android"?7:0
 },
 });
 

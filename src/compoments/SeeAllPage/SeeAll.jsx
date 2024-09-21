@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Image, FlatList } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Image, FlatList, Platform } from 'react-native';
 import { EvilIcons, AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
@@ -8,7 +8,7 @@ const SeeAll = ({cards}) => {
     const [expandedCard, setExpandedCard] = useState(cards[0].id);
 
     // console.log(cards[0].id);
-    
+
 
     const toggleCard = (id) => {
         setExpandedCard(expandedCard === id ? cards[0].id : id);
@@ -80,6 +80,7 @@ const styles = StyleSheet.create({
         padding: 5,
         borderBottomWidth: 1,
         borderBottomColor: '#e0e0e0',
+        marginTop:Platform.OS==="android"?20:0
     },
     headerText: {
         fontSize: 20,

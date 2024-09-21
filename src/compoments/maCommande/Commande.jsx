@@ -59,7 +59,7 @@ const Commande = () => {
   if (rond) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#FF6A69" />
+        <ActivityIndicator size="large" color="#30A08B" />
         <Text style={styles.loadingText}>Chargement...</Text>
       </View>
     );
@@ -118,7 +118,7 @@ const Commande = () => {
           {myAllComande
             ?.filter((param) => param.statusLivraison === "en cours")
             .reverse()?.map((param, index) => (
-            <TouchableOpacity key={index} style={styles.cardNoti} onPress={() => navigation.navigate('Suivre la commande')}>
+            <TouchableOpacity key={index} style={styles.cardNoti} onPress={() => navigation.navigate('Suivre la commande', { commande: param })}>
               <View style={styles.gaucheCard}>
                 <Text style={styles.jourText}>{getFormattedDay(new Date(param.date))}</Text>
                 <View style={styles.produitContent}>

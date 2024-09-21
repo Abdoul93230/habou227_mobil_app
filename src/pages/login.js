@@ -36,6 +36,7 @@ function LogIn({ chg, creer }) {
       visibilityTime: 3000,
       autoHide: true,
       bottomOffset: 40,
+      width: "100%"
     });
   };
 

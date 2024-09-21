@@ -125,7 +125,7 @@ const Home = () => {
           )}
           name={"électroniques"}
           id={DATA_Categories
-            ? DATA_Categories.find((item) => item.name === "électroniques")._id
+            ? DATA_Categories.find((item) => item.name === "électroniques")?._id
             : null}
           />
           <Galerie__page products={DATA_Products} />
@@ -167,7 +167,7 @@ const Home = () => {
                   )}
                   name={param.name}
                   id={param._id}
-                
+
                 />
                 {/* {console.log(param.name, param._id)} */}
               </View>

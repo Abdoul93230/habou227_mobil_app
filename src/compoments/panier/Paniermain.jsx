@@ -179,7 +179,9 @@ const Paniermain = ({chgTotal}) => {
         );
       })}
 
-    <View style={styles.container2}>
+        {
+          (produits?.length<=0 || Vide)?
+          <View style={styles.container2}>
       {(produits?.length<=0 || Vide) && (
         <>
           <Text style={styles.emptyText}>Aucune produit sélectionné, veuillez vous rendre dans la section Orders pour vos commandes !</Text>
@@ -192,7 +194,10 @@ const Paniermain = ({chgTotal}) => {
           </TouchableOpacity>
         </>
       )}
-    </View>
+    </View>:<></>
+        }
+
+
     </View>
   );
 };
@@ -204,7 +209,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     marginHorizontal: 12,
-    marginBottom: 190
+    marginBottom: 190,
+    // borderWidth:2,
+    paddingBottom:-100
   },
   panierCart: {
     padding: 5,
@@ -270,7 +277,7 @@ const styles = StyleSheet.create({
     // position: "absolute"
   },
   result: {
-    marginTop: 10,
+    marginTop: Platform.OS==="android"?0:10,
   },
   prix: {
     color: '#30A08B',
@@ -291,7 +298,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 600,
-    
+
   },
   emptyText: {
     fontSize: 16,
