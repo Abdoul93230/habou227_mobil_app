@@ -2,11 +2,11 @@
   "expo": {
     "extra": {
       "eas": {
-        "projectId": "5dbc3a72-0944-475e-b9d5-1269dd1098b4"
+        "projectId": "85ac32cd-a107-41ab-850a-eb22d50b7d7b"
       }
     },
     "name": "NomDeTonApp",
-    "slug": "nom-de-ton-app",
+    "slug": "iham-baobab",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./src/image/PlashScreen.png",
@@ -28,9 +28,7 @@
     },
     "web": {
       "favicon": "./src/image/PlashScreen.png"
-    }
+    },
+    "owner": "abdoulrazak"
   }
 }
-
-
-
