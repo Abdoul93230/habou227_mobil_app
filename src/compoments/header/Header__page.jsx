@@ -132,7 +132,8 @@ useEffect(() => {
       </View>
     <View style={styles.shoppingIcon}>
       <TouchableOpacity style={styles.iconContainer} onPress={() => navigation.navigate('ChatMessage')}>
-        <Entypo name='circle' size={24} color="#B2905F" />
+        {/* <Entypo name='circle' size={24} color="#B2905F" /> */}
+        <Feather name="message-circle" size={24} color="#B2905F" />
         <View style={styles.circleBTN}>
           <Text style={styles.badgeText}>{nbr > 0 ? allMessage.length : 0}</Text>
         </View>
@@ -160,9 +161,9 @@ const styles = StyleSheet.create({
       justifyContent: "space-between",
       paddingHorizontal: 12,
       width: "100%",
-      paddingBottom: Platform.OS === 'ios' ? 10 : 30,
-      // backgroundColor: "rgba(255, 152, 0, 0.2)"
-      backgroundColor: "red"
+      paddingBottom: Platform.OS === 'ios' ? 10 : 20,
+      backgroundColor: "rgba(255, 152, 0, 0.2)"
+      // backgroundColor: "red"
   },
   profileLogo: {
       width: Platform.OS === "ios" ? width * 0.35 : width * 5/11,
@@ -171,7 +172,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
       overflow: 'hidden',
-      top: Platform.OS === 'ios' ? 0 : 15,
+      top: Platform.OS === 'ios' ? 0 : 10,
       right: 20
   },
   image: {
@@ -188,7 +189,7 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
       position: 'relative',
-      top: Platform.OS === 'ios' ? 0 : 15,
+      top: Platform.OS === 'ios' ? 0 : 10,
   },
   circleBTN: {
       position: 'absolute',

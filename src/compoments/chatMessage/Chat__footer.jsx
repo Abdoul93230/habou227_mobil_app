@@ -16,7 +16,7 @@ const Chat__footer = ({ onSendMessage }) => {
 
   useEffect(() => {
     getPermissionAsync();
-    
+
   }, []);
 
   const getPermissionAsync = async () => {
@@ -40,7 +40,7 @@ const Chat__footer = ({ onSendMessage }) => {
       quality: 1,
     });
 
-    if (!result.cancelled) {
+    if (!result.canceled) {
       console.log(result.uri);
     }
   };
@@ -52,7 +52,7 @@ const Chat__footer = ({ onSendMessage }) => {
       quality: 1,
     });
 
-    if (!result.cancelled) {
+    if (!result.canceled) {
       console.log(result.uri);
       // Vous pouvez maintenant utiliser l'URI de l'image capturée
     }
@@ -100,16 +100,16 @@ const Chat__footer = ({ onSendMessage }) => {
 
 
   const handleAudioRecord = async () => {
-    
+
       if (isRecording===false) {
         setIsRecording(true)
         startRecording()
-        
+
       } else {
         setIsRecording(false);
         stopRecording()
       }
-    
+
   };
 
   const handleSendMessage = () => {
@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', 
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
     width: '100%',
@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
     color: '#30A08B',
     fontWeight: '500',
     textAlign: 'center',
-    bottom: Platform.OS === 'ios' ? 0 : 40, 
+    bottom: Platform.OS === 'ios' ? 0 : 40,
   },
   cancelButton: {
     width: Platform.OS === 'ios' ?  '100%' : "100%",
@@ -320,6 +320,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
-    
+
   },
 });

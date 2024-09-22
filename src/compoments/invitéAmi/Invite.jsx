@@ -2,7 +2,8 @@ import { StyleSheet, Text,Linking,Platform, View, Image, TextInput, TouchableOpa
 
 import React, { useState, useEffect, useRef } from 'react';
 import { FontAwesome5 } from '@expo/vector-icons';
-import Produit from "../../image/Vnike2.jpg";
+// import Produit from "../../image/Vnike2.jpg"
+import Produit from "../../image/im1.jpeg";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 import axios from 'axios';
@@ -227,9 +228,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   image: {
-    width: "100%",
+    width: "99%",
     height: "100%",
     resizeMode: "cover",
+    borderRadius:5
   },
   containerBottom: {
     flex: 1,

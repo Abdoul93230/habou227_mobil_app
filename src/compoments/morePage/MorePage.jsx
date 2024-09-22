@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
 import React from 'react';
 import { AntDesign, Feather, SimpleLineIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -18,7 +18,7 @@ const MorePage = () => {
     }
   };
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false} >
     <Text style={[styles.moreTitle, {color: colors[0]}]}>More</Text>
     <View style={styles.moreBox}>
       <TouchableOpacity style={styles.shippingAddress} onPress={() => navigation.navigate('Livraison Page')}>
@@ -79,7 +79,7 @@ const MorePage = () => {
     <TouchableOpacity style={styles.deconnecter} onPress={clearStorage}>
       <Text style={styles.deconnecterText}>Se déconnecter</Text>
     </TouchableOpacity>
-  </View>
+  </ScrollView>
   );
 };
 
@@ -90,6 +90,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     paddingHorizontal: 10,
+    // bottom:30,
+    // borderWidth:3,
+    marginBottom:80,
+    // paddingBottom:100
+
   },
   moreTitle: {
     fontSize: 22,
@@ -107,14 +112,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 8,
-    backgroundColor: "#B2905F",  
+    backgroundColor: "#B2905F",
     marginVertical: 10,
-    borderRadius: 15, 
+    borderRadius: 15,
     paddingHorizontal: 20,
-    elevation: 8,  
-    shadowColor: '#000', 
-    shadowOffset: { width: 0, height: 4 }, 
-    shadowOpacity: 0.3,  
+    elevation: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
     shadowRadius: 8,
   },
   arrowContainer: {
@@ -135,7 +140,7 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     color: '#FFF',
   },
- 
+
   deconnecter: {
     flexDirection: "row",
     justifyContent: "center",

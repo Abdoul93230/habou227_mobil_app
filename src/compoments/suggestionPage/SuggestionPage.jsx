@@ -1,7 +1,8 @@
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Dimensions, Animated, Easing, ActivityIndicator,KeyboardAvoidingView,Platform } from 'react-native';
 import React, { useState, useEffect, useRef } from 'react';
 import { FontAwesome5 } from '@expo/vector-icons';
-import Produit from "../../image/Vnike2.jpg";
+// import Produit from "../../image/Vnike2.jpg";
+import Produit from "../../image/im1.jpeg"
 import Toast from 'react-native-toast-message';
 import axios from 'axios';
 import { API_URL } from "@env";
@@ -100,7 +101,7 @@ const SuggestionPage = () => {
   }, [imageOpacity, formOpacity, buttonTranslateY]);
 
   return (
-    <KeyboardAvoidingView 
+    <KeyboardAvoidingView
     behavior={Platform.OS  === "ios" ? "height" : "height"}
     style={styles.container}>
       <Animated.View style={[styles.containerTop, { opacity: imageOpacity }]}>
