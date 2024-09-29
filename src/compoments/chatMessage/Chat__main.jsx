@@ -1,145 +1,127 @@
-import { StyleSheet, View, ScrollView, Text,Button } from 'react-native';
-import React, { useRef, useEffect, useState } from 'react';
+import { StyleSheet, View, ScrollView, Text, KeyboardAvoidingView, Keyboard, Platform } from 'react-native';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { format } from 'date-fns';
 import MessageCard from './MessageCard';
 import { Audio } from 'expo-av';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Chat__main = ({ messages ,getRecordingLines,clearRecordings}) => {
+const Chat__main = ({ messages, getRecordingLines, clearRecordings }) => {
+  const [keyboardOffset, setKeyboardOffset] = useState(0);
   const scrollViewRef = useRef();
   const sound = useRef(new Audio.Sound());
   const [recordings, setRecordings] = useState([]);
-  const [currentAudio, setCurrentAudio] = useState({});
-  const [playbakobject, setPlaybakobject] = useState(null);
-  const [soundObject, setSoundObject] = useState(null);
+
+  const [contentHeight, setContentHeight] = useState(0);
+  const [scrollViewHeight, setScrollViewHeight] = useState(0);
 
   // Sort messages by date
   const sortedMessages = [...messages].sort((a, b) => new Date(a.date) - new Date(b.date));
 
-
   useEffect(() => {
-    // Charger les enregistrements précédents depuis AsyncStorage
     const loadRecordings = async () => {
-      const savedRecordings = await AsyncStorage.getItem('recordings');
-      // const savedRecording = await AsyncStorage.removeItem('recordings');
-
-      if (savedRecordings) {
-        setRecordings(JSON.parse(savedRecordings));
-        // console.log(savedRecordings)
+      try {
+        const savedRecordings = await AsyncStorage.getItem('recordings');
+        if (savedRecordings) {
+          setRecordings(JSON.parse(savedRecordings));
+        }
+      } catch (error) {
+        console.error('Error loading recordings:', error);
       }
     };
     loadRecordings();
   }, []);
 
-
-
+  // Gérer le clavier pour éviter qu'il ne recouvre l'interface
   useEffect(() => {
-    if (scrollViewRef.current) {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (event) => {
+      setKeyboardOffset(event.endCoordinates.height);
+    });
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardOffset(0);
+    });
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
+  const scrollToBottom = useCallback(() => {
+    if (scrollViewRef.current && contentHeight > scrollViewHeight) {
       scrollViewRef.current.scrollToEnd({ animated: true });
     }
-  }, [messages]);
+  }, [contentHeight, scrollViewHeight]);
 
-  async function stopSound() {
-    try {
-      await sound.current.setStatusAsync({ shouldPlay: false });
-    } catch (error) {
-      console.error('Error stopping sound:', error);
-    }
-  }
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      scrollToBottom();
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [messages, scrollToBottom]);
 
+  const handleContentSizeChange = (contentWidth, contentHeight) => {
+    setContentHeight(contentHeight);
+    scrollToBottom();
+  };
 
-  async function stopSound2() {
-    try {
-      await sound.current.setStatusAsync({ shouldPlay: false });
-    } catch (error) {
-      console.error('Error stopping sound:', error);
-    }
-  }
-
-  const playRecording = async (uri) => {
-    // console.log(uri.toString().replace("file://","."))
-// plyin audio for the first time
-    if(soundObject===null){
-
-      try {
-        // await sound.current.loadAsync({ uri: uri});
-        // await sound.current.setStatusAsync({ shouldPlay: true });
-
-        const playbakobject = new Audio.Sound()
-      const status = await playbakobject.loadAsync({uri:uri},{shouldPlay:true})
-      setPlaybakobject(playbakobject)
-      setSoundObject(status)
-      setCurrentAudio(uri)
-      // console.log(status)
-        // stopSound()
-      } catch (error) {
-        console.error('Error loading or playing sound:', error);
-      }
-    }
-//pause
-    if (soundObject.isLoaded && soundObject.isPlaying) {
-      const status = await playbakobject.setStatusAsync({shouldPlay:false})
-      setSoundObject(status)
-    }
-
-    if(soundObject.isLoaded && !soundObject.isPlayin && currentAudio.id === uri.id){
-      const status = await playbakobject.playAsync()
-      setSoundObject(status)
-    }
-
-
-};
-
+  const handleLayout = (event) => {
+    setScrollViewHeight(event.nativeEvent.layout.height);
+  };
 
   const renderMessages = () => {
-    let lastDate = null;
+    const messagesByDate = {};
 
-    return sortedMessages.map((messageData, index) => {
-      const showDate = messageData.date && messageData.date !== lastDate;
-      lastDate = messageData.date;
-
+    // Organiser les messages par date
+    sortedMessages.forEach((messageData) => {
       const date = new Date(messageData.date);
       const formattedDate = format(date, 'MMMM dd, yyyy');
-      const formattedTime = format(date, 'HH:mm');
 
-      return (
-        <View key={index}>
-          {showDate && <Text style={styles.dateSeparator}>{formattedDate}</Text>}
-          <MessageCard
-            message={messageData.message}
-            sender={messageData.provenance ? 'user' : 'other'}
-            timestamp={formattedTime}
-          />
-        </View>
-      );
+      if (!messagesByDate[formattedDate]) {
+        messagesByDate[formattedDate] = [];
+      }
+
+      messagesByDate[formattedDate].push(messageData);
     });
+
+    return Object.keys(messagesByDate).map((dateKey, index) => (
+      <View key={index}>
+        <Text style={styles.dateSeparator}>{dateKey}</Text>
+        {messagesByDate[dateKey].map((messageData, msgIndex) => {
+          const time = format(new Date(messageData.date), 'HH:mm');
+          return (
+            <MessageCard
+              key={msgIndex}
+              message={messageData.message}
+              sender={messageData.provenance ? 'user' : 'other'}
+              timestamp={time}
+            />
+          );
+        })}
+      </View>
+    ));
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={keyboardOffset}
+    >
       <ScrollView
         style={styles.chatMain}
         ref={scrollViewRef}
-        onContentSizeChange={() => scrollViewRef.current.scrollToEnd({ animated: true })}
+        onContentSizeChange={handleContentSizeChange}
+        onLayout={handleLayout}
+        keyboardShouldPersistTaps="handled"
       >
         {renderMessages()}
-
         <View style={styles.recordingsList}>
-        {/* {recordings.map((recordingUri, index) => (
-          <View key={index} style={styles.recordingItem}>
-            <Text>Enregistrement {index + 1}</Text>
-            <Button title="Écouter" onPress={() => playRecording(recordingUri)} />
-            <Button title="stop" onPress={() => stopSound2()} />
-          </View>
-        ))} */}
-         {getRecordingLines()}
-      </View>
+          {getRecordingLines()}
+        </View>
       </ScrollView>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
-
-export default Chat__main;
 
 const styles = StyleSheet.create({
   container: {
@@ -156,4 +138,9 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     paddingHorizontal: 10,
   },
+  recordingsList: {
+    // Ajoutez ici les styles pour la liste des enregistrements si nécessaire
+  },
 });
+
+export default Chat__main;

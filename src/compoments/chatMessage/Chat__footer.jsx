@@ -4,6 +4,10 @@ import { Ionicons, FontAwesome, MaterialIcons, MaterialCommunityIcons } from '@e
 import * as ImagePicker from 'expo-image-picker';
 import { Audio } from 'expo-av';
 import { CameraView, useCameraPermissions } from 'expo-camera';
+import { Keyboard } from 'react-native'; // Importez Keyboard
+
+
+
 
 const Chat__footer = ({ onSendMessage }) => {
   const [message, setMessage] = useState('');
@@ -112,10 +116,12 @@ const Chat__footer = ({ onSendMessage }) => {
 
   };
 
+
   const handleSendMessage = () => {
     if (message.trim().length > 0) {
-      onSendMessage(message, 'user');
       setMessage('');
+      onSendMessage(message, 'user');
+      Keyboard.dismiss(); // Ferme le clavier après l'envoi du message
     }
   };
 
@@ -254,7 +260,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   sendButton: {
-    backgroundColor: '#FF6A69',
+    backgroundColor: '#30A08B',
     borderRadius: 25,
     padding: 10,
     justifyContent: 'center',

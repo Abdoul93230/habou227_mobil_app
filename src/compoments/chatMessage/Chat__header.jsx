@@ -1,6 +1,7 @@
 import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
 import React from 'react';
 import Profil from "../../image/ordinateur14.jpg";
+import Profil1 from "../../image/PlashScreen.png";
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
@@ -18,7 +19,7 @@ const Chat__header = () => {
           <Text style={styles.Chat}>Messagerie</Text>
         
         <View style={styles.centerContainer}>
-          <Image source={Profil} style={styles.ChatImage} />
+          <Image source={Profil1} style={styles.ChatImage} />
         </View>
         </View>
       </View>
@@ -64,6 +65,7 @@ const styles = StyleSheet.create({
     },
   centerContainer: {
    marginHorizontal: 12,
+   backgroundColor:"#0000"
   },
   ChatImage: {
     width: 60,
@@ -71,5 +73,6 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     borderWidth: 1,
     borderColor: '#30A08B',
+    backgroundColor:"#0000"
   },
 });

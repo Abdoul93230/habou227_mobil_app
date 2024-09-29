@@ -186,7 +186,7 @@ const ChatMessage = () => {
     if (message.length <= 0) {
       return;
     }
-    setLoading(true)
+    // setLoading(true)
     axios
       .post(`${API_URL}/createUserMessage`, {
         message: message,
@@ -194,7 +194,7 @@ const ChatMessage = () => {
         provenance: provenance,
       })
       .then((res) => {
-        setLoading(false)
+        // setLoading(false)
         // alert(res.data);
         socket.emit("new_message_u", {
           data: {
@@ -213,8 +213,9 @@ const ChatMessage = () => {
             console.log(erro);
           });
       })
-      .catch((error) => {console.log(error)
-        setLoading(false)
+      .catch((error) => {
+        console.log(error)
+        // setLoading(false)
       });
   };
 
@@ -223,7 +224,7 @@ const ChatMessage = () => {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#FF6A69" />
+        <ActivityIndicator size="large" color="#30A08B" />
         <Text style={styles.loadingText}>Chargement...</Text>
       </View>
     );
@@ -246,7 +247,7 @@ export default ChatMessage;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: '#FFF',
+    backgroundColor: '#FFF',
   },
   contenu: {
     marginBottom: 100,

@@ -13,13 +13,15 @@ import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { Feather } from "@expo/vector-icons";
 import { API_URL } from "@env";
-import { ChevronRight } from "react-native-feather";
+import { ChevronRight, PhoneCall } from "react-native-feather";
 import Toast from "react-native-toast-message";
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
+  const [isEmail, setIsEmail] = useState(true);
   const regexMail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const handleAlert = (message) => {
@@ -87,23 +89,61 @@ function ForgotPassword() {
             Enter the email address you used to create your account and we will
             email you a link to reset your password
           </Text>
+          <View style={styles.email_phone}>
+            <TouchableOpacity
+              style={isEmail ? styles.touchOptions2 : styles.touchOptions}
+              onPress={() => setIsEmail(true)}
+            >
+              <Text style={isEmail ? styles.option : styles.option2}>
+                Email
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={isEmail ? styles.touchOptions : styles.touchOptions2}
+              onPress={() => setIsEmail(false)}
+            >
+              <Text style={isEmail ? styles.option2 : styles.option}>
+                Phone
+              </Text>
+            </TouchableOpacity>
+          </View>
           <View>
-              <Text style={styles.label}>Email</Text>
+            {isEmail ? (
+              <>
+                <Text style={styles.label}>Email</Text>
 
-            <View style={styles.rightContainer}>
-              <Feather name="mail" size={24} color="#B2905F" />
-              <TextInput
-                style={styles.input}
-                placeholder="janedoe123@email.com"
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-              />
-            </View>
+                <View style={styles.rightContainer}>
+                  <Feather name="mail" size={24} color="#B2905F" />
+                  <TextInput
+                    style={styles.input}
+                    placeholder="janedoe123@email.com"
+                    value={email}
+                    onChangeText={setEmail}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                  />
+                </View>
+              </>
+            ) : (
+              <>
+                <Text style={styles.label}>Numéro de téléphone</Text>
+                <View style={styles.rightContainer}>
+                  <PhoneCall color="#B2905F" />
+                  <TextInput
+                    style={styles.input}
+                    placeholder="+227 87727501"
+                    keyboardType="phone-pad"
+                    value={phoneNumber}
+                    onChangeText={setPhoneNumber}
+                  />
+                </View>
+              </>
+            )}
           </View>
           <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-            <Text style={styles.buttonText}>Send email</Text>
+            <Text style={styles.buttonText}>
+              {isEmail ? "Send email" : "Send Sms"}
+            </Text>
             <View style={styles.buttonIcon}>
               <ChevronRight style={{ color: "#30A08B" }} />
             </View>
@@ -136,16 +176,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 5,
     overflow: "hidden",
-    borderRadius: 10
-
-
+    borderRadius: 10,
   },
   label: {
     fontSize: 18,
     fontWeight: "300",
     textTransform: "uppercase",
     color: "#515C6F",
-    bottom: 5
+    bottom: 5,
   },
   input: {
     width: "100%",
@@ -198,6 +236,55 @@ const styles = StyleSheet.create({
   //   color: "#B17235",
   //   fontWeight: "bold",
   // },
+
+  email_phone: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 20,
+  },
+  touchOptions: {
+    padding: 10,
+    backgroundColor: "#F5F5F5",
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "#B2905F",
+    marginHorizontal: 5,
+  },
+  touchOptions2: {
+    padding: 10,
+    backgroundColor: "#30A08B",
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "#B2905F",
+    marginHorizontal: 5,
+  },
+  option: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
+    textTransform: "uppercase",
+    paddingHorizontal: 20,
+  },
+  option2: {
+    color: "#B2905F",
+    fontSize: 18,
+    fontWeight: "bold",
+    textTransform: "uppercase",
+    paddingHorizontal: 20,
+  },
+
+  // forgotPasswordLink: {
+  //   color: "#B17235",
+  //   fontWeight: "bold",
+  // },
+
+  // bottomText: {
+  //   color: "#515C6F",
+  //   fontSize: 14,
+  //   marginTop: 20,
+  // },
+
+  // bottomLink:
 });
 
 export default ForgotPassword;

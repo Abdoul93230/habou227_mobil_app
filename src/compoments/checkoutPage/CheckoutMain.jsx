@@ -480,7 +480,7 @@ if (loading) {
         </View>
       </View>
       <TouchableOpacity style={styles.button} onPress={()=>navigation.navigate("Livraison Page",{ fromCart: true })}>
-        <Text style={styles.buttonText}>Voir les données</Text>
+        <Text style={styles.buttonText}>Modifier les informations</Text>
       </TouchableOpacity>
 
       <View style={styles.paymentContainer}>
@@ -708,7 +708,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   android: {
-    bottom: 0,
+    bottom: 3,
     position: "absolute",
   },
   cardItem: {
@@ -837,3 +837,4 @@ const styles = StyleSheet.create({
     marginTop:250
   }
 });
+g
