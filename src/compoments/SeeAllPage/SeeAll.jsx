@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Image, FlatList } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Image, FlatList, Platform } from 'react-native';
 import { EvilIcons, AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
 const SeeAll = ({cards}) => {
     const navigation = useNavigation();
-    const [expandedCard, setExpandedCard] = useState(1);
+    const [expandedCard, setExpandedCard] = useState(cards[0].id);
 
+    // console.log(cards[0].id);
 
 
     const toggleCard = (id) => {
-        setExpandedCard(expandedCard === id ? null : id);
+        setExpandedCard(expandedCard === id ? cards[0].id : id);
     };
 
 
@@ -26,7 +27,7 @@ const SeeAll = ({cards}) => {
 
             {expandedCard === item.id && (
                 <View style={styles.cardContent}>
-                <Text style={styles.cardTitle}>{item.description}</Text>
+                <Text style={styles.cardTitlee}>{item.description}</Text>
                 {item.items.map((subItem, index) => (
                     <TouchableOpacity
                     key={index}
@@ -58,7 +59,7 @@ const SeeAll = ({cards}) => {
                     style={styles.closeButton}
                     onPress={() => navigation.navigate('Home')}
                 >
-                    <EvilIcons name="close" size={30} color="#FF6969" />
+                    <EvilIcons name="close" size={32} fontWeight="bold" color="#B17236" />
                 </TouchableOpacity>
             </View>
             <FlatList
@@ -79,10 +80,12 @@ const styles = StyleSheet.create({
         padding: 5,
         borderBottomWidth: 1,
         borderBottomColor: '#e0e0e0',
+        marginTop:Platform.OS==="android"?20:0
     },
     headerText: {
         fontSize: 20,
         fontWeight: 'bold',
+        color: "#B17236"
     },
     closeButton: {
         padding: 5,
@@ -122,31 +125,40 @@ const styles = StyleSheet.create({
     },
     cardContent: {
         flex: 1,
-        backgroundColor: '#F5F6F8',
+        backgroundColor: '#b28f5fb0',
         padding: 10,
         borderRadius: 12,
         height: 100
+    },
+    cardTitlee: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 5,
+        color: "#30A08B",
+        textTransform: "capitalize"
     },
     cardTitle: {
         fontSize: 16,
         fontWeight: 'bold',
         marginBottom: 5,
+        color: "#B17236",
+        textTransform: "capitalize"
     },
     cardLigne: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        borderBottomColor: "#e0e0e0",
+        borderBottomColor: "#30A08B",
         borderBottomWidth: 1,
         paddingVertical: 4,
         height: 'auto'
     },
     cardLink: {
         fontSize: 14,
-        color: '#515C70',
+        color: '#fff',
     },
     cardIcon: {
-        backgroundColor: '#515C70',
+        backgroundColor: '#30A08B',
         padding: 5,
         borderRadius: 50,
         height: 20,width: 20,

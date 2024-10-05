@@ -1,6 +1,9 @@
-import { StyleSheet, Text, TextInput, View, Image, TouchableOpacity, Modal, TouchableWithoutFeedback, Animated, Platform } from 'react-native';
+import { StyleSheet, Text, TextInput, View, Image, TouchableOpacity, Modal,ScrollView, TouchableWithoutFeedback, Animated, Platform,Alert, ActivityIndicator } from 'react-native';
 import React, { useState, useRef,useEffect } from 'react';
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
+import { launchImageLibrary } from 'react-native-image-picker';
+import { Ionicons } from 'react-native-vector-icons';
+import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Profile from '../../image/macbook profil.png';
 import Invite from '../invitéAmi/Invite';
@@ -8,18 +11,20 @@ import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import { API_URL } from "@env";
 import Toast from 'react-native-toast-message';
+// import { ScrollView } from 'native-base';
 const ProfilePage = () => {
   const navigation = useNavigation()
   const regexMail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const regexPhone = /^[0-9]{8,}$/;
   const [modalVisible, setModalVisible] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
   const [imageP, setImageP] = useState(null);
   const [scaleValue] = useState(new Animated.Value(0));
   const [phone, setPhone] = useState("");
   const [nom, setNom] = useState("");
   const [email, setEmail] = useState("");
+  const [onsubmit, setOnsubmit] = useState(false);
 
   const handleAlert = (message) => {
     Toast.show({
@@ -59,6 +64,7 @@ const ProfilePage = () => {
     } else if (!regexPhone.test(phone.toString())) {
       return handleAlertwar("forma du numero non valid!");
     }
+    // setOnsubmit(true)
     const allowedImageTypes = [
       "image/jpeg",
       "image/png",
@@ -66,17 +72,19 @@ const ProfilePage = () => {
       "image/webp",
     ];
 
+
       const formData = new FormData();
       formData.append("name", nom);
       formData.append("email", email);
       formData.append("phone", Number(phone));
-
+      formData.append("image", imageP);
       formData.append("id", user.id);
 
       setLoading(true);
       axios
         .post(`${API_URL}/createProfile`, formData)
         .then((Profile) => {
+          console.log(formData)
           if (Profile.status === 200) {
             handleAlert(Profile.data.message);
 
@@ -95,6 +103,7 @@ const ProfilePage = () => {
                     setPhone(Profiler.data.data.numero);
                   }
                 }
+                console.log(Profile.data)
               })
               .catch((erro) => {
                 setLoading(false);
@@ -114,9 +123,11 @@ const ProfilePage = () => {
           }
           if (error.response.data.data?.keyPattern?.email) {
             handleAlertwar("Un utilisateur avec le même email existe déjà ");
+            setEmail('')
           }
           if (error.response.data.data?.keyPattern?.phoneNumber) {
             handleAlertwar("Un utilisateur avec le même Numero existe déjà ");
+            setPhone('')
           }
           console.log(error.response);
           closeModal()
@@ -125,12 +136,25 @@ const ProfilePage = () => {
 
   };
 
+  const getPermissionAsync = async () => {
+    if (Platform.OS !== 'web') {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+        alert('Sorry, we need camera roll permissions to make this work!');
+      }
+      const audioStatus = await Audio.requestPermissionsAsync();
+      if (audioStatus.status !== 'granted') {
+        alert('Sorry, we need audio permissions to make this work!');
+      }
+    }
+  };
 
 
 
 
 
   useEffect(() => {
+    getPermissionAsync();
     const fetchUserData = async () => {
       try {
         const jsonValue = await AsyncStorage.getItem('userEcomme');
@@ -161,7 +185,7 @@ const ProfilePage = () => {
             })
             .then((Profiler) => {
               setLoading(false);
-              // console.log(Profiler);
+              // console.log(Profiler.data);
               if (
                 Profiler.data.data.image &&
                 Profiler.data.data.image !==
@@ -212,8 +236,68 @@ const ProfilePage = () => {
     setModalVisible(false);
   }
 
+
+  const selectImage = async () => {
+    Alert.alert(
+      'Choisir une option',
+      'Voulez-vous prendre une photo ou choisir dans la galerie ?',
+      [
+        {
+          text: 'Prendre une photo',
+          onPress: openCamera,
+        },
+        {
+          text: 'Choisir une image',
+          onPress: openImagePicker,
+        },
+        {
+          text: 'Annuler',
+          style: 'cancel',
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
+
+
+
+  const openImagePicker = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    // console.log(result.assets[0])
+
+    if (!result.canceled) {
+      setImageP(result.assets[0].uri);
+    }
+  };
+
+  const openCamera = async () => {
+
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    console.log(result)
+
+    if (!result.canceled) {
+      setImageP(result.assets[0].uri);
+    }
+  };
+
+
+
+
+
+
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.profile}>
         <View style={styles.imgProfile}>
           <Image source={imageP?{uri:imageP} : Profile} style={styles.image} />
@@ -274,7 +358,8 @@ const ProfilePage = () => {
               <View style={styles.imgProfile} onPress={changeImg}>
               <Image source={imageP?{uri:imageP} : Profile} style={styles.image} />
               </View>
-              <Text style={styles.modalInstruction}>Click me to select image (max 4MB)</Text>
+              {/* <Text style={styles.modalInstruction}>Click me to select image (max 4MB)</Text> */}
+              <Ionicons onPress={selectImage} name="camera-outline" size={30} color="black" />
               <View style={styles.inputContainer}>
                 <Text style={styles.inputLabel}>Nom:</Text>
                 <TextInput style={Platform.OS === 'ios' ? styles.input : styles.inputAndroid} placeholder='Name' onChangeText={(text=>setNom(text))} value={nom} />
@@ -292,15 +377,19 @@ const ProfilePage = () => {
                 <TouchableOpacity onPress={closeModal} style={[styles.button, styles.buttonCancel]}>
                   <Text style={styles.buttonText}>Retour</Text>
                 </TouchableOpacity>
+                {
+                  loading?<ActivityIndicator size="large" color="#30A08B" />:
+
                 <TouchableOpacity style={[styles.button, styles.buttonSubmit]} onPress={onSub}>
                   <Text style={styles.buttonText}>Soumettre</Text>
                 </TouchableOpacity>
+                }
               </View>
             </Animated.View>
           </View>
 
       </Modal>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -321,18 +410,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 8,
-    backgroundColor: "#B2905F",  
+    backgroundColor: "#B2905F",
     marginVertical: 10,
-    borderRadius: 15, 
+    borderRadius: 15,
     paddingHorizontal: 20,
-    elevation: 8,  
-    shadowColor: '#000', 
-    shadowOffset: { width: 0, height: 4 }, 
-    shadowOpacity: 0.3,  
-    shadowRadius: 8, 
+    elevation: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
   },
   iconContainer: {
-    backgroundColor: '#B17236', 
+    backgroundColor: '#B17236',
     borderRadius: 50,
     padding: 10,
   },
@@ -395,12 +484,12 @@ const styles = StyleSheet.create({
   BtnEdit: {
     paddingVertical: 10,
     paddingHorizontal: 15,
-    backgroundColor: '#30A08B', 
+    backgroundColor: '#30A08B',
     borderRadius: 30,
     alignItems: 'center',
     width: 170,
     borderWidth: 1,
-    borderColor: '#B2905F', 
+    borderColor: '#B2905F',
   },
   editText: {
     color: 'white',
@@ -416,7 +505,7 @@ const styles = StyleSheet.create({
   ///////////modal change Image /////
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)', 
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -463,7 +552,7 @@ const styles = StyleSheet.create({
   },
   inputAndroid: {
     borderWidth: 1,
-    borderColor: '#B2905F', 
+    borderColor: '#B2905F',
     marginBottom: 15,
     paddingVertical: 8,
     paddingHorizontal: 10,
@@ -483,7 +572,7 @@ const styles = StyleSheet.create({
   },
   changePasswordText: {
     fontSize: 16,
-    color: '#30A08B', 
+    color: '#30A08B',
     marginTop: 10,
     textDecorationLine: 'underline',
   },
@@ -502,7 +591,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#B2905F',
   },
   buttonSubmit: {
-    backgroundColor: '#30A08B', 
+    backgroundColor: '#30A08B',
   },
   buttonText: {
     color: '#fff',

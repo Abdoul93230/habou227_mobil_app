@@ -8,17 +8,15 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
-  Image
+  Image,
 } from "react-native";
-import LogoProject from "../../src/image/PlashScreen.png"
+import LogoProject from "../../src/image/PlashScreen.png";
 import { ChevronRight, Lock, Phone, User } from "react-native-feather";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { API_URL } from "@env";
 import Toast from "react-native-toast-message";
-
-const BackendUrl = process.env.REACT_APP_Backend_Url;
 
 function LogIn({ chg, creer }) {
   const [email, setEmail] = useState("");
@@ -29,7 +27,7 @@ function LogIn({ chg, creer }) {
   const navigation = useNavigation();
   const regexMail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const regexPhone = /^[0-9]{8,}$/;
-  
+
   const handleAlert = (message) => {
     Toast.show({
       type: "success",
@@ -39,6 +37,7 @@ function LogIn({ chg, creer }) {
       visibilityTime: 3000,
       autoHide: true,
       bottomOffset: 40,
+      width: "100%"
     });
   };
 
@@ -54,7 +53,6 @@ function LogIn({ chg, creer }) {
     });
   };
 
-
   const connect = async () => {
     setIsloading(true);
 
@@ -63,27 +61,31 @@ function LogIn({ chg, creer }) {
       handleAlertwar(message);
     };
 
-    if (email.length !== 0 && !regexMail.test(email)) {
+    if (email.length === 0 && phoneNumber.length === 0) {
+      handleError("Veuillez entrer des informations valide.");
+      return;
+    }
+    if (email.length !== 0 && !regexMail.test(email.trim())) {
       handleError("Veuillez entrer une adresse e-mail valide.");
       return;
     }
 
     if (
       phoneNumber.length > 0 &&
-      (!regexPhone.test(phoneNumber) || phoneNumber.length > 11)
+      (!regexPhone.test(phoneNumber.trim()) || phoneNumber.trim().length > 11)
     ) {
       handleError("Veuillez entrer un numéro de téléphone valide.");
       return;
     }
-    if (password === "" || password.length < 6) {
+    if (password === "" || password.trim().length < 6) {
       handleError("Votre mot de passe doit contenir au moins 6 caractères.");
       return;
     }
 
     const loginData = {
-      email: email.length > 0 ? email : null,
-      phoneNumber: phoneNumber.length > 0 ? phoneNumber : null,
-      password: password,
+      email: email.trim().length > 0 ? email.trim() : null,
+      phoneNumber: phoneNumber.trim().length > 0 ? phoneNumber.trim() : null,
+      password: password.trim(),
     };
 
     try {
@@ -128,7 +130,7 @@ function LogIn({ chg, creer }) {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0} // Ajustez la valeur si nécessaire
     >
-   
+
         {isloading ? (
           <View style={styles.loadingContainer}>
             <Text style={styles.loadingText}>
@@ -289,9 +291,9 @@ const styles = StyleSheet.create({
     borderColor: "#2ea28dd0",
     borderWidth: 1,
     backgroundColor: "#fff",
-    elevation: 2, 
+    elevation: 2,
     width: "100%",
-    minHeight: 50, 
+    minHeight: 50,
   },
   icon: {
     marginRight: 10,
@@ -301,10 +303,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   label: {
-    fontSize: 16,
+    fontSize: 14,
     color: "#515C6F",
     marginBottom: 5,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   input: {
     flex: 1,
@@ -375,7 +377,7 @@ const styles = StyleSheet.create({
   },
   buttonFD: {
     width: "100%",
-    textAlign: "left"
+    textAlign: "left",
   },
   buttonF: {
     textAlign: "left",
@@ -391,26 +393,26 @@ const styles = StyleSheet.create({
   // /////////////////////////////:
 
   btnUtilisateur: {
-    flexDirection: 'row',         
-    justifyContent: 'center',     
-    alignItems: 'center',        
-    marginVertical: 20,          
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 20,
   },
   buttonBTN: {
-    backgroundColor: 'rgb(181, 182, 184)',  
-    paddingVertical: 10,       
-    paddingHorizontal: 20,       
-    borderRadius: 30,           
-    marginHorizontal: 10,       
+    backgroundColor: 'rgb(181, 182, 184)',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 30,
+    marginHorizontal: 10,
   },
   buttonTextBTN: {
-    color: 'white',              
-    fontSize: 16,                
-    fontWeight: 'bold',          
-    textAlign: 'center',         
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   selectedButton: {
-    backgroundColor: '#30A08B', 
+    backgroundColor: '#30A08B',
   },
   buttonFD: {
     width: "100%",
@@ -420,6 +422,60 @@ const styles = StyleSheet.create({
 });
 
 export default LogIn;
+
+
+
+
+{/* <View style={styles.inputGroup}>
+<View style={styles.btnUtilisateur}>
+  <TouchableOpacity
+    style={[
+      styles.buttonBTN,
+      selectedInput === "email" && styles.selectedButton
+    ]}
+    onPress={() => setSelectedInput("email")}
+  >
+    <Text style={styles.buttonTextBTN}>Email</Text>
+  </TouchableOpacity>
+  <TouchableOpacity
+    style={[
+      styles.buttonBTN,
+      selectedInput === "phone" && styles.selectedButton
+    ]}
+    onPress={() => setSelectedInput("phone")}
+  >
+    <Text style={styles.buttonTextBTN}>Téléphone</Text>
+  </TouchableOpacity>
+</View>
+
+{selectedInput === "email" ? (
+  <View style={styles.inputContainer}>
+    <User style={styles.icon} />
+    <View style={styles.inputWrapper}>
+      <TextInput
+        style={styles.input}
+        value={email}
+        onChangeText={setEmail}
+        placeholder="abass123@email.com"
+        keyboardType="email-address"
+      />
+    </View>
+  </View>
+) : (
+  <View style={styles.inputContainer}>
+    <Phone style={styles.icon} />
+    <View style={styles.inputWrapper}>
+      <TextInput
+        style={styles.input}
+        value={phoneNumber}
+        onChangeText={setPhoneNumber}
+        placeholder="Numéro de téléphone"
+        keyboardType="phone-pad"
+      />
+    </View>
+  </View>
+)}
+</View> */}
 
 
 

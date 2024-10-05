@@ -8,9 +8,9 @@ const More = () => {
   return (
     <View style={styles.container}>
         <Header__page />
-        <ScrollView>
+        {/* <ScrollView> */}
           <MorePage />
-        </ScrollView>
+        {/* </ScrollView> */}
 
 
       <Footer />

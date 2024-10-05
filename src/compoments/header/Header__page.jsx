@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { StyleSheet, Text, View, TouchableOpacity, Image, Animated,Platform } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image, Animated,Platform,DeviceEventEmitter } from 'react-native';
 import { Feather, Entypo } from '@expo/vector-icons';
 import Profil from "../../image/logo.png";
 import io from "socket.io-client";
@@ -27,8 +27,10 @@ const Header__page = () => {
       useNativeDriver: true,
     }).start();
   }, [fadeAnimHeader]);
-  const [produits, setProduits] = useState(0);
+  const [produits, setProduits] = useState(null);
   useEffect(() => {
+
+    // console.log("ouié&")
     const getPanier = async () => {
       try {
         const local = await AsyncStorage.getItem("panier");
@@ -43,7 +45,7 @@ const Header__page = () => {
     };
 
     getPanier();
-  }, []);
+  }, );
 
   useEffect(() => {
 
@@ -130,7 +132,8 @@ useEffect(() => {
       </View>
     <View style={styles.shoppingIcon}>
       <TouchableOpacity style={styles.iconContainer} onPress={() => navigation.navigate('ChatMessage')}>
-        <Entypo name='circle' size={24} color="#B2905F" />
+        {/* <Entypo name='circle' size={24} color="#B2905F" /> */}
+        <Feather name="message-circle" size={24} color="#B2905F" />
         <View style={styles.circleBTN}>
           <Text style={styles.badgeText}>{nbr > 0 ? allMessage.length : 0}</Text>
         </View>
@@ -151,23 +154,26 @@ useEffect(() => {
 export default Header__page;
 
 const styles = StyleSheet.create({
-  //Header composant 
+  //Header composant
   header: {
       flexDirection: "row",
       alignItems: 'center',
       justifyContent: "space-between",
       paddingHorizontal: 12,
-      width: "100%",   
-      paddingBottom: 10,
-      backgroundColor: "rgba(255, 152, 0, 0.2)" 
+      width: "100%",
+      paddingBottom: Platform.OS === 'ios' ? 10 : 20,
+      backgroundColor: "rgba(255, 152, 0, 0.2)"
+      // backgroundColor: "red"
   },
   profileLogo: {
-      width: width * 0.25, 
-      height: height * 0.047, 
+      width: Platform.OS === "ios" ? width * 0.35 : width * 5/11,
+      height: height * 0.047,
       borderColor: '#FF9800', // Orange assorti à la bordure du header
-      justifyContent: 'center', 
-      alignItems: 'center', 
-      overflow: 'hidden', 
+      justifyContent: 'center',
+      alignItems: 'center',
+      overflow: 'hidden',
+      top: Platform.OS === 'ios' ? 0 : 10,
+      right: 20
   },
   image: {
       width: '100%',
@@ -179,9 +185,11 @@ const styles = StyleSheet.create({
       justifyContent: "space-between",
       alignItems: 'center',
       width: 85,
+
   },
   iconContainer: {
       position: 'relative',
+      top: Platform.OS === 'ios' ? 0 : 10,
   },
   circleBTN: {
       position: 'absolute',

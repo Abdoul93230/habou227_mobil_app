@@ -357,7 +357,8 @@ const styles = StyleSheet.create({
     },
     ProduitName: {
       fontSize: 12,
-      color: "#FFF"
+      color: "#FFF",
+      fontWeight:"bold",
     },
     prix: {
       fontSize: 12,
@@ -397,6 +398,7 @@ const styles = StyleSheet.create({
     },
     backButton: {
       marginRight: 10,
+      top:Platform.OS==="android"?-17:0
     },
     searchContainer: {
       flex: 1,
@@ -406,6 +408,7 @@ const styles = StyleSheet.create({
       borderColor: '#30A08B',
       borderRadius: 30,
       paddingHorizontal: 10,
+      top:Platform.OS==="android"?-17:0
     },
     searchInput: {
       flex: 1,

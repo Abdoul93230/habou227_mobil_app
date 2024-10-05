@@ -14,9 +14,9 @@ import axios from 'axios';
 import { API_URL } from "@env";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 const { width } = Dimensions.get('window');
-const BackendUrl = `${API_URL}`;
 
 function MyCheckbox({ checked, onPress }) {
   return (
@@ -39,7 +39,9 @@ const PaiementPage = () => {
   const [operateur, setOperateur] = useState("");
   const [cvc, setCvc] = useState("");
   const [choix, setChoix] = useState("");
-
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { fromCart } = route.params || false; // Utilise des valeurs par défaut pour éviter les erreurs
 
   const regexPhone = /^[0-9]{8,}$/;
   const handlePress = (paymentMethod) => {
@@ -84,7 +86,7 @@ const PaiementPage = () => {
         if (userData) {
 
           axios
-      .get(`${BackendUrl}/getMoyentPaymentByClefUser/${userData?.id}`)
+      .get(`${API_URL}/getMoyentPaymentByClefUser/${userData?.id}`)
       .then((res) => {
         // console.log(res.data.paymentMethod)
         setOperateur('227');
@@ -250,10 +252,14 @@ const PaiementPage = () => {
       }
       setLoading(true)
       axios
-        .post(`${BackendUrl}/createMoyentPayment`, data)
+        .post(`${API_URL}/createMoyentPayment`, data)
         .then((res) => {
           handleAlert(res.data.message);
           setLoading(false)
+          if (fromCart) {
+            navigation.navigate("Checkout",{ fromCart: true })
+            return;
+          }
           // const fromCartParam = new URLSearchParams(location.search).get(
           //   "fromCart"
           // );
@@ -403,13 +409,13 @@ const PaiementPage = () => {
             <View style={styles.compteText}>
               <Text style={styles.numeroText}>Compte mobile Money</Text>
               <View style={styles.PhoneInput}>
-              
+
                     <Select
-                    style={{borderColor: "#30A08B", borderWidth: 0, overflow: "hidden"}}
+                    style={{borderColor: "#B2905F", borderWidth: 0, overflow: "hidden"}}
                       selectedValue={operateur==='227' || operateur==='229'?operateur:'227'}
                       minWidth="100"
                       minHeight="20"
-                      borderColor={"#30A08B"}
+                      borderColor={"#B2905F"}
                       accessibilityLabel="Choisir une région"
 
                       mt={0}
@@ -423,7 +429,7 @@ const PaiementPage = () => {
 
 
                     </Select>
-              
+
                 <View style={styles.dropdownInput}>
                 <TextInput
                 value={numero.length>8&&(numero.substring(0, 3)==='227' || numero.substring(0, 3)==='229')?numero.substring(3, numero.length):numero}
@@ -616,7 +622,7 @@ const styles = StyleSheet.create({
   paymentDetail: {
     marginTop: 8,
     padding: 12,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#30A08B',
     borderRadius: 8,
     flexDirection: "row",
     justifyContent: "space-between",
@@ -625,7 +631,7 @@ const styles = StyleSheet.create({
   masterText: {
     fontSize: 13,
     fontWeight: "bold",
-    color: "#515C70",
+    color: "#FFF",
   },
   numeroText: {
     fontSize: 15,
@@ -637,7 +643,7 @@ const styles = StyleSheet.create({
 
   input: {
     height: 40,
-    borderColor: '#ddd',
+    borderColor: '#B2905F',
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
@@ -659,7 +665,7 @@ const styles = StyleSheet.create({
   dateText: {
     fontSize: 15,
     fontWeight: "bold",
-    color: "#515C70",
+    color: "#B2905F",
     marginVertical: 4
   },
   btnSoumettre: {
@@ -683,7 +689,7 @@ const styles = StyleSheet.create({
   ////domicile
   domicileBox: {
     width: "100%",
-    height: 210,
+    height: 192,
     margin: "auto",
   },
   imageBackground: {
@@ -697,11 +703,15 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   btnSoumettreDome: {
-    padding: 12,
-    backgroundColor: '#FF6A69',
+    padding: 15,
+    backgroundColor: '#30A08B',
     width: "100%",
-    borderRadius: 10,
-    marginTop: 20
+    borderRadius: 15,
+    marginTop: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   ////domicile
 
@@ -735,7 +745,7 @@ const styles = StyleSheet.create({
   PhoneInput: {
     height: 45,
     width: "100%",
-    borderColor: '#30A08B',
+    borderColor: '#B2905F',
     borderWidth: 1,
     borderRadius: 5,
     marginTop: 15,

@@ -5,7 +5,8 @@ import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 const { width, height } = Dimensions.get('window');
 
-const ProductsSli = ({ products, name }) => {
+const ProductsSli = ({ products, name,id }) => {
+  // console.log(id)
 
   const navigation = useNavigation();
   const screenWidth = Dimensions.get('window').width;
@@ -20,7 +21,11 @@ const ProductsSli = ({ products, name }) => {
           <View style={styles.after} />
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => navigation.navigate('Category', { name })} style={styles.link}>
+        <TouchableOpacity 
+        onPress={() => {
+          navigation.navigate('CategoriDetailPage', { categoryId: id });
+        }}
+        style={styles.link}>
           <Text style={styles.more}>View More</Text>
           <Icon name="chevrons-right" size={20} color="#30A08B" />
           <View style={styles.before} />
@@ -200,7 +205,8 @@ const styles = StyleSheet.create({
   newPrice: {
     color: '#30A08B',
     marginVertical: 1,
-    fontSize: width * 0.028,
+    fontSize: width * 0.029,
+    fontWeight: '500'
   },
   dot: {
     backgroundColor: '#B2905F', // Couleur des points non sélectionnés

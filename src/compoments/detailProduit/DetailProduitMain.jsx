@@ -28,7 +28,7 @@ function shufflee(array) {
   }
   return shuffled;
 }
-const DetailProduitMain = ({produit,chgColor, chgTail,id,Allcommente}) => {
+const DetailProduitMain = ({produit,chgColor, chgTail,id,Allcommente,chgNbr}) => {
 
   const flatListRef = useRef(null);
   const [selectedImageIds, setSelectedImageIds] = useState([]);
@@ -215,79 +215,81 @@ const DetailProduitMain = ({produit,chgColor, chgTail,id,Allcommente}) => {
   };
 
 
-  const AddProduct = async () => {
-    try {
-      const existingProductsJson = await AsyncStorage.getItem('panier');
-      const existingProducts = existingProductsJson ? JSON.parse(existingProductsJson) : [];
+  // const AddProduct = async () => {
+  //   try {
+  //     const existingProductsJson = await AsyncStorage.getItem('panier');
+  //     const existingProducts = existingProductsJson ? JSON.parse(existingProductsJson) : [];
 
-      const isProductInCart = existingProducts.some((p) => p.id === params.id);
+  //     const isProductInCart = existingProducts.some((p) => p.id === params.id);
 
-      if (isProductInCart) {
-        const updatedProducts = existingProducts.map((p) => {
-          if (p.id === params.id) {
-            const updatedColors = [...p.colors, color]; // Ajouter la nouvelle couleur
-            const updatedSizes = [...p.sizes, taille]; // Ajouter la nouvelle taille
+  //     if (isProductInCart) {
+  //       const updatedProducts = existingProducts.map((p) => {
+  //         if (p.id === params.id) {
+  //           const updatedColors = [...p.colors, color]; // Ajouter la nouvelle couleur
+  //           const updatedSizes = [...p.sizes, taille]; // Ajouter la nouvelle taille
 
-            return {
-              ...p,
-              colors: updatedColors,
-              sizes: updatedSizes,
-              quantity: p.quantity + 1,
-              id: params.id,
-            };
-          }
-          return p;
-        });
+  //           return {
+  //             ...p,
+  //             colors: updatedColors,
+  //             sizes: updatedSizes,
+  //             quantity: p.quantity + 1,
+  //             id: params.id,
+  //           };
+  //         }
+  //         return p;
+  //       });
 
-        await AsyncStorage.setItem('panier', JSON.stringify(updatedProducts));
-        handleAlert("La quantité du produit a été incrémentée dans le panier !");
-        const local = await AsyncStorage.getItem('panier');
-        setProduitsL(local ? JSON.parse(local) : []);
-        return;
-      }
+  //       await AsyncStorage.setItem('panier', JSON.stringify(updatedProducts));
+  //       handleAlert("La quantité du produit a été incrémentée dans le panier !");
+  //       chgNbr()
+  //       const local = await AsyncStorage.getItem('panier');
+  //       setProduitsL(local ? JSON.parse(local) : []);
+  //       return;
+  //     }
 
-      if (produit?.couleur[0].split(",").length >= 2 && !color) {
-        if (produit.pictures.length >= 2) {
-          handleAlertwar(
-            `Veuillez choisir un modèle parmi les ${produit?.pictures.length}`
-          );
-        } else {
-          handleAlertwar(
-            `Veuillez choisir une couleur parmi les ${produit?.couleur[0].split(",").length}`
-          );
-        }
-        // chgOption("Details", 0);
-        return;
-      }
+  //     if (produit?.couleur[0].split(",").length >= 2 && !color) {
+  //       if (produit.pictures.length >= 2) {
+  //         handleAlertwar(
+  //           `Veuillez choisir un modèle parmi les ${produit?.pictures.length}`
+  //         );
+  //       } else {
+  //         handleAlertwar(
+  //           `Veuillez choisir une couleur parmi les ${produit?.couleur[0].split(",").length}`
+  //         );
+  //       }
+  //       // chgOption("Details", 0);
+  //       return;
+  //     }
 
-      if (produit?.taille[0].split(",").length >= 2 && !taille) {
-        handleAlertwar(
-          `Veuillez choisir une taille parmi les ${produit?.taille[0].split(",").length}`
-        );
-        // chgOption("Details", 0);
-        return;
-      }
+  //     if (produit?.taille[0].split(",").length >= 2 && !taille) {
+  //       handleAlertwar(
+  //         `Veuillez choisir une taille parmi les ${produit?.taille[0].split(",").length}`
+  //       );
+  //       // chgOption("Details", 0);
+  //       return;
+  //     }
 
-      const updatedProducts = [
-        ...existingProducts,
-        {
-          ...produit,
-          colors: [color], // Ajouter la couleur sélectionnée comme tableau
-          sizes: [taille], // Ajouter la taille sélectionnée comme tableau
-          quantity: 1,
-          id: params.id,
-        },
-      ];
+  //     const updatedProducts = [
+  //       ...existingProducts,
+  //       {
+  //         ...produit,
+  //         colors: [color], // Ajouter la couleur sélectionnée comme tableau
+  //         sizes: [taille], // Ajouter la taille sélectionnée comme tableau
+  //         quantity: 1,
+  //         id: params.id,
+  //       },
+  //     ];
 
-      await AsyncStorage.setItem('panier', JSON.stringify(updatedProducts));
-      handleAlert("Produit ajouté au panier !");
-      const local = await AsyncStorage.getItem('panier');
-      setProduitsL(local ? JSON.parse(local) : []);
-    } catch (error) {
-      console.error('Erreur lors de l\'ajout du produit au panier', error);
-      // Vous pouvez également afficher une alerte ou un message d'erreur ici si nécessaire
-    }
-  };
+  //     await AsyncStorage.setItem('panier', JSON.stringify(updatedProducts));
+  //     chgNbr()
+  //     handleAlert("Produit ajouté au panier !");
+  //     const local = await AsyncStorage.getItem('panier');
+  //     setProduitsL(local ? JSON.parse(local) : []);
+  //   } catch (error) {
+  //     console.error('Erreur lors de l\'ajout du produit au panier', error);
+  //     // Vous pouvez également afficher une alerte ou un message d'erreur ici si nécessaire
+  //   }
+  // };
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -563,7 +565,7 @@ const DetailProduitMain = ({produit,chgColor, chgTail,id,Allcommente}) => {
             key={star}
             name='star'
             size={18}
-            color={star <= rating[index] ? '#30A08B' : '#B2905F'} // Couleur des étoiles
+            color={star <= param.etoil ? '#30A08B' : '#B2905F'} // Couleur des étoiles
           />
         ))}
           </View>
@@ -917,7 +919,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
     color: '#B17236',
     fontWeight: 'bold',
-    
+
   },
 
   text: {
@@ -931,6 +933,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 30,
+    marginTop:Platform.OS==="android"?-10:0
   },
   button: {
     backgroundColor: '#B2905F',

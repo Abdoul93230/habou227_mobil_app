@@ -1,17 +1,20 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet, ScrollView } from 'react-native';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+import React from "react";
+import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
+import AntDesign from "react-native-vector-icons/AntDesign";
 
 const ReviewList = ({ randomComments, DATA_Products }) => {
-    // console.log(DATA_Products)
+  // console.log(DATA_Products)
   // Fonction pour formater la date
   const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const options = { year: "numeric", month: "long", day: "numeric" };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={styles.container}
+    >
       {randomComments.length > 0 ? (
         randomComments.map((param, index) => {
           const etoiles = param.etoil;
@@ -21,9 +24,9 @@ const ReviewList = ({ randomComments, DATA_Products }) => {
                 <View style={styles.profilName}>
                   <Text style={styles.textName}>
                     {param.userName
-                      ?.split(' ')
+                      ?.split(" ")
                       .map((word) => word.charAt(0))
-                      .join('')}
+                      .join("")}
                   </Text>
                 </View>
                 <View style={styles.messageContainer}>
@@ -31,9 +34,9 @@ const ReviewList = ({ randomComments, DATA_Products }) => {
                     {[1, 2, 3, 4, 5].map((star) => (
                       <AntDesign
                         key={star}
-                        name='star'
+                        name="star"
                         size={18}
-                        color={star <= etoiles ? '#FF6A69' : 'black'}
+                        color={star <= etoiles ? "#30A08B" : "#B2905F"}
                       />
                     ))}
                   </View>
@@ -42,30 +45,43 @@ const ReviewList = ({ randomComments, DATA_Products }) => {
                   </View>
                 </View>
                 <View style={styles.date}>
-                  <Text>{formatDate(param.date)}</Text>
+                  <Text style={{ color: "#30A08B" }}>
+                    {formatDate(param.date)}
+                  </Text>
                 </View>
               </View>
               <View style={styles.commantaire}>
                 <Text style={styles.textCommantaire}>{param.description}</Text>
-                <View style={styles.cardeimg}>
-                  {DATA_Products?.find(
-                    (item) => item._id === param.clefProduct
-                  )?.pictures.length>=2?DATA_Products?.find(
-                    (item) => item._id === param.clefProduct
-                  )?.pictures?.map((image, imgIndex) => (
-                    <Image
-                      key={imgIndex}
-                      style={styles.image}
-                      source={{ uri: image }}
-                    />
-                  )):<></>}
-                </View>
+                {DATA_Products?.find((item) => item._id === param.clefProduct)
+                  ?.pictures.length >= 2 ? (
+                  <View style={styles.cardeimg}>
+                    {DATA_Products?.find(
+                      (item) => item._id === param.clefProduct
+                    )?.pictures.length >= 2 ? (
+                      DATA_Products?.find(
+                        (item) => item._id === param.clefProduct
+                      )?.pictures?.map((image, imgIndex) => (
+                        <Image
+                          key={imgIndex}
+                          style={styles.image}
+                          source={{ uri: image }}
+                        />
+                      ))
+                    ) : (
+                      <></>
+                    )}
+                  </View>
+                ) : (
+                  <></>
+                )}
               </View>
             </View>
           );
         })
       ) : (
-        <Text>Aucun commentaire disponible pour ce produit pour le moment.</Text>
+        <Text>
+          Aucun commentaire disponible pour ce produit pour le moment.
+        </Text>
       )}
     </ScrollView>
   );
@@ -74,12 +90,12 @@ const ReviewList = ({ randomComments, DATA_Products }) => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    padding: 10,
+    padding: 5,
   },
   reviewsContent: {
-    width: '100%',
-    backgroundColor: '#FFF',
-    shadowColor: '#000',
+    width: "100%",
+    backgroundColor: "#FFF",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 5,
@@ -91,38 +107,42 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   cardProfil: {
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
     padding: 0,
   },
   profilName: {
     width: 70,
     height: 70,
     borderRadius: 35,
-    backgroundColor: '#f0f0f0',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#f0f0f0",
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: 10,
   },
   textName: {
     fontSize: 26,
+    color: "#30A08B",
   },
   messageContainer: {
     flex: 1,
-    flexDirection: 'column',
+    flexDirection: "column",
   },
   starIcon: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
+    flexDirection: "row",
+    justifyContent: "flex-start",
     marginBottom: 5,
   },
   name: {
     fontSize: 16,
-    textAlign: 'left',
+    textAlign: "left",
+    color: "#B2905F",
+    fontWeight: "bold",
+    top: 4,
   },
   date: {
-    justifyContent: 'center',
+    justifyContent: "center",
     marginLeft: 10,
   },
   commantaire: {
@@ -130,14 +150,13 @@ const styles = StyleSheet.create({
   },
   textCommantaire: {
     fontSize: 14,
-    color: '#333',
+    color: "#333",
   },
   cardeimg: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 10,
-    display:"flex",
-    justifyContent:"space-around",
-    alignItems:"center"
+    justifyContent: "space-around",
+    alignItems: "center",
   },
   image: {
     width: 60,

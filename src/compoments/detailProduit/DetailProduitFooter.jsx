@@ -5,7 +5,7 @@ import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from 'react-native';
 
-const DetailProduitFooter = ({produit,color,taille,id}) => {
+const DetailProduitFooter = ({produit,color,taille,id,chgNbr}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [produitsL, setProduitsL] = useState(0);
   const [nbrCol, setNbrCol] = useState(null);
@@ -60,6 +60,7 @@ const DetailProduitFooter = ({produit,color,taille,id}) => {
         });
 
         await AsyncStorage.setItem('panier', JSON.stringify(updatedProducts));
+        chgNbr()
         handleAlert("La quantité du produit a été incrémentée dans le panier !");
         const local = await AsyncStorage.getItem('panier');
         setProduitsL(local ? JSON.parse(local) : []);
@@ -101,6 +102,7 @@ const DetailProduitFooter = ({produit,color,taille,id}) => {
       ];
 
       await AsyncStorage.setItem('panier', JSON.stringify(updatedProducts));
+      chgNbr()
       handleAlert("Produit ajouté au panier !");
       const local = await AsyncStorage.getItem('panier');
       setProduitsL(local ? JSON.parse(local) : []);
@@ -182,7 +184,7 @@ const DetailProduitFooter = ({produit,color,taille,id}) => {
       </TouchableOpacity> */}
 
       <TouchableOpacity style={styles.buttonAddWhatsp} onPress={Discuite}>
-        <Ionicons name="logo-whatsapp" size={20} color="#27AA19" />
+        <Ionicons name="logo-whatsapp" size={20} color="#30A08B" />
         <Text style={styles.buttonTextAddWhatsp}>Discuter</Text>
       </TouchableOpacity>
 
@@ -320,12 +322,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    height: 78,
+    height: 70,
     paddingHorizontal: 10,
     borderColor: "#ccc",
     borderTopWidth: 1,
     elevation: 5,
-    backgroundColor: "rgba(255, 153, 0, 0.56)",
+    backgroundColor: "#F5F6F8",
   },
   button: {
     backgroundColor: "#B2905F",
@@ -335,24 +337,25 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
   buttonAddWhatsp: {
-    backgroundColor: "#B2905F",
+    backgroundColor: "rgba(255, 152, 0, 0.2)",
     flexDirection: 'row',
     justifyContent: "center",
     alignItems: 'center',
     padding: 7,
     borderRadius: 30,
-    width: "40%",
+    width: "43%",
   },
   buttonText: {
     textTransform: "uppercase",
-    color: '#000000c2',
+    color: '#30A08B',
     fontSize: 12,
     marginLeft: 5,
   },
   buttonTextAddWhatsp: {
     textTransform: "uppercase",
-    color: '#FFF',
-    fontSize: 12,
+    color: '#30A08B',
+    fontWeight:"bold",
+    fontSize: 11,
     marginLeft: 5,
   },
 });

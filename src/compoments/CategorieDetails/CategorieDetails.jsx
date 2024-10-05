@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, SafeAreaView, Image, Dimensions, TouchableOpacity, ScrollView, Platform, TextInput } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, Image, Dimensions, TouchableOpacity, ScrollView, Platform, TextInput, KeyboardAvoidingView } from 'react-native';
 import React, { useState } from 'react';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -113,11 +113,8 @@ const CategorieDetails = () => {
     switch (activeSection) {
       case 'Homme':
         return (
-          <ScrollView>
-
-
+          <ScrollView showsVerticalScrollIndicator={false}>
             <View>
-      <Text style={styles.heading}>Trending</Text>
 
       {Pub?.length > 0 ? (
         <View style={styles.carouselContainer}>
@@ -179,7 +176,7 @@ const CategorieDetails = () => {
         );
       case 'Products':
         return(
-          <ScrollView>
+          <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.productFilter}>
 
             {
@@ -189,8 +186,8 @@ const CategorieDetails = () => {
                 if (index > 4) {
                   return null;
                 }
-                return <TouchableOpacity>
-                <Text>{param.name}</Text>
+                return <TouchableOpacity key={index}>
+                <Text style={{color: "#30A08B"}}>{param.name}</Text>
                 <View style={styles.ligneBas} />
               </TouchableOpacity>
               })
@@ -297,22 +294,22 @@ const CategorieDetails = () => {
           resizeMode="cover"
         />
         <View style={styles.headerContent}>
-            <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', zIndex: 1000, position: 'relative', paddingHorizontal: 10, top: 20}}>
+            <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', zIndex: 1000, position: 'relative', paddingHorizontal: 10, top:Platform.OS === 'ios' ? 20 : 38}}>
               <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-                <AntDesign name="left" size={24} color="#FF6A69" />
+                <AntDesign name="left" size={24} color="#30A08B" />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => setShowSearch(!showSearch)}>
-                <Feather name="search" size={24} color="#FF6A69" />
+                <Feather name="search" size={24} color="#30A08B" />
               </TouchableOpacity>
             </View>
-            {showSearch && (
-        <View style={styles.searchBox}>
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search..."
-            autoFocus
-          />
-        </View>
+            {showSearch && (<></>
+        // <View style={styles.searchBox}>
+        //   <TextInput
+        //     style={styles.searchInput}
+        //     placeholder="Search..."
+        //     autoFocus
+        //   />
+        // </View>
       )}
           <View style={styles.headerIcons}>
 
@@ -356,15 +353,16 @@ export default CategorieDetails;
 const styles = StyleSheet.create({
   ligneBas: {
     height: 2,
-    backgroundColor: '#FF6A69',
+    backgroundColor: '#B17236',
     width: '100%', // Ajuster la largeur pour être responsive
     alignSelf: 'flex-start',
   },
   titleHomme: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#515C70',
-    marginBottom: 20, // Augmenter l'espace sous le titre
+    color: '#B17236',
+    marginBottom: 20, 
+    textTransform: "capitalize",
   },
   containerHommeCard: {
     flexDirection: 'row',
@@ -413,7 +411,7 @@ const styles = StyleSheet.create({
   },
   valeurPromo: {
     fontSize: 18,
-    backgroundColor: '#FF6A69',
+    backgroundColor: '#30a08b9f',
     position: 'absolute',
     top: 5,
     end: 5,
@@ -441,30 +439,30 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 13,
-    color: '#333',
+    color: '#B17236',
     paddingHorizontal: 5,
   },
   cardTitleAll: {
     fontSize: 12,
-    color: '#333',
+    color: '#B2905F',
     paddingHorizontal: 5,
   },
   cardPriceDefaullt: {
     fontSize: 11,
-    color: '#515C70',
+    color: '#B17236',
     fontWeight: 'bold',
     textDecorationLine: 'line-through',
     paddingHorizontal: 5,
   },
   cardPrice: {
     fontSize: 11,
-    color: '#FF6A69',
+    color: '#30A08B',
     fontWeight: 'bold',
     paddingHorizontal: 5,
   },
   cardPriceAll: {
-    fontSize: 8,
-    color: '#FF6A69',
+    fontSize: 10,
+    color: '#30A08B',
     fontWeight: 'bold',
     paddingHorizontal: 5,
   },
@@ -512,11 +510,12 @@ const styles = StyleSheet.create({
   titleHead: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#FFF',
+    color: '#30A08B',
+    textTransform: "capitalize"
   },
   fashion: {
     fontSize: 16,
-    color: '#FFF', // Couleur de texte gris pour une meilleure lisibilité
+    color: '#B2905F', // Couleur de texte gris pour une meilleure lisibilité
     textAlign: 'center', // Centre le texte
     marginTop: 10,
   },
@@ -527,23 +526,23 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff', // Fond blanc pour la barre de boutons
   },
   button: {
-    backgroundColor: '#e0e0e0',
+    backgroundColor: '#3301',
     paddingVertical: 10,
     paddingHorizontal: 25,
     borderRadius: 5,
   },
   activeButton: {
-    backgroundColor: '#FF6A69', // Couleur de fond du bouton sélectionné
+    backgroundColor: '#30A08B', // Couleur de fond du bouton sélectionné
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
   },
   buttonText: {
-    color: '#333', // Couleur du texte des boutons non sélectionnés
+    color: '#000', 
     fontSize: 16,
   },
   activeButtonText: {
-    color: '#FFF', // Couleur du texte du bouton sélectionné
+    color: '#FFF',
     fontSize: 16,
     fontWeight: 'bold',
   },
@@ -565,12 +564,6 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   ////////////////////////////////////////////////////////////
-
-  heading: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
   carouselContainer: {
     overflow: "hidden",
   },

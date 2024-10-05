@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 const Confidentialite = () => {
   const [data, setData] = useState([
-    { titre: '1. Introduction :', description: "Bienvenue sur notre page de confidentialité. Chez [VotreEntreprise], nous sommes attachés à protéger la confidentialité de vos données personnelles. Cette politique explique comment nous collectons, utilisons, stockons et partageons vos informations. En utilisant notre site, vous acceptez les pratiques décrites dans cette politique de confidentialité." },
+    { titre: '1. Introduction :', description: "Bienvenue sur notre page de confidentialité. Chez IHAM baobab, nous sommes attachés à protéger la confidentialité de vos données personnelles. Cette politique explique comment nous collectons, utilisons, stockons et partageons vos informations. En utilisant notre site, vous acceptez les pratiques décrites dans cette politique de confidentialité." },
     { titre: '2. Données personnelles collectées :', description: "Nous pouvons collecter les types suivants de données personnelles lorsque vous utilisez notre site : votre nom, adresse e-mail, adresse postale, numéro de téléphone, informations de paiement, et toute autre information que vous choisissez de nous fournir volontairement." },
     { titre: '3. Buts de la collecte des données :', description: "Nous collectons vos données personnelles dans le but de traiter vos commandes, d'expédier des produits, de communiquer avec vous concernant votre commande, de personnaliser votre expérience sur notre site, et de vous envoyer des communications marketing si vous y avez consenti." },
     { titre: '4. Base légale de la collecte des données :', description: "Nous collectons et traitons vos données personnelles sur la base de votre consentement, de l'exécution d'un contrat avec vous, de notre intérêt légitime à exploiter notre site et à vous fournir nos services, ainsi que pour respecter nos obligations légales." },
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: "#515C70",
+    color: "#B2905F",
     marginTop: 10,
     marginLeft: 10,
   },
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginHorizontal: 10,
     marginVertical: 10,
-    shadowColor: "#000",
+    shadowColor: "#B2905F",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   introductionText: {
-    color: "#000",
+    color: "#30A08B",
     fontSize: 18,
     fontWeight: 'bold',
   },

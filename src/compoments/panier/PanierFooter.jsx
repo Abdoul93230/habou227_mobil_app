@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   footerContainer: {
     flexDirection: 'row',
     position: "absolute",
-    bottom: 90,
+    bottom: 80,
     width: "100%",
     backgroundColor: "#f8f9fa",
     padding: 16,

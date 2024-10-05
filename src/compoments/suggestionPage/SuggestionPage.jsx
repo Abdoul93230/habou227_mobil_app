@@ -1,12 +1,16 @@
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Dimensions, Animated, Easing, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Dimensions, Animated, Easing, ActivityIndicator,KeyboardAvoidingView,Platform } from 'react-native';
 import React, { useState, useEffect, useRef } from 'react';
 import { FontAwesome5 } from '@expo/vector-icons';
-import Produit from "../../image/Vnike2.jpg";
-import { Platform } from 'react-native';
+// import Produit from "../../image/Vnike2.jpg";
+import Produit from "../../image/im1.jpeg"
+import Toast from 'react-native-toast-message';
+import axios from 'axios';
+import { API_URL } from "@env";
 
 const SuggestionPage = () => {
+  const [onSubmit, setOnsubmit] = useState(false)
   const [valueText, setValueText] = useState("")
-  
+
 
 
   const { height } = Dimensions.get('window');
@@ -14,6 +18,64 @@ const SuggestionPage = () => {
   const imageOpacity = useRef(new Animated.Value(0)).current;
   const formOpacity = useRef(new Animated.Value(0)).current;
   const buttonTranslateY = useRef(new Animated.Value(30)).current;
+
+  const handleAlert = (message) => {
+    Toast.show({
+      type: 'success',
+      text1: message,
+      position: 'top',
+      visibilityTime: 3000,
+      autoHide: true,
+      bottomOffset: 40,
+    });
+  };
+
+  const handleAlertwar = (message) => {
+    Toast.show({
+      type: 'error',
+      text1: message,
+      position: 'top',
+      visibilityTime: 3000,
+      autoHide: true,
+      bottomOffset: 40,
+    });
+  };
+
+
+  const envoyer = async () => {
+    setOnsubmit(true)
+    if (valueText.length < 8) {
+      handleAlertwar("Veuillez entrer un commentaire valide !");
+      setOnsubmit(false)
+      return;
+    }
+
+    handleAlert("Envoi en cours...");
+
+    try {
+      const emailData = {
+        senderEmail: "abdoulrazak9323@gmail.com",
+        subject: "Commentaire iham-baobab.onrender.com",
+        message: valueText,
+        friendEmail: "abdoulrazak9323@gmail.com",
+        clientName: "un Client",
+      };
+
+      await axios.post(`${API_URL}/Send_email_freind`, emailData);
+      setOnsubmit(false)
+      handleAlert("Commentaire envoyé !");
+      // setAlertClosed(true);
+
+      // Attendez un peu avant de naviguer
+      setTimeout(() => {
+        // navigue("/Profile");
+      }, 2000);
+    } catch (error) {
+      console.error("Erreur lors de la requête :", error);
+    }
+  };
+
+
 
   useEffect(() => {
     Animated.sequence([
@@ -39,8 +101,8 @@ const SuggestionPage = () => {
   }, [imageOpacity, formOpacity, buttonTranslateY]);
 
   return (
-    <KeyboardAvoidingView 
-    behavior={Platform.OS  === "ios" ? "padding" : "height"}
+    <KeyboardAvoidingView
+    behavior={Platform.OS  === "ios" ? "height" : "height"}
     style={styles.container}>
       <Animated.View style={[styles.containerTop, { opacity: imageOpacity }]}>
         <Image source={Produit} style={styles.image} />
@@ -48,7 +110,7 @@ const SuggestionPage = () => {
 
       <Animated.View style={[styles.containerBottom, { opacity: formOpacity, transform: [{ translateY: buttonTranslateY }] }]}>
         <Text style={styles.suggestionText}>Votre suggestion</Text>
-        <TextInput 
+        <TextInput
         value={valueText}
           style={styles.textInput}
           onChangeText={setValueText}
@@ -56,8 +118,13 @@ const SuggestionPage = () => {
           placeholderTextColor="#a0a0a0"
           multiline
         />
-        <TouchableOpacity style={styles.envoieBtn}>
-          <Text style={styles.envoieText}>Envoyer</Text>
+        <TouchableOpacity onPress={envoyer} style={styles.envoieBtn}>
+          {
+            onSubmit?(<ActivityIndicator size="small" color="#FFFFFF" />):(
+
+              <Text style={styles.envoieText}>Envoyer</Text>
+            )
+          }
         </TouchableOpacity>
       </Animated.View>
     </KeyboardAvoidingView>
@@ -83,7 +150,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-    height: "100%", 
+    height: "100%",
     resizeMode: "cover",
   },
   containerBottom: {

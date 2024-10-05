@@ -36,11 +36,11 @@ const Produits = ({ products, name }) => {
 export default Produits;
 
 const styles = StyleSheet.create({
-  //Produit composant 
+  //Produit composant
   container: {
     flex: 1,
     marginTop: 7,
-    marginHorizontal: 10,
+    marginHorizontal: 5,
     borderTopEndRadius: 20,
     borderTopLeftRadius: 20,
   },
@@ -51,13 +51,15 @@ const styles = StyleSheet.create({
   navProduct: {
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#FFF8E1",
+    backgroundColor: "#FECC85",
+    borderRadius: 10,
   },
   title__product: {
     fontSize: 18,
     letterSpacing: 1,
     color: '#30A08B',
     marginVertical: 10,
+    textTransform: 'capitalize',
   },
   box__menu: {
     flexDirection: "row",
@@ -70,12 +72,12 @@ const styles = StyleSheet.create({
     width: "30%",
     height: 120,
     borderRadius: 12,
-    backgroundColor: "#FFF8E1", 
+    backgroundColor: "#FFF8E1",
     marginVertical: 10,
     justifyContent: "flex-end",
     overflow: "hidden",
     borderColor: "#FF9800",
-    borderWidth: 1, 
+    borderWidth: 1,
   },
   image: {
     width: "100%",
@@ -84,7 +86,8 @@ const styles = StyleSheet.create({
   },
   footer: {
     height: 35,
-    backgroundColor: "rgba(255, 152, 0, 0.48)", 
+    // backgroundColor: "rgba(255, 152, 0, 0.48)",
+    backgroundColor: "#30a08bb5",
     justifyContent: "center",
     alignItems: "center",
     borderBottomLeftRadius: 12,
