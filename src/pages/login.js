@@ -23,6 +23,7 @@ function LogIn({ chg, creer }) {
   const [password, setPassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isloading, setIsloading] = useState(false);
+  const [selectedInput, setSelectedInput] = useState("email");
   const navigation = useNavigation();
   const regexMail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const regexPhone = /^[0-9]{8,}$/;
@@ -341,6 +342,89 @@ const styles = StyleSheet.create({
     color: "#515C6F",
     marginBottom: 5,
   },
+  // /////////////////////////////:
+
+  btnUtilisateur: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 20,
+  },
+  buttonBTN: {
+    backgroundColor: 'rgb(181, 182, 184)',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 30,
+    marginHorizontal: 10,
+  },
+  buttonTextBTN: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  selectedButton: {
+    backgroundColor: '#30A08B',
+  },
+  buttonFD: {
+    width: "100%",
+    textAlign: "left"
+  },
+  //////////////////////////
 });
 
 export default LogIn;
+
+
+
+
+{/* <View style={styles.inputGroup}>
+<View style={styles.btnUtilisateur}>
+  <TouchableOpacity
+    style={[
+      styles.buttonBTN,
+      selectedInput === "email" && styles.selectedButton
+    ]}
+    onPress={() => setSelectedInput("email")}
+  >
+    <Text style={styles.buttonTextBTN}>Email</Text>
+  </TouchableOpacity>
+  <TouchableOpacity
+    style={[
+      styles.buttonBTN,
+      selectedInput === "phone" && styles.selectedButton
+    ]}
+    onPress={() => setSelectedInput("phone")}
+  >
+    <Text style={styles.buttonTextBTN}>Téléphone</Text>
+  </TouchableOpacity>
+</View>
+
+{selectedInput === "email" ? (
+  <View style={styles.inputContainer}>
+    <User style={styles.icon} />
+    <View style={styles.inputWrapper}>
+      <TextInput
+        style={styles.input}
+        value={email}
+        onChangeText={setEmail}
+        placeholder="abass123@email.com"
+        keyboardType="email-address"
+      />
+    </View>
+  </View>
+) : (
+  <View style={styles.inputContainer}>
+    <Phone style={styles.icon} />
+    <View style={styles.inputWrapper}>
+      <TextInput
+        style={styles.input}
+        value={phoneNumber}
+        onChangeText={setPhoneNumber}
+        placeholder="Numéro de téléphone"
+        keyboardType="phone-pad"
+      />
+    </View>
+  </View>
+)}
+</View> */}
