@@ -412,7 +412,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   selectedButton: {
-    backgroundColor: 'red',
+    backgroundColor: '#30A08B',
   },
   buttonFD: {
     width: "100%",
