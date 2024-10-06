@@ -162,8 +162,8 @@ const styles = StyleSheet.create({
       paddingHorizontal: 12,
       width: "100%",
       paddingBottom: Platform.OS === 'ios' ? 10 : 20,
-      backgroundColor: "rgba(255, 152, 0, 0.2)"
-      // backgroundColor: "red"
+      // backgroundColor: "rgba(255, 152, 0, 0.2)"
+      backgroundColor: "red"
   },
   profileLogo: {
       width: Platform.OS === "ios" ? width * 0.35 : width * 5/11,

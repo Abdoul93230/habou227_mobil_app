@@ -136,7 +136,7 @@ function LogIn({ chg, creer }) {
             <Text style={styles.loadingText}>
               Connection en cours Veuillez Patientez....
             </Text>
-            <ActivityIndicator size="large" color="#FF6969" />
+            <ActivityIndicator size="large" color="#30A08B" />
           </View>
         ) : (
           <View style={styles.container}>
