@@ -272,18 +272,21 @@ const SignUp = () => {
             </View>
           </View>
 
-          {phoneNumber.length >= 8 && (
+          {(
+      (phoneNumber.length > 0 && regexPhone.test(phoneNumber)) ||
+      phoneNumber.length > 11
+    ) && (
             <>
               <View style={styles.checkboxContainer}>
-                <Text style={styles.checkboxLabel}>WhatsApp Groupe:</Text>
+                <Text style={styles.checkboxLabel}>WhatsApp ?</Text>
                 <MyCheckbox
                   checked={whatsapp}
                   onPress={() => setWhatsapp(!whatsapp)}
                 />
               </View>
-              <Text style={styles.checkboxText}>
+              {/* <Text style={styles.checkboxText}>
                 Acceptez-vous de faire partie de notre communauté WhatsApp ?
-              </Text>
+              </Text> */}
             </>
           )}
 

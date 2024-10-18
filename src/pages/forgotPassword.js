@@ -14,7 +14,7 @@ import axios from "axios";
 import { Feather } from "@expo/vector-icons";
 import { API_URL } from "@env";
 import { ChevronRight, PhoneCall } from "react-native-feather";
-import {  Select,NativeBaseProvider  } from 'native-base';
+import {  Select,NativeBaseProvider, Center  } from 'native-base';
 import Toast from "react-native-toast-message";
 
 function ForgotPassword() {
@@ -354,20 +354,25 @@ function ForgotPassword() {
                   />
                 </View>
               </View>
-                </>:<Text>Sera bientot operationelle</Text>
+                </>:<View style={styles.indisponible}>
+                <Text style={styles.indisponibleText}>Sera bientot operationelle</Text>
+                </View>
                }
 
               </>
             )}
           </View>
-          <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+          {
+            isEmail?<TouchableOpacity style={styles.button} onPress={handleSubmit}>
             <Text style={styles.buttonText}>
               {isEmail ? "Send email" : "Send Sms"}
             </Text>
             <View style={styles.buttonIcon}>
               <ChevronRight style={{ color: "#30A08B" }} />
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity>:<></>
+          }
+
         </KeyboardAvoidingView>
       )}
     </NativeBaseProvider>
@@ -446,6 +451,16 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     padding: 5,
     color: "#FF6969",
+  },
+  indisponible:{
+    textAlign:'center',
+    display:"flex",
+    justifyContent:'center',
+    alignItems:'center',
+    paddingVertical:10,
+  },
+  indisponibleText:{
+    color:'#B2905F'
   },
   // signUpText: {
   //   color: "#515C6F",

@@ -179,7 +179,10 @@ function LogIn({ chg, creer }) {
       styles.buttonBTN,
       selectedInput === "email" && styles.selectedButton
     ]}
-    onPress={() => setSelectedInput("email")}
+    onPress={() => {
+      setSelectedInput("email")
+      setPhoneNumber('')
+    }}
   >
     <Text style={styles.buttonTextBTN}>Email</Text>
   </TouchableOpacity>
@@ -188,7 +191,10 @@ function LogIn({ chg, creer }) {
       styles.buttonBTN,
       selectedInput === "phone" && styles.selectedButton
     ]}
-    onPress={() => setSelectedInput("phone")}
+    onPress={() => {
+      setSelectedInput("phone")
+      setEmail('')
+    }}
   >
     <Text style={styles.buttonTextBTN}>Téléphone</Text>
   </TouchableOpacity>

@@ -1,22 +1,22 @@
 {
   "cli": {
-    "version": ">= 10.2.3"
+    "version": ">= 12.5.3",
+    "appVersionSource": "remote"
   },
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "channel": "development"
     },
     "preview": {
-      "ios":{
-        "simulator":true
-      },
-      "android":{
-        "buildType":"apk"
-      },
-      "distribution": "internal"
+      "distribution": "internal",
+      "channel": "preview"
     },
-    "production": {}
+    "production": {
+      "autoIncrement": true,
+      "channel": "production"
+    }
   },
   "submit": {
     "production": {}
