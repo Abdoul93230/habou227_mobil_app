@@ -14,7 +14,7 @@ const SuivreCommande = ({route}) => {
   return (
     <View style={styles.container}>
       <SuivreCommandeHeader commande={commande} />
-      <SuivreCommandePage allProducts={DATA_Products} commande={commande}/>
+      <SuivreCommandePage allProducts={DATA_Products} commande={commande} recut={route.params.recut}/>
     </View>
   )
 }

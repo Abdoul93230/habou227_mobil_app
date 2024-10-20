@@ -23,7 +23,7 @@ const SuivreCommandePage = ({commande,allProducts,recut}) => {
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
     const commandes = commande?.commande
-    const recu = recut
+
 
     // useEffect(() => {
     //   axios
@@ -289,7 +289,7 @@ const styles = StyleSheet.create({
       ligneHori: {
         width: width * 0.01,
         height: height * 0.10,
-        backgroundColor: recu?'#30A08B':'#B17236',
+        backgroundColor: '#B17236',
         marginVertical: 0,
         marginHorizontal: 18,
       },
