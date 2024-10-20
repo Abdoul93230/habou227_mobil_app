@@ -1,7 +1,8 @@
 import { StyleSheet, Image,
    View, Dimensions, FlatList, Text,
     TouchableOpacity, Modal,
-    PanResponder, Animated, Pressable, Platform
+    PanResponder, Animated, Pressable, Platform,
+    ScrollView
    } from 'react-native';
    import RenderHtml from 'react-native-render-html';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -497,8 +498,9 @@ const DetailProduitMain = ({produit,chgColor, chgTail,id,Allcommente,chgNbr}) =>
                 </View>
 
       <View style={styles.bottomContainer}>
+        <ScrollView style={{paddingBottom:5}} showsVerticalScrollIndicator={false}>
         <View style={styles.textContainer}>
-          <Text style={styles.textTitle}>{products?.find(item=>item._id===idClicked)?.name.slice(0,20)} ...</Text>
+          <Text style={styles.textTitle}>{products?.find(item=>item._id===idClicked)?.name.slice(0,25)} ...</Text>
           {/* <Text style={styles}>Prix du produit</Text> */}
           {/* {
               products?.find(item=>item._id===idClicked)?.prixPromo <= 0 ?<Text style={styles.CFAText}>CFA {products?.find(item=>item._id===idClicked)?.prix}</Text>:<Text style={styles.CFAText}>CFA {products?.find(item=>item._id===idClicked)?.prixPromo}</Text>
@@ -513,7 +515,7 @@ const DetailProduitMain = ({produit,chgColor, chgTail,id,Allcommente,chgNbr}) =>
           <Text style={styles.text}>
             Découvrez un produit alliant qualité et élégance. Conçu avec soin, il offre une
             expérience exceptionnelle, que ce soit pour enrichir votre quotidien ou comme cadeau parfait.
-</Text>
+          </Text>
         </View>
         <View style={styles.buttonContainer}>
           <Pressable
@@ -534,9 +536,10 @@ const DetailProduitMain = ({produit,chgColor, chgTail,id,Allcommente,chgNbr}) =>
               }
 
           >
-            <Text style={styles.textButton} >Ajouter au panier</Text>
+            <Text style={styles.textButton} >Plus De Details</Text>
           </Pressable>
         </View>
+        </ScrollView>
       </View>
     </SafeAreaView>
   </Modal>
@@ -632,11 +635,11 @@ const styles = StyleSheet.create({
     height: 270,
     borderRadius: 10,
     overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 5,
+    // shadowColor: '#000',
+    // shadowOffset: { width: 0, height: 2 },
+    // shadowOpacity: 0.1,
+    // shadowRadius: 5,
+    // elevation: 5,
   },
   carouselItem: {
     width,

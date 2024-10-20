@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput, Image, Dimensions, Pressable, TouchableOpacity, ImageBackground,ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Image, Dimensions, Pressable,Platform, TouchableOpacity, ImageBackground,ActivityIndicator,KeyboardAvoidingView, ScrollView } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import MasterCard from "./paiementPhoto/masterCard.jpeg";
 import VisaCard from "./paiementPhoto/VisaCard.png";
@@ -287,6 +287,7 @@ const PaiementPage = () => {
     switch (selectedPayment) {
       case 'master Card':
   return (
+
     <View style={styles.pageContent}>
       <View style={styles.paymentDetail}>
         <Text style={styles.masterText}>Détails de paiement</Text>
@@ -330,6 +331,7 @@ const PaiementPage = () => {
         </TouchableOpacity>
       </View>
     </View>
+
   );
       case 'Visa':
         return (
@@ -439,6 +441,7 @@ const PaiementPage = () => {
                   placeholder='Entrez votre numéro'
                   placeholderTextColor='#a9a9a9'
                   style={{marginHorizontal: 3, height: 40,}}
+                  keyboardType="numeric"
                 />
                 </View>
 
@@ -469,15 +472,19 @@ const PaiementPage = () => {
 
 
   return (
+
+
+
     <NativeBaseProvider>
-          <View style={styles.container}>
+      {/* <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}> */}
+          <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <Text style={styles.title}>Mode de paiement</Text>
       <View style={styles.livraisoncard}>
         <View style={styles.cardPa}>
           <Pressable
             style={[styles.box, selectedPayment === 'master Card' && styles.selectedBox]}
             onPress={() => handlePress('master Card')}
-          >
+            >
             <View style={styles.boxText}>
               <MyCheckbox checked={selectedPayment === 'master Card'} onPress={() => handlePress('master Card')} />
             </View>
@@ -489,7 +496,7 @@ const PaiementPage = () => {
           <Pressable
             style={[styles.box, selectedPayment === 'Visa' && styles.selectedBox]}
             onPress={() => handlePress('Visa')}
-          >
+            >
             <View style={styles.boxText}>
               <MyCheckbox checked={selectedPayment === 'Visa'} onPress={() => handlePress('Visa')} />
             </View>
@@ -503,7 +510,7 @@ const PaiementPage = () => {
           <Pressable
             style={[styles.box, selectedPayment === 'Payment a domicile' && styles.selectedBox]}
             onPress={() => handlePress('Payment a domicile')}
-          >
+            >
             <View style={styles.boxText}>
               <MyCheckbox checked={selectedPayment === 'Payment a domicile'} onPress={() => handlePress('Payment a domicile')} />
             </View>
@@ -515,7 +522,7 @@ const PaiementPage = () => {
           <Pressable
             style={[styles.box, selectedPayment === 'Mobile Money' && styles.selectedBox]}
             onPress={() => handlePress('Mobile Money')}
-          >
+            >
             <View style={styles.boxText}>
               <MyCheckbox checked={selectedPayment === 'Mobile Money'} onPress={() => handlePress('Mobile Money')} />
             </View>
@@ -527,7 +534,8 @@ const PaiementPage = () => {
         </View>
       </View>
       {renderSelectedPaymentPage()}
-    </View>
+    </ScrollView>
+    {/* </KeyboardAvoidingView> */}
     </NativeBaseProvider>
 
   );
@@ -567,7 +575,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   box: {
-    width: width * 0.44,
+    width: width * 0.41,
     height: 120,
     backgroundColor: '#30A08B',
     flexDirection: 'row',
@@ -575,6 +583,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 5,
     borderRadius: 5,
+    marginHorizontal:1
   },
 
   selectedBox: {
@@ -674,6 +683,7 @@ const styles = StyleSheet.create({
     width: "100%",
     borderRadius: 15,
     marginTop: 20,
+    marginBottom: 30,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,

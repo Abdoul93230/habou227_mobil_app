@@ -62,31 +62,6 @@ const Home = () => {
     scrollViewRef.current.scrollTo({ y: 0, animated: true });
   };
 
-
-  const products = [
-    { _id: '1', name: 'Laptop A', prix: 1000, prixPromo: 900, image1: Ordi, },
-    { _id: '2', name: 'Smartphone B', prix: 500, prixPromo: 450, image1:Ordi, },
-    { _id: '3', name: 'Tablet C', prix: 300, prixPromo: 0, image1: Ordi, },
-    { _id: '4', name: 'Headphones D', prix: 100, prixPromo: 80, image1: Ordi, },
-    { _id: '5', name: 'Smartwatch E', prix: 200, prixPromo: 0, image1: Ordi, },
-    { _id: '6', name: 'Camera F', prix: 800, prixPromo: 750, image1: Ordi, },
-    { _id: '7', name: 'Monitor G', prix: 400, prixPromo: 350, image1: Ordi, },
-    { _id: '8', name: 'Keyboard H', prix: 50, prixPromo: 45, image1: Ordi, },
-    { _id: '9', name: 'Mouse I', prix: 30, prixPromo: 25, image1: Ordi, },
-    { _id: '10', name: 'Printer Ji', prix: 150, prixPromo: 0, image1: Ordi, },
-    { _id: '9', name: 'Mouse I', prix: 30, prixPromo: 25, image1: Ordi, },
-    { _id: '10', name: 'Printer Ji', prix: 150, prixPromo: 0, image1: Ordi, },
-    { _id: '4', name: 'Headphones D', prix: 100, prixPromo: 80, image1: Ordi, },
-    { _id: '5', name: 'Smartwatch E', prix: 200, prixPromo: 0, image1: Ordi, },
-    { _id: '6', name: 'Camera F', prix: 800, prixPromo: 750, image1: Ordi, },
-    { _id: '7', name: 'Monitor G', prix: 400, prixPromo: 350, image1: Ordi, },
-    { _id: '8', name: 'Keyboard H', prix: 50, prixPromo: 45, image1: Ordi, },
-    { _id: '9', name: 'Mouse I', prix: 30, prixPromo: 25, image1: Ordi, },
-    { _id: '10', name: 'Printer Ji', prix: 150, prixPromo: 0, image1: Ordi, },
-    { _id: '9', name: 'Mouse I', prix: 30, prixPromo: 25, image1: Ordi, },
-    { _id: '10', name: 'Printer Ji', prix: 150, prixPromo: 0, image1: Ordi, },
-  ];
-
   return (
     <View style={styles.container}>
       <Header__page />

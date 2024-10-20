@@ -70,7 +70,7 @@ const Commande = () => {
     <>
 
     <View style={styles.container}>
-    <Text style={styles.commande}>Ma commande</Text>
+    <Text style={styles.commande}>Mes commandes</Text>
     <View style={styles.toucheCommande}>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
@@ -118,7 +118,7 @@ const Commande = () => {
           {myAllComande
             ?.filter((param) => param.statusLivraison === "en cours")
             .reverse()?.map((param, index) => (
-            <TouchableOpacity key={index} style={styles.cardNoti} onPress={() => navigation.navigate('Suivre la commande', { commande: param })}>
+            <TouchableOpacity key={index} style={styles.cardNoti} onPress={() => navigation.navigate('Suivre la commande', { commande: param,recut:false })}>
               <View style={styles.gaucheCard}>
                 <Text style={styles.jourText}>{getFormattedDay(new Date(param.date))}</Text>
                 <View style={styles.produitContent}>
@@ -144,7 +144,8 @@ const Commande = () => {
           {myAllComande
             ?.filter((param) => param.statusLivraison === "recu")
             .reverse()?.map((param, index) => (
-            <View key={index} style={styles.cardNoti}>
+              <TouchableOpacity key={index} style={styles.cardNoti} onPress={() => navigation.navigate('Suivre la commande', { commande: param,recut:true })}>
+            {/* <View key={index} style={styles.cardNoti}> */}
               <View style={styles.gaucheCard}>
                 <Text style={styles.jourText}>{getFormattedDay(new Date(param.date))}</Text>
                 <View style={styles.produitContent}>
@@ -160,7 +161,8 @@ const Commande = () => {
                   <Text style={styles.ProduitNumber}>{param.prix} F CFA</Text>
                 </View>
               </View>
-            </View>
+            {/* </View> */}
+            </TouchableOpacity>
           ))}
         </>
       )}

@@ -21,7 +21,7 @@ const CheckoutFooter = ({total,reduction,onFooterClick}) => {
             reduction>0?<Text style={styles.totalAmount}>Reduction : CFA {total}</Text>:<></>
           }
           {/* <Text style={styles.shippingInfo}>livraison: CFA 1000 (Niamey)</Text> */}
-          <Text style={styles.shippingInfo}>{total>1000?'shipping : 1000 Niamey':total>20000?"shipping : 1500 Niamey":"Free Bomestic shipping"}</Text>
+          <Text style={styles.shippingInfo}>{total>1000?'Livraison : 1000 Niamey':total>20000?"Livraison : 1500 Niamey":"Livraison gratuite"}</Text>
         </View>
       </View>
       <View style={styles.footerAction}>

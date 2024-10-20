@@ -16,14 +16,14 @@ const items = [
 // Calculer le total des prix
 const total = items.reduce((sum, item) => sum + parseInt(item.prix.replace(/[^0-9]/g, '' )), 0);
 const { width, height } = Dimensions.get('window');
-const SuivreCommandePage = ({commande,allProducts}) => {
+const SuivreCommandePage = ({commande,allProducts,recut}) => {
   // console.log(commande?.commande)
     const navigation = useNavigation();
     const [user, setUser] = useState(null);
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
     const commandes = commande?.commande
-
+    const recu = recut
 
     // useEffect(() => {
     //   axios
@@ -289,7 +289,7 @@ const styles = StyleSheet.create({
       ligneHori: {
         width: width * 0.01,
         height: height * 0.10,
-        backgroundColor: '#B17236',
+        backgroundColor: recu?'#30A08B':'#B17236',
         marginVertical: 0,
         marginHorizontal: 18,
       },

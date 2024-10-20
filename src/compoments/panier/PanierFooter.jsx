@@ -13,13 +13,13 @@ const PanierFooter = ({total}) => {
         <View>
           <Text style={styles.totalLabel}>Total</Text>
           <Text style={styles.totalAmount}>CFA {total}</Text>
-          <Text style={styles.shippingInfo}>{total>1000?'shipping : 1000 Niamey':total>20000?"shipping : 1500 Niamey":"Free Bomestic shipping"}</Text>
+          <Text style={styles.shippingInfo}>{total>1000?'Livraison : 1000 Niamey':total>20000?"Livraison : 1500 Niamey":"Livraison gratuite"}</Text>
         </View>
       </View>
       <View style={styles.footerAction}>
         <TouchableOpacity style={styles.buttonCheck} onPress={() => navigation.navigate('Checkout')}>
-            <MaterialIcons name="shopping-cart-checkout" size={24} color="white"/>
-          <Text style={styles.buttonText}>Checkout</Text>
+            <MaterialIcons name="shopping-cart-checkout" size={22} color="white"/>
+          <Text style={styles.buttonText}>Vérification</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold',
     marginLeft: 8,
   },

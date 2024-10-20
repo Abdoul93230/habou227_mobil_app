@@ -5,7 +5,7 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import { Ionicons } from 'react-native-vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Profile from '../../image/macbook profil.png';
+import Profile from '../../image/Profile.jpg';
 import Invite from '../invitéAmi/Invite';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
@@ -316,7 +316,7 @@ const ProfilePage = () => {
         <View style={styles.iconContainer}>
           <AntDesign name="addusergroup" size={24} color="#FFF" />
         </View>
-        <Text style={styles.title}>Invite Friends</Text>
+        <Text style={styles.title}>Inviter des amis</Text>
         <View style={styles.arrowContainer}>
           <AntDesign name='right' size={18} color="#FFF" />
         </View>
@@ -334,7 +334,7 @@ const ProfilePage = () => {
         <View style={styles.iconContainer}>
           <MaterialCommunityIcons name="shopping-outline" size={24} color="#FFF" />
         </View>
-        <Text style={styles.title}>Ma commande</Text>
+        <Text style={styles.title}>Mes commandes</Text>
         <View style={styles.arrowContainer}>
           <AntDesign name='right' size={18} color="#FFF" />
         </View>

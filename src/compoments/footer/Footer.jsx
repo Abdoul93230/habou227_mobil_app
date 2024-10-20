@@ -15,15 +15,15 @@ const Footer = () => {
     <View style={styles.footer}>
       <TouchableOpacity style={styles.footerIcon} onPress={() => navigation.navigate('Home')}>
         <Feather name="home" size={24} color={getColor('Home')} />
-        <Text style={{ color: getColor('Home') }}>Home</Text>
+        <Text style={{ color: getColor('Home') }}>Acceuil</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.footerIcon} onPress={() => navigation.navigate('Search')}>
         <Feather name="search" size={24} color={getColor('Search')} />
-        <Text style={{ color: getColor('Search') }}>Search</Text>
+        <Text style={{ color: getColor('Search') }}>Recherche</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.footerIcon} onPress={() => navigation.navigate('Cart')}>
         <Feather name="shopping-cart" size={24} color={getColor('Cart')} />
-        <Text style={{ color: getColor('Cart') }}>Cart</Text>
+        <Text style={{ color: getColor('Cart') }}>Panier</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.footerIcon} onPress={() => navigation.navigate('Profile')}>
         <Feather name="user" size={24} color={getColor('Profile')} />

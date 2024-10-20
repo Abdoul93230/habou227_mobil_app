@@ -147,7 +147,7 @@ const Paniermain = ({chgTotal}) => {
             </View>
             <View style={styles.panierText}>
               <Text style={styles.panierText1}>
-                {product.name.slice(0, 20)}...
+                {product.name.slice(0, 15)}...
               </Text>
 
               {product.prixPromo > 0 ? (
@@ -169,7 +169,7 @@ const Paniermain = ({chgTotal}) => {
                 </TouchableOpacity>
               </View>
               <View style={styles.result}>
-                <Text style={styles.prix}>TT {totalPrice}</Text>
+                <Text style={styles.prix}>Total {totalPrice} f</Text>
               </View>
             </View>
             <TouchableOpacity style={styles.IconCircle} onPress={() => removeProduct(index)}>

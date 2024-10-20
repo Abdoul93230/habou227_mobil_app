@@ -273,13 +273,13 @@ const Plasser = async() => {
   if (phone?.length <= 0) {
     setLoading(false);
     // navigue("/More/shipping_address?fromCart=true");
-    navigation.navigate("Livraison Page",{ fromCart: true })
+    navigation.navigate("Page de livraison",{ fromCart: true })
     return;
   }
   if (choix?.length <= 0) {
     setLoading(false);
     // navigue("/More/payment_method?fromCart=true");
-    navigation.navigate("Paiement Page",{ fromCart: true })
+    navigation.navigate("Page de paiement",{ fromCart: true })
 
     return;
   }
@@ -479,13 +479,13 @@ if (loading) {
           <Text style={{color:"#B2905F"}}>{phone}</Text>
         </View>
       </View>
-      <TouchableOpacity style={styles.button} onPress={()=>navigation.navigate("Livraison Page",{ fromCart: true })}>
+      <TouchableOpacity style={styles.button} onPress={()=>navigation.navigate("Page de livraison",{ fromCart: true })}>
         <Text style={styles.buttonText}>Modifier les informations</Text>
       </TouchableOpacity>
 
       <View style={styles.paymentContainer}>
       <Text style={styles.paymentText}>Mode de paiement</Text>
-      <TouchableOpacity onPress={()=> navigation.navigate("Paiement Page",{ fromCart: true })} >
+      <TouchableOpacity onPress={()=> navigation.navigate("Page de paiement",{ fromCart: true })} >
         <View style={styles.cardMoney}>
           <Feather name="credit-card" size={24} color="#B2905F" />
           <Text style={styles.paraMoney}>

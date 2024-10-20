@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity,Dimensions } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity,Dimensions, Platform } from 'react-native';
 import React from 'react';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import { useNavigation , useNavigationState} from '@react-navigation/native';
@@ -61,11 +61,11 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     backgroundColor: "rgba(255, 152, 0, 0.2)",
-    height: 95,
+    height: Platform.OS === 'ios' ? 'auto' : 95,
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 15,
-    paddingTop: 40,  
+    paddingTop:Platform.OS === 'ios' ? 48 : 20,
   },
   backButton: {
     justifyContent: 'center',

@@ -45,7 +45,7 @@ const Header__page = () => {
     };
 
     getPanier();
-  }, );
+  },[] );
 
   useEffect(() => {
 

@@ -21,7 +21,7 @@ const MorePage = () => {
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false} >
     <Text style={[styles.moreTitle, {color: colors[0]}]}>More</Text>
     <View style={styles.moreBox}>
-      <TouchableOpacity style={styles.shippingAddress} onPress={() => navigation.navigate('Livraison Page')}>
+      <TouchableOpacity style={styles.shippingAddress} onPress={() => navigation.navigate('Page de livraison')}>
         <View style={[styles.iconContainer, { backgroundColor: colors[0] }]}>
           <AntDesign name="home" size={24} color="#FFF" />
         </View>
@@ -30,7 +30,7 @@ const MorePage = () => {
           <AntDesign name='right' size={18} color="#FFF" />
         </View>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.shippingAddress} onPress={() => navigation.navigate('Paiement Page')}>
+      <TouchableOpacity style={styles.shippingAddress} onPress={() => navigation.navigate('Page de paiement')}>
         <View style={[styles.iconContainer, { backgroundColor: colors[0] }]}>
           <Feather name="credit-card" size={24} color="#FFF" />
         </View>

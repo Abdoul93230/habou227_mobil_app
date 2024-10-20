@@ -160,28 +160,28 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         position: "relative",
         overflow: 'hidden',
-        ...Platform.select({
-            ios: {
-                shadowColor: "#B2905F",
-                shadowOffset: { width: 0, height: 1},
-                shadowOpacity: 0.25,
-                shadowRadius: 3.84,
-                elevation: 5,
-            },
-            android: {
-                shadowColor: "#B2905F",
-                shadowOffset: {width: 0, height: 0.30},
-                shadowOpacity: 0.10,
-                shadowRadius: 5,
-                elevation: 1,
-            }
+        // ...Platform.select({
+        //     ios: {
+        //         shadowColor: "#B2905F",
+        //         shadowOffset: { width: 0, height: 1},
+        //         shadowOpacity: 0.25,
+        //         shadowRadius: 3.84,
+        //         elevation: 5,
+        //     },
+        //     android: {
+        //         shadowColor: "#B2905F",
+        //         shadowOffset: {width: 0, height: 0.30},
+        //         shadowOpacity: 0.10,
+        //         shadowRadius: 5,
+        //         elevation: 1,
+        //     }
 
-        })
+        // })
     },
     carouselItem: {
         width: Dimensions.get('window').width - 30, // Ajuster la largeur
         height: '100%',
-        marginRight: 10, 
+        marginRight: 10,
     },
     carouselImage: {
         width: '100%',
