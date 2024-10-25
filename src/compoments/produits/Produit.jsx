@@ -43,6 +43,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     borderTopEndRadius: 20,
     borderTopLeftRadius: 20,
+    paddingHorizontal: 2,
+
   },
   product__page: {
     flex: 1,

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput, Image, Dimensions, Pressable, TouchableOpacity, ImageBackground,ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Image, Dimensions, Pressable, TouchableOpacity, ImageBackground,ActivityIndicator, ScrollView, KeyboardAvoidingView } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import MasterCard from "./paiementPhoto/masterCard.jpeg";
 import VisaCard from "./paiementPhoto/VisaCard.png";
@@ -281,6 +281,7 @@ const PaiementPage = () => {
     switch (selectedPayment) {
       case 'master Card':
   return (
+
     <View style={styles.pageContent}>
       <View style={styles.paymentDetail}>
         <Text style={styles.masterText}>Détails de paiement</Text>
@@ -288,29 +289,49 @@ const PaiementPage = () => {
       </View>
       <Text style={styles.numeroText}>Numéro de carte</Text>
       <TextInput
-        value={numeroCard}
-        onChangeText={(text) => {
-          setNumeroCard(text);
-        }}
-        placeholder={(dernierChiffres && selectedPayment==="master Card") ? `*** *** *** ${dernierChiffres}` : "Entrez votre numéro de carte"}
-        style={styles.input}
-        keyboardType="numeric"
-      />
+  value={numeroCard}
+  onChangeText={(text) => {
+    // Supprimer tous les caractères non numériques
+    const numericText = text.replace(/[^0-9]/g, '');
+    
+    // Formater le texte en ajoutant des espaces tous les 4 chiffres
+    const formattedText = numericText.replace(/(.{4})/g, '$1 ').trim(); // Ajoute un espace tous les 4 chiffres et supprime les espaces de fin
+
+    setNumeroCard(formattedText);
+  }}
+  placeholder={(dernierChiffres && selectedPayment === "master Card") ? `*** *** *** ${dernierChiffres}` : "Entrez votre numéro de carte"}
+  style={styles.input}
+  keyboardType="numeric"
+  maxLength={19}
+/>
+
       <View style={styles.expirationDate}>
         <View style={styles.boxInput}>
           <Text style={styles.dateText}>Date d'expiration :</Text>
-          <TextInput
+          {/* <TextInput
               onChangeText={(text) => {
                 setExpiredCard(text);
               }}
-           textContentType='date' style={styles.input} placeholder='EX : 12/09/27' />
+           textContentType='date' style={styles.input} placeholder='EX : 12/09/27' 
+           /> */}
+           <TextInput
+           keyboardType='numeric'
+              onChangeText={(text) => {
+                setExpiredCard(text);
+              }}
+           textContentType='date' style={styles.input} placeholder='EX : 12/09/27' 
+           />
         </View>
         <View style={styles.boxInput}>
           <Text style={styles.dateText}>CV Code</Text>
           <TextInput
             placeholder="CVC"
+            maxLength={3}
             onChangeText={(text) => {
-              setCvc(text);
+              if (/^\d*$/.test(text)) {
+                setCvc(text);
+              }
+              
             }}
             style={styles.input}
             keyboardType="numeric"
@@ -334,28 +355,66 @@ const PaiementPage = () => {
           </View>
           <Text style={styles.numeroText}>Numéro de carte</Text>
           <TextInput
-           placeholder={(dernierChiffres && selectedPayment==='Visa') ? `*** *** *** ${dernierChiffres}` : "Entrez votre numéro de carte"}
-          style={styles.input}
-          onChangeText={(text) => {
-            setNumeroCard(text);
-          }}
-          />
+  value={numeroCard}
+  keyboardType="numeric"
+  placeholder={(dernierChiffres && selectedPayment === 'Visa') ? `*** *** *** ${dernierChiffres}` : "Entrez votre numéro de carte"}
+  style={styles.input}
+  onChangeText={(text) => {
+    // Supprimer tous les caractères non numériques
+    const numericText = text.replace(/[^0-9]/g, '');
+    
+    // Formater le texte en ajoutant des espaces tous les 4 chiffres
+    const formattedText = numericText.replace(/(.{4})/g, '$1 ').trim();
+    
+    // Limiter la saisie à 16 chiffres + espaces
+    if (formattedText.replace(/\s/g, '').length <= 16) {
+      setNumeroCard(formattedText);
+    }
+  }}
+  maxLength={19} // 16 chiffres + 3 espaces
+/>
+
           <View style={styles.expirationDate}>
             <View style={styles.boxInput}>
               <Text style={styles.dateText}>Date d'expiration :</Text>
               <TextInput
-              onChangeText={(text) => {
-                setExpiredCard(text);
-              }}
-           textContentType='date' style={styles.input} placeholder='EX : 12/09/27' />
+  // value={expiredCard}
+  onChangeText={(text) => {
+    // Supprimer tous les caractères non numériques et le slash
+    const numericText = text.replace(/[^0-9/]/g, '');
+
+    // Formatage pour MM/AA
+    let formattedText = numericText;
+
+    if (numericText.length > 2) {
+      formattedText = `${numericText.slice(0, 2)}/${numericText.slice(2, 4)}`;
+    }
+
+    setExpiredCard(formattedText);
+  }}
+  textContentType='none' // 'none' car ce n'est pas une date standard
+  style={styles.input}
+  placeholder='EX : 12/09'
+  maxLength={5} // 5 pour "MM/AA"
+  keyboardType="numeric"
+/>
+
             </View>
             <View style={styles.boxInput}>
               <Text style={styles.dateText}>CV Code</Text>
               <TextInput
-              onChangeText={(text) => {
-                setCvc(text);
-              }}
-              placeholder='CVC' style={styles.input} />
+  keyboardType="numeric"
+  onChangeText={(text) => {
+    // Limiter la saisie à 3 chiffres
+    if (/^\d{0,3}$/.test(text)) {
+      setCvc(text);
+    }
+  }}
+  placeholder='CVC'
+  style={styles.input}
+  maxLength={3} // CVC a généralement 3 chiffres
+/>
+
             </View>
           </View>
           <View style={styles.expirationDate}>
@@ -388,6 +447,7 @@ const PaiementPage = () => {
         );
       case 'Mobile Money':
         return (
+    <KeyboardAvoidingView>
           <View style={styles.pageContent}>
             <View style={styles.MobileMoney}>
              <View style={styles.reseauText}>
@@ -418,20 +478,21 @@ const PaiementPage = () => {
 
                       {optionS.map(option => (
                          <Select.Item key={option.value} label={option.label} value={option.value} />
-
         ))}
-
-
                     </Select>
               
                 <View style={styles.dropdownInput}>
                 <TextInput
                 value={numero.length>8&&(numero.substring(0, 3)==='227' || numero.substring(0, 3)==='229')?numero.substring(3, numero.length):numero}
                 onChangeText={(text) => {
-                  setNumero(text);
+                  // setNumero(text);
+                  const numericText = text.replace(/[^0-9]/g, '');
+                  setNumero(numericText);
                 }}
                   placeholder='Entrez votre numéro'
                   placeholderTextColor='#a9a9a9'
+                  keyboardType="numeric"
+                  maxLength={15}
                   style={{marginHorizontal: 3, height: 40,}}
                 />
                 </View>
@@ -445,6 +506,9 @@ const PaiementPage = () => {
               </View>
             </View>
           </View>
+      
+    </KeyboardAvoidingView>
+
         );
       default:
         return null;
@@ -464,6 +528,11 @@ const PaiementPage = () => {
 
   return (
     <NativeBaseProvider>
+      <ScrollView
+      contentContainerStyle={{padding: 10}}
+        keyboardShouldPersistTaps="handled"
+      >
+
           <View style={styles.container}>
       <Text style={styles.title}>Mode de paiement</Text>
       <View style={styles.livraisoncard}>
@@ -522,6 +591,8 @@ const PaiementPage = () => {
       </View>
       {renderSelectedPaymentPage()}
     </View>
+    </ScrollView>
+
     </NativeBaseProvider>
 
   );
@@ -532,8 +603,7 @@ export default PaiementPage;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    padding: 10,
+    padding: 2,
   },
   title: {
     fontSize: 22,
@@ -545,14 +615,15 @@ const styles = StyleSheet.create({
   livraisoncard: {
     backgroundColor: '#fff',
     width: '100%',
+    paddingHorizontal: 5,
     borderRadius: 10,
     marginVertical: 10,
-    padding: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    overflow: 'hidden'
   },
   cardPa: {
     flexDirection: 'row',
@@ -697,11 +768,12 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   btnSoumettreDome: {
-    padding: 12,
-    backgroundColor: '#FF6A69',
     width: "100%",
-    borderRadius: 10,
-    marginTop: 20
+    marginTop: 20,
+    padding: 15,
+    backgroundColor: '#30A08B',
+    width: "100%",
+    borderRadius: 15,
   },
   ////domicile
 

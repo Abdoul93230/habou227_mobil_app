@@ -304,6 +304,8 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontWeight: 'bold',
     color: '#B17236',
+    paddingHorizontal: 10
+
   },
   galerie__box: {
     width: '100%',
@@ -311,7 +313,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     flexWrap: 'wrap',
-    marginBottom: 78
+    marginBottom: 78,
+    paddingHorizontal: 10
 
   },
   galerie__box__img: {

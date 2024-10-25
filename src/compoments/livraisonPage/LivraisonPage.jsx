@@ -250,7 +250,7 @@ const LivraisonPage = () => {
             />
           </View>
         </View>
-        <View style={styles.buttonContainer}>
+        <View style={{padding: 18, bottom: 42}}>
           <TouchableOpacity style={styles.button} onPress={envoyer}>
             <Text style={styles.buttonText}>Soumettre</Text>
           </TouchableOpacity>
@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
   },
   selectContainer: {
     height: 40,
-    borderColor: colors[0], // Color of the border
+    borderColor: colors[0],
     borderWidth: 1,
     borderRadius: 5,
     overflow: 'hidden',
@@ -330,8 +330,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    padding: 20,
-    borderRadius: 15,
+    padding:15,
+    borderRadius: 12,
     backgroundColor: colors[2],
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },

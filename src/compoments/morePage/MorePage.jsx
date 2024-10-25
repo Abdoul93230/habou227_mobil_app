@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
 import React from 'react';
 import { AntDesign, Feather, SimpleLineIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 
 
 const colors = ['#B17236', '#B2905F', '#30A08B'];
+const { height } = Dimensions.get('window');
 const MorePage = () => {
   const navigation = useNavigation()
 
@@ -18,8 +19,9 @@ const MorePage = () => {
     }
   };
   return (
-    <View style={styles.container}>
-    <Text style={[styles.moreTitle, {color: colors[0]}]}>More</Text>
+<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+  <View style={[styles.container, { minHeight: height }]}>
+    <Text style={[styles.moreTitle, { color: colors[0] }]}>More</Text>
     <View style={styles.moreBox}>
       <TouchableOpacity style={styles.shippingAddress} onPress={() => navigation.navigate('Livraison Page')}>
         <View style={[styles.iconContainer, { backgroundColor: colors[0] }]}>
@@ -76,10 +78,14 @@ const MorePage = () => {
         </View>
       </TouchableOpacity>
     </View>
-    <TouchableOpacity style={styles.deconnecter} onPress={clearStorage}>
-      <Text style={styles.deconnecterText}>Se déconnecter</Text>
-    </TouchableOpacity>
+    <View style={styles.moreBox}>
+      <TouchableOpacity style={styles.deconnecter} onPress={clearStorage}>
+        <Text style={styles.deconnecterText}>Se déconnecter</Text>
+      </TouchableOpacity>
+    </View>
   </View>
+</ScrollView>
+    
   );
 };
 
@@ -140,8 +146,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 30,
-    padding: 20,
+    paddingHorizontal: 20,
+    marginTop: 25,
+    paddingVertical: 20,
     borderRadius: 15,
     backgroundColor: colors[2],
     shadowColor: "#000",

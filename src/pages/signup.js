@@ -20,6 +20,7 @@ import {
   MessageSquare,
   PhoneCall,
   ChevronRight,
+  Eye, EyeOff
 } from "react-native-feather";
 import { useNavigation } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
@@ -34,6 +35,7 @@ const SignUp = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isSecureEnter, setIsSecureEnter] = useState(true)
   const [phoneNumber, setPhoneNumber] = useState("");
   const [whatsapp, setWhatsapp] = useState(true);
   const regexPhone = /^[0-9]{8,}$/;
@@ -220,7 +222,7 @@ const SignUp = () => {
                 <User color="#B2905F" />
                 <TextInput
                   style={styles.input}
-                  placeholder="janedoe12345"
+                  placeholder="abass12345"
                   value={name}
                   onChangeText={setName}
                 />
@@ -233,7 +235,7 @@ const SignUp = () => {
                   <MessageSquare color="#B2905F" />
                   <TextInput
                     style={styles.input}
-                    placeholder="janedoe123@email.com"
+                    placeholder="abass123@email.com"
                     keyboardType="email-address"
                     value={email}
                     onChangeText={setEmail}
@@ -250,9 +252,12 @@ const SignUp = () => {
                   <TextInput
                     style={styles.input}
                     placeholder="+227 87727501"
-                    keyboardType="phone-pad"
+                    keyboardType="numeric"
                     value={phoneNumber}
-                    onChangeText={setPhoneNumber}
+                    onChangeText={(text) => {
+                      const numericText = text.replace(/[^0-9]/g, '')
+                      setPhoneNumber(numericText)
+                    }}
                   />
                 </View>
     
@@ -265,10 +270,17 @@ const SignUp = () => {
                 <TextInput
                   style={styles.input}
                   placeholder="*******************"
-                  secureTextEntry={true}
+                  secureTextEntry={isSecureEnter}
                   value={password}
                   onChangeText={setPassword}
                 />
+                 <TouchableOpacity onPress={() => setIsSecureEnter(!isSecureEnter)}>
+                    {isSecureEnter ? (
+                      <EyeOff style={{color: "#B2905F"}} />
+                    ) : (
+                      <Eye style={{color: "#B2905F"}} />
+                    )}
+                  </TouchableOpacity>
               </View>
             </View>
 

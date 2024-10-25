@@ -11,7 +11,7 @@ import {
   Image
 } from "react-native";
 import LogoProject from "../../src/image/PlashScreen.png"
-import { ChevronRight, Lock, Phone, User } from "react-native-feather";
+import { ChevronRight, Lock, Phone, User, Eye, EyeOff } from "react-native-feather";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
@@ -24,6 +24,7 @@ function LogIn({ chg, creer }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [isSecureEntry, setIsSecureEntry] = useState(true);
   const [isloading, setIsloading] = useState(false);
   const [selectedInput, setSelectedInput] = useState("email");
   const navigation = useNavigation();
@@ -212,9 +213,12 @@ function LogIn({ chg, creer }) {
       <TextInput
         style={styles.input}
         value={phoneNumber}
-        onChangeText={setPhoneNumber}
+        onChangeText={(text) => {
+          const numericText = text.replace(/[^0-9]/g, "")
+          setPhoneNumber(numericText)
+        }}
         placeholder="Numéro de téléphone"
-        keyboardType="phone-pad"
+        keyboardType="numeric"
       />
     </View>
   </View>
@@ -230,8 +234,15 @@ function LogIn({ chg, creer }) {
                   value={password}
                   onChangeText={setPassword}
                   placeholder="Mot de passe"
-                  secureTextEntry
+                  secureTextEntry={isSecureEntry}
                 />
+                 <TouchableOpacity onPress={() => setIsSecureEntry(!isSecureEntry)}>
+          {isSecureEntry ? (
+            <EyeOff style={styles.icon} />
+          ) : (
+            <Eye style={styles.icon} />
+          )}
+        </TouchableOpacity>
               </View>
             </View>
             <View style={styles.buttonFD}>
@@ -299,6 +310,9 @@ const styles = StyleSheet.create({
   },
   inputWrapper: {
     flex: 1,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: 'center'
   },
   label: {
     fontSize: 16,
@@ -420,57 +434,3 @@ const styles = StyleSheet.create({
 });
 
 export default LogIn;
-
-
-
-
-{/* <View style={styles.inputGroup}>
-<View style={styles.btnUtilisateur}>
-  <TouchableOpacity
-    style={[
-      styles.buttonBTN,
-      selectedInput === "email" && styles.selectedButton
-    ]}
-    onPress={() => setSelectedInput("email")}
-  >
-    <Text style={styles.buttonTextBTN}>Email</Text>
-  </TouchableOpacity>
-  <TouchableOpacity
-    style={[
-      styles.buttonBTN,
-      selectedInput === "phone" && styles.selectedButton
-    ]}
-    onPress={() => setSelectedInput("phone")}
-  >
-    <Text style={styles.buttonTextBTN}>Téléphone</Text>
-  </TouchableOpacity>
-</View>
-
-{selectedInput === "email" ? (
-  <View style={styles.inputContainer}>
-    <User style={styles.icon} />
-    <View style={styles.inputWrapper}>
-      <TextInput
-        style={styles.input}
-        value={email}
-        onChangeText={setEmail}
-        placeholder="abass123@email.com"
-        keyboardType="email-address"
-      />
-    </View>
-  </View>
-) : (
-  <View style={styles.inputContainer}>
-    <Phone style={styles.icon} />
-    <View style={styles.inputWrapper}>
-      <TextInput
-        style={styles.input}
-        value={phoneNumber}
-        onChangeText={setPhoneNumber}
-        placeholder="Numéro de téléphone"
-        keyboardType="phone-pad"
-      />
-    </View>
-  </View>
-)}
-</View> */}

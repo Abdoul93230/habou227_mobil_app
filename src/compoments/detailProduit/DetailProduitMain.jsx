@@ -779,6 +779,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
+    padding: 10
+
   },
 
   galerie__title: {
