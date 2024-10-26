@@ -55,16 +55,6 @@ import PlashScreenConnexion from "./PlashScreen";
 const Stack = createNativeStackNavigator();
 
 
-const NoConnectionScreen = () => {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Pas de connexion internet</Text>
-      <Text style={styles.subtext}>Vérifiez votre connexion réseau</Text>
-    </View>
-  );
-};
-
-
 export default function App() {
   const [isAuthChecked, setIsAuthChecked] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -118,10 +108,10 @@ export default function App() {
 
 
 
-  if (!isConnected) {
-    // Si pas de connexion, afficher l'écran de déconnexion
-    return <PlashScreenConnexion />;
-  }
+  // if (!isConnected) {
+  //   // Si pas de connexion, afficher l'écran de déconnexion
+  //   return <PlashScreenConnexion />;
+  // }
 
 
   // initialRouteName={isAuthenticated ? 'Home' : 'Login'}

@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Profile from '../../image/Profile.jpg';
 import Invite from '../invitéAmi/Invite';
 import { useNavigation } from '@react-navigation/native';
+import * as FileSystem from 'expo-file-system';
 import axios from 'axios';
 import { API_URL } from "@env";
 import Toast from 'react-native-toast-message';
@@ -52,8 +53,7 @@ const ProfilePage = () => {
     });
   };
 
-
-  const onSub = (e) => {
+  const onSub = async(e) => {
     e.preventDefault();
     if (nom.trim().length < 3) {
       return handleAlertwar(
@@ -64,21 +64,52 @@ const ProfilePage = () => {
     } else if (!regexPhone.test(phone.toString())) {
       return handleAlertwar("forma du numero non valid!");
     }
-    // setOnsubmit(true)
-    const allowedImageTypes = [
-      "image/jpeg",
-      "image/png",
-      "image/gif",
-      "image/webp",
-    ];
 
 
       const formData = new FormData();
       formData.append("name", nom);
       formData.append("email", email);
       formData.append("phone", Number(phone));
-      formData.append("image", imageP);
+      if (imageP) {
+        // Obtenez les informations du fichier, y compris la taille
+    const fileInfo = await FileSystem.getInfoAsync(imageP);
+
+    if (fileInfo.size > 5 * 1024 * 1024) { // Limite de 4 Mo
+
+      return Alert.alert("L'image ne doit pas dépasser 5 Mo.");
+    }
+        // Extraire l'extension du fichier pour déterminer le type MIME
+        const extension = imageP.split('.').pop().toLowerCase();
+        let mimeType = '';
+
+        // Définir le type MIME en fonction de l'extension
+        switch (extension) {
+          case 'jpg':
+          case 'jpeg':
+            mimeType = 'image/jpeg';
+            break;
+          case 'png':
+            mimeType = 'image/png';
+            break;
+          case 'gif':
+            mimeType = 'image/gif';
+            break;
+          default:
+            handleAlertwar('Format de fichier non pris en charge');
+            return;
+        }
+
+        // Ajouter l'image au formData
+        formData.append("image", {
+          uri: imageP,
+          type: mimeType, // Utiliser le type MIME dynamique
+          name: `photo.${extension}`, // Nom dynamique basé sur l'extension
+        });
+      }
+
       formData.append("id", user.id);
+
+
 
       setLoading(true);
       axios
@@ -358,8 +389,8 @@ const ProfilePage = () => {
               <View style={styles.imgProfile} onPress={changeImg}>
               <Image source={imageP?{uri:imageP} : Profile} style={styles.image} />
               </View>
-              {/* <Text style={styles.modalInstruction}>Click me to select image (max 4MB)</Text> */}
-              <Ionicons onPress={selectImage} name="camera-outline" size={30} color="black" />
+              <Ionicons onPress={selectImage} style={{marginTop:-30,marginLeft:38}} name="camera-outline" size={30} color="#30A08B" />
+              <Text style={styles.modalInstruction}>(max 4MB)</Text>
               <View style={styles.inputContainer}>
                 <Text style={styles.inputLabel}>Nom:</Text>
                 <TextInput style={Platform.OS === 'ios' ? styles.input : styles.inputAndroid} placeholder='Name' onChangeText={(text=>setNom(text))} value={nom} />
@@ -523,8 +554,9 @@ const styles = StyleSheet.create({
   },
   modalInstruction: {
     fontSize: 16,
-    color: '#333',
-    marginBottom: 20,
+    color: '#B2905F',
+    // marginBottom: 20,
+    // marginTop:-20,
   },
   inputContainer: {
     width: '100%',

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Page de Paiement</title>
+
+
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: transparent;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .payment-container {
+      background-color: transparent;
+      padding: 20px;
+      border-radius: 10px;
+      /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+      width: 400px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="payment-container">
+    <div>
+        <button
+        type="button"
+        id="checkout-button"
+        class="ipaymoney-button"
+        data-amount="200 "
+        data-environement="live"
+        data-key="pk_f83a240bd0df4393b35a819925863e16"
+        data-transaction-id="testdetransaction3zze"
+        data-redirect-url="https://ihambaobab.onrender.com"
+        data-callback-url="https://ihambaobab.onrender.com"
+        style="display: none;"
+      >
+      CheckOut
+      </button>
+    </div>
+  </div>
+
+
+  <script>
+
+    window.onload = (event) => {
+      if (window.ReactNativeWebView.injectedObjectJson()) {
+          const customValue = JSON.parse(window.ReactNativeWebView.injectedObjectJson()).customValue;
+      }
+    }
+  </script>
+
+
+  <script src=" https://i-pay.money/checkout.js"></script>
+  <script>
+    window.onload = function() {
+        if (window.ReactNativeWebView.injectedObjectJson()) {
+          const customValue = JSON.parse(window.ReactNativeWebView.injectedObjectJson()).customValue;
+          const prix = JSON.parse(window.ReactNativeWebView.injectedObjectJson()).prix;
+          const id = JSON.parse(window.ReactNativeWebView.injectedObjectJson()).id;
+
+          // Mettre à jour l'attribut data-amount du bouton
+          const checkoutButton = document.getElementById('checkout-button');
+          checkoutButton.setAttribute('data-amount', prix);
+          checkoutButton.setAttribute('data-transaction-id', id);
+      }else{
+        alert("customValue2")
+      }
+      // Simulez un clic sur le bouton CheckOut lorsque la page est chargée
+      document.getElementById('checkout-button').click();
+    };
+  </script>
+
+</body>
+</html>
+
+
+
+
+<!-- WARN  Encountered an error loading page {"canGoBack": false, "canGoForward": false, "code": -1003, "description": "A server with the specified hostname could not be found.", "didFailProvisionalNavigation": true, "domain": "NSURLErrorDomain", "loading": false, "target": 5267, "title": "Page de Paiement", "url": "http://192.168.88.241:8081/assets/?unstable_path=.%2Fsrc%2Fcompoments%2FcheckoutPage%2Fpay.html&platform=ios&hash=3eb31738dbc5dfb625e97497d52f909f"} -->

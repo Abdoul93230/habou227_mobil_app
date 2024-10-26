@@ -1,5 +1,5 @@
 import { StyleSheet, View, ScrollView, Text, KeyboardAvoidingView, Keyboard, Platform } from 'react-native';
-import React, { useRef, useEffect, useState, useCallback } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import MessageCard from './MessageCard';
 import { Audio } from 'expo-av';
@@ -10,9 +10,6 @@ const Chat__main = ({ messages, getRecordingLines, clearRecordings }) => {
   const scrollViewRef = useRef();
   const sound = useRef(new Audio.Sound());
   const [recordings, setRecordings] = useState([]);
-
-  const [contentHeight, setContentHeight] = useState(0);
-  const [scrollViewHeight, setScrollViewHeight] = useState(0);
 
   // Sort messages by date
   const sortedMessages = [...messages].sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -31,13 +28,18 @@ const Chat__main = ({ messages, getRecordingLines, clearRecordings }) => {
     loadRecordings();
   }, []);
 
-  // Gérer le clavier pour éviter qu'il ne recouvre l'interface
+  // Gérer le clavier
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (event) => {
       setKeyboardOffset(event.endCoordinates.height);
+      // Scroll to bottom when keyboard appears
+      setTimeout(() => scrollToBottom(true), 100);
     });
+
     const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
       setKeyboardOffset(0);
+      // Scroll to bottom when keyboard hides
+      setTimeout(() => scrollToBottom(true), 100);
     });
 
     return () => {
@@ -46,26 +48,15 @@ const Chat__main = ({ messages, getRecordingLines, clearRecordings }) => {
     };
   }, []);
 
-  const scrollToBottom = useCallback(() => {
-    if (scrollViewRef.current && contentHeight > scrollViewHeight) {
-      scrollViewRef.current.scrollToEnd({ animated: true });
-    }
-  }, [contentHeight, scrollViewHeight]);
-
+  // Scroll to bottom whenever messages change
   useEffect(() => {
-    const timer = setTimeout(() => {
-      scrollToBottom();
-    }, 100);
-    return () => clearTimeout(timer);
-  }, [messages, scrollToBottom]);
+    scrollToBottom(true);
+  }, [messages]);
 
-  const handleContentSizeChange = (contentWidth, contentHeight) => {
-    setContentHeight(contentHeight);
-    scrollToBottom();
-  };
-
-  const handleLayout = (event) => {
-    setScrollViewHeight(event.nativeEvent.layout.height);
+  const scrollToBottom = (animated = true) => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollToEnd({ animated });
+    }
   };
 
   const renderMessages = () => {
@@ -110,13 +101,13 @@ const Chat__main = ({ messages, getRecordingLines, clearRecordings }) => {
       <ScrollView
         style={styles.chatMain}
         ref={scrollViewRef}
-        onContentSizeChange={handleContentSizeChange}
-        onLayout={handleLayout}
         keyboardShouldPersistTaps="handled"
+        onContentSizeChange={() => scrollToBottom(true)}
+        onLayout={() => scrollToBottom(false)}
       >
         {renderMessages()}
         <View style={styles.recordingsList}>
-          {getRecordingLines()}
+          {/* {getRecordingLines()} */}
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

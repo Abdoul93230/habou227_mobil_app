@@ -38,6 +38,16 @@
       "url": "https://u.expo.dev/85ac32cd-a107-41ab-850a-eb22d50b7d7b",
       "checkAutomatically": "ON_LOAD",
       "fallbackToCacheTimeout": 0
-    }
+    },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./src/image/logo.png",
+          "color": "#ffffff",
+          "sounds": ["./local/path/to/your/notification-sound.wav"]
+        }
+      ]
+    ]
   }
 }
