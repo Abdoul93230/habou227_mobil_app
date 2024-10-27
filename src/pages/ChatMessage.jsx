@@ -220,15 +220,15 @@ const ChatMessage = () => {
     socket.on("new_message_user", async (data) => {
       fetchData();
       // Notification locale si l'app est ouverte et que le message n'est pas de l'utilisateur actuel
-      if (data.clefUser !== user?.id) {
-        await Notifications.scheduleNotificationAsync({
-          content: {
-            title: "Nouveau message",
-            body: data.message || "Vous avez reçu un nouveau message",
-          },
-          trigger: null,
-        });
-      }
+      // if (data.clefUser !== user?.id) {
+      //   await Notifications.scheduleNotificationAsync({
+      //     content: {
+      //       title: "Nouveau message",
+      //       body: data.message || "Vous avez reçu un nouveau message",
+      //     },
+      //     trigger: null,
+      //   });
+      // }
     });
 
     return () => {

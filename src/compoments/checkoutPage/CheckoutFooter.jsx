@@ -1,7 +1,12 @@
 import { StyleSheet, Text, View, TouchableOpacity, Modal, ActivityIndicator, Alert } from 'react-native';
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Feather } from '@expo/vector-icons';
 import { WebView } from 'react-native-webview';
+
+
+import { API_URL } from "@env";
+
+
 
 const CheckoutFooter = ({
   total,
@@ -14,6 +19,7 @@ const CheckoutFooter = ({
 }) => {
   const [showWebView, setShowWebView] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [paymentPageHtml, setPaymentPageHtml] = useState(null);
 
   const getShippingCost = useCallback(() => {
     if (total > 20000) return 1500;
@@ -147,8 +153,70 @@ function generateUniqueID() {
 
 
 
+// Fonction pour récupérer la page de paiement
+// const fetchPaymentPage = async () => {
+//   const redirect_url = 'http://localhost:8080/payment_success';
+//   const callback_url = 'http://localhost:8080/payment_failure';
+//   try {
+//     const response = await fetch('http://localhost:8080/generate_payment_page', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify({ total: finalTotal, orderId: generateUniqueID(),redirect_url:redirect_url,callback_url:callback_url }),
+//     });
+//     const html = await response.text();
+//     console.log(html)
+//     setPaymentPageHtml(html);
+//   } catch (error) {
+//     console.error('Erreur lors de la récupération de la page de paiement:', error);
+//   }
+// };
+
+const fetchPaymentPage = async () => {
+  const redirect_url = `${API_URL}/payment_success`;
+  const callback_url = `${API_URL}/payment_callback`; // Modifiez cela pour utiliser le callback
 
 
+  const commandeData = {
+    clefUser: "dsqdqs",
+    nbrProduits: 2,
+    prix: 22222,
+    codePro: 22222,
+    idCodePro: 33333,
+    reference: 23,
+  };
+
+  try {
+    const response = await fetch(`${API_URL}/generate_payment_page`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        total: finalTotal,
+        orderId: generateUniqueID(),
+        redirect_url,
+        callback_url,
+        ...commandeData, // Ajoutez les données de la commande ici
+      }),
+    });
+
+    const html = await response.text();
+
+    setPaymentPageHtml(html);
+  } catch (error) {
+    console.error('Erreur lors de la récupération de la page de paiement:', error);
+  }
+};
+
+
+
+
+  // Appel de la fonction au chargement
+  useEffect(() => {
+    fetchPaymentPage();
+  }, []);
 
 
 
@@ -199,8 +267,8 @@ function generateUniqueID() {
             >
               <Feather name="x" size={24} color="#333" />
             </TouchableOpacity>
-            <WebView
-              originWhitelist={['*']}
+            {/* <WebView */}
+              {/* originWhitelist={['*']}
               source={require('./pay.html')} // Chargez le fichier HTML ici
               javaScriptEnabled={true}
               domStorageEnabled={true}
@@ -213,8 +281,25 @@ function generateUniqueID() {
                 console.log('Data from HTML:', data);
                 // Vous pouvez gérer les données reçues ici
               }}
-              style={styles.webview}
-            />
+              style={styles.webview} */}
+            {/* /> */}
+
+            {paymentPageHtml ? (
+        <WebView
+          originWhitelist={['*']}
+          source={{ html: paymentPageHtml }}
+          javaScriptEnabled={true}
+          domStorageEnabled={true}
+          onNavigationStateChange={handleNavigationStateChange}
+          onMessage={(event) => {
+            const data = event.nativeEvent.data;
+            console.log('Data from HTML:', data);
+          }}
+          style={styles.webview}
+        />
+      ) : (
+        <Text>Chargement de la page de paiement...</Text>
+      )}
           </View>
         </Modal>
       )}
@@ -307,7 +392,7 @@ const styles = StyleSheet.create({
   },
   webview: {
     flex: 1,
-    marginTop: 40,
+    marginTop: 100,
   },
 });
 

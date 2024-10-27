@@ -34,18 +34,6 @@ const SearchMain = ( allCategories,allProducts) => {
 
   const navigation = useNavigation()
 
-  const Table__Galerie = [
-    { id: 1, image: Ordi},
-    { id: 2, image: Ordi},
-    { id: 3, image: Ordi},
-    { id: 4, image: Ordi},
-    { id: 5, image: Ordi},
-    { id: 6, image: Ordi},
-    { id: 7, image: Ordi},
-    { id: 8, image: Ordi},
-    { id: 9, image: Ordi},
-    { id: 10, image: Ordi },
-  ];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -384,7 +372,7 @@ const styles = StyleSheet.create({
       paddingHorizontal: 10,
       backgroundColor: '#DDD',
       width: "100%",
-      height: 180,
+      height: Platform.OS==="ios"? 180:160,
       justifyContent: 'center',
       shadowColor: "#000",
       shadowOffset: { height: 3, width: 0,},
@@ -398,7 +386,7 @@ const styles = StyleSheet.create({
     },
     backButton: {
       marginRight: 10,
-      top:Platform.OS==="android"?-17:0
+      top:Platform.OS==="android"?-10:5
     },
     searchContainer: {
       flex: 1,
@@ -408,7 +396,7 @@ const styles = StyleSheet.create({
       borderColor: '#30A08B',
       borderRadius: 30,
       paddingHorizontal: 10,
-      top:Platform.OS==="android"?-17:0
+      top:Platform.OS==="android"?-10:5
     },
     searchInput: {
       flex: 1,

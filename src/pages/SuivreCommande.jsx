@@ -10,7 +10,7 @@ const SuivreCommande = ({route}) => {
 
 
   const commande  = route.params;
-  console.log(route.params.recut)
+  // console.log(route.params.recut)
   return (
     <View style={styles.container}>
       <SuivreCommandeHeader commande={commande} />

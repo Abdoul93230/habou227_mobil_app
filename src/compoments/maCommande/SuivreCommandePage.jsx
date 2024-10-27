@@ -17,7 +17,7 @@ const items = [
 const total = items.reduce((sum, item) => sum + parseInt(item.prix.replace(/[^0-9]/g, '' )), 0);
 const { width, height } = Dimensions.get('window');
 const SuivreCommandePage = ({commande,allProducts,recut}) => {
-  // console.log(commande?.commande)
+// console.log(commande.commande._id)
     const navigation = useNavigation();
     const [user, setUser] = useState(null);
     const [profile, setProfile] = useState(null);
@@ -79,7 +79,7 @@ const SuivreCommandePage = ({commande,allProducts,recut}) => {
                             style={styles.edit}
                             // onPress={() => { navigation.navigate('Suivie commandes'); }}
                         >
-                            <Text style={styles.editText}>En cours</Text>
+                            <Text style={styles.editText}>{recut?'Récus':'En cours'}</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.menuMain}>
@@ -104,9 +104,33 @@ const SuivreCommandePage = ({commande,allProducts,recut}) => {
 
                         {/* /////////////////////////////////////// */}
 
-                        <View style={styles.ligneHori} />
+
+
+                        {
+                          recut?
+                          <>
+                          <View style={styles.ligneHoriR} />
+                          </>
+                          :
+                          <>
+                          <View style={commande.commande.etatTraitement==="reçu par le livreur" ||commande.commande.etatTraitement==="en cours de livraison"?
+                            styles.ligneHoriR:styles.ligneHori} />
+                          </>
+                        }
+
                         <View style={styles.pointContent}>
-                             <View style={styles.point} />
+
+                             {
+                          recut?
+                          <>
+                          <View style={styles.pointR} />
+                          </>
+                          :
+                          <>
+                          <View style={commande.commande.etatTraitement==="reçu par le livreur" || commande.commande.etatTraitement==="en cours de livraison"?
+                            styles.pointR:styles.point} />
+                          </>
+                        }
                              <View>
                                 <Text style={styles.titleLivraison}>Commande Reçu</Text>
                                 <Text style={styles.subtitle}>Reçu par</Text>
@@ -128,15 +152,44 @@ const SuivreCommandePage = ({commande,allProducts,recut}) => {
                                 </View>
                              </View>
                         </View>
-                        <View style={styles.ligneMadame} />
+                        {
+                          recut?
+                          <>
+                          <View style={styles.ligneMadameR} />
+                          </>
+                          :
+                          <>
+                          <View style={commande.commande.etatTraitement==="en cours de livraison"?styles.ligneMadameR:styles.ligneMadame} />
+                          </>
+                        }
+
                         <View style={styles.contentMadame}>
-                             <View style={styles.pointMadame} />
+
+                             {
+                          recut?
+                          <>
+                          <View style={styles.pointMadameR} />
+                          </>
+                          :
+                          <>
+                          <View style={commande.commande.etatTraitement==="en cours de livraison"?styles.pointMadameR:styles.pointMadame} />
+                          </>
+                        }
                              <View>
                                 <Text style={styles.titleLivraison}>Votre Commande est En Cours de Livraison</Text>
                                 <Text style={styles.subtitle}>Votre commande va arriver dans environs 8 - 15 min</Text>
                              </View>
                         </View>
-                        <View style={styles.ligneMadame} />
+                        {
+                          recut?
+                          <>
+                          <View style={styles.ligneMadameR2} />
+                          </>
+                          :
+                          <>
+                          <View style={styles.ligneMadame2} />
+                          </>
+                        }
                         <View style={styles.locationContainer}>
                             <TouchableOpacity style={styles.bgSucess}>
                                 <AntDesign name="checkcircle" size={24} color="#fff" />
@@ -152,7 +205,7 @@ const SuivreCommandePage = ({commande,allProducts,recut}) => {
                         <View style={styles.boxHead}>
                           <Text style={styles.boxTitle}>Commande #{commande?.commande._id?.slice(0,8)}...</Text>
                           <TouchableOpacity style={styles.edit}>
-                            <Text style={styles.editText}>En cours</Text>
+                            <Text style={styles.editText}>{recut?'Récus':'En cours'}</Text>
                           </TouchableOpacity>
                         </View>
                         <View style={styles.boxContent}>
@@ -286,10 +339,24 @@ const styles = StyleSheet.create({
         marginVertical: 0,
         marginHorizontal: 18,
       },
-      ligneHori: {
+      ligneHoriT: {
         width: width * 0.01,
         height: height * 0.10,
+        backgroundColor: '#30A08B',
+        marginVertical: 0,
+        marginHorizontal: 18,
+      },
+      ligneHori: {
+        width: width * 0.01,
+        height: height * 0.04,
         backgroundColor: '#B17236',
+        marginVertical: 0,
+        marginHorizontal: 18,
+      },
+      ligneHoriR: {
+        width: width * 0.01,
+        height: height * 0.04,
+        backgroundColor: '#30A08B',
         marginVertical: 0,
         marginHorizontal: 18,
       },
@@ -318,6 +385,16 @@ const styles = StyleSheet.create({
         zIndex: 100,
         left: 8,
       },
+      pointR: {
+        width: 13,
+        height: 13,
+        borderRadius: 50,
+        backgroundColor: '#30A08B',
+        marginHorizontal: 15.7,
+        zIndex: 100,
+        left: 8,
+        marginBottom:55
+      },
       point: {
         width: 13,
         height: 13,
@@ -325,7 +402,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#B2905F',
         marginHorizontal: 15.7,
         zIndex: 100,
-        left: 8
+        left: 8,
+        marginBottom:55
       },
       imageProfile: {
         width: 30,
@@ -383,10 +461,35 @@ const styles = StyleSheet.create({
       },
       ligneMadame: {
         width: width * 0.01,
-        height: '16%',
+        height: '30%',
         backgroundColor: '#B17236', // Couleur secondaire pour la ligne madame
         marginVertical: 0,
         marginHorizontal: 18,
+        marginTop:11
+      },
+      ligneMadameR: {
+        width: width * 0.01,
+        height: '30%',
+        backgroundColor: '#30A08B', // Couleur secondaire pour la ligne madame
+        marginVertical: 0,
+        marginHorizontal: 18,
+        marginTop:11
+      },
+      ligneMadame2: {
+        width: width * 0.01,
+        height: '15%',
+        backgroundColor: '#B17236', // Couleur secondaire pour la ligne madame
+        marginVertical: 0,
+        marginHorizontal: 18,
+        marginTop:10
+      },
+      ligneMadameR2: {
+        width: width * 0.01,
+        height: '15%',
+        backgroundColor: '#30A08B', // Couleur secondaire pour la ligne madame
+        marginVertical: 0,
+        marginHorizontal: 18,
+        marginTop:10
       },
       contentMadame: {
         flexDirection: 'row',
@@ -403,7 +506,18 @@ const styles = StyleSheet.create({
         backgroundColor: '#B2905F', // Couleur principale pour les points madame
         marginHorizontal: 15.7,
         zIndex: 130,
-        left: 8
+        left: 8,
+        marginBottom:10
+      },
+      pointMadameR: {
+        width: 13,
+        height: 13,
+        borderRadius: 50,
+        backgroundColor: '#30A08B', // Couleur principale pour les points madame
+        marginHorizontal: 15.7,
+        zIndex: 130,
+        left: 8,
+        marginBottom:10
       },
       bgSucess: {
         backgroundColor: '#30A08B', // Couleur principale pour le bouton de succès

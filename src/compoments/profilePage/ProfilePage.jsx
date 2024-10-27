@@ -13,6 +13,11 @@ import axios from 'axios';
 import { API_URL } from "@env";
 import Toast from 'react-native-toast-message';
 // import { ScrollView } from 'native-base';
+
+// const API_URL = "https://secoure.onrender.com"
+
+
+
 const ProfilePage = () => {
   const navigation = useNavigation()
   const regexMail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

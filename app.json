@@ -45,7 +45,7 @@
         {
           "icon": "./src/image/logo.png",
           "color": "#ffffff",
-          "sounds": ["./local/path/to/your/notification-sound.wav"]
+          "sounds": []
         }
       ]
     ]

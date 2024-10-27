@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Image, Platform } from 'react-native'
 import React from 'react'
 import { Ionicons } from '@expo/vector-icons'
 import Profile from "../../image/logo.png"
@@ -24,17 +24,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: 6,
-    height: 93,
+    paddingTop:0,
+    height: Platform.OS==='ios'? 93:65,
     width: "100%",
     backgroundColor: '#rgba(255, 152, 0, 0.2)',
     paddingHorizontal: 15
-  
+
   },
   headerImage: {
     width: "30%",
     height: 40,
-    top: 15
-    
+    top: Platform.OS==='ios'? 15:5
+
   },
   headerTitle: {
     flex: 1,
@@ -46,6 +47,6 @@ const styles = StyleSheet.create({
   iconClose: {
     padding: 6,
     backgroundColor: "transparent",
-    top: 15
+    top: Platform.OS==='ios'? 15:5
   }
 })

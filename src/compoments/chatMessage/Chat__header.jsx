@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity, Platform } from 'react-native';
 import React from 'react';
 import Profil from "../../image/ordinateur14.jpg";
 import Profil1 from "../../image/PlashScreen.png";
@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 
 const Chat__header = () => {
   const navigation = useNavigation();
-  
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -17,7 +17,7 @@ const Chat__header = () => {
           <Text style={styles.backText}>Retour</Text>
         </TouchableOpacity>
           <Text style={styles.Chat}>Messagerie</Text>
-        
+
         <View style={styles.centerContainer}>
           <Image source={Profil1} style={styles.ChatImage} />
         </View>
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
   },
   header: {
     width: '100%',
-    height: 110,
+    height: Platform.OS==="ios"? 110 : 75,
     borderBottomWidth: 1,
     borderColor: '#ccc',
     backgroundColor: '#F1F1F1',

@@ -2,11 +2,13 @@ import { StyleSheet, Text, View, TouchableOpacity, Dimensions, ScrollView, Activ
 import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { API_URL } from "@env";
+// import { API_URL } from "@env";
 import { useNavigation } from '@react-navigation/native';
 import Footer from '../footer/Footer';
 const { width, height } = Dimensions.get('window');
 
+
+const API_URL = "http://localhost:8080"
 const Commande = () => {
   const navigation = useNavigation()
   const [myAllComande, setMyAllCommandes] = useState(null);

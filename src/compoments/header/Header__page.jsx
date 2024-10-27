@@ -126,7 +126,7 @@ useEffect(() => {
 
 
   return (
-    <Animated.View style={[styles.header, { opacity: fadeAnimHeader,paddingTop:Platform.OS==="ios"?40:20 }]}>
+    <Animated.View style={[styles.header, { opacity: fadeAnimHeader,paddingTop:Platform.OS==="ios"?40:5 }]}>
       <View style={styles.profileLogo}>
         <Image source={Profil} style={styles.image} />
       </View>
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
       width: "100%",
       paddingBottom: Platform.OS === 'ios' ? 10 : 20,
       backgroundColor: "rgba(255, 152, 0, 0.2)"
-      // backgroundColor: "blue"
+      // backgroundColor: "#30A08B"
   },
   profileLogo: {
       width: Platform.OS === "ios" ? width * 0.35 : width * 5/11,
