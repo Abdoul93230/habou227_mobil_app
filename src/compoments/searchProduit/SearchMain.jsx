@@ -379,6 +379,7 @@ const styles = StyleSheet.create({
       shadowOpacity: 0.3,
       shadowRadius: 3,
       elevation: 2,
+      paddingTop:Platform.OS==="ios"?0:-10,
     },
     contenu: {
       flexDirection: 'row',
