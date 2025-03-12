@@ -32,7 +32,7 @@ import LogIn from "./src/pages/login";
 import SignUp from "./src/pages/signup";
 import ResetPassword from "./src/pages/ResetPassword";
 import axios from "axios";
-import NetInfo from '@react-native-community/netinfo';
+import NetInfo from "@react-native-community/netinfo";
 import {
   getCategories,
   getProducts,
@@ -54,24 +54,23 @@ import PlashScreenConnexion from "./PlashScreen";
 
 const Stack = createNativeStackNavigator();
 
-
 export default function App() {
   const [isAuthChecked, setIsAuthChecked] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isConnected, setIsConnected] = useState(true);
-
+  const [total, setTotal] = useState(0);
+  const [livraison, setLivraison] = useState(0);
+  const [region, setRegion] = useState(null);
 
   useEffect(() => {
     // Abonnement à l'état de la connexion
-    const unsubscribe = NetInfo.addEventListener(state => {
+    const unsubscribe = NetInfo.addEventListener((state) => {
       setIsConnected(state.isConnected);
     });
 
     // Nettoyage de l'abonnement
     return () => unsubscribe();
   }, []);
-
-
 
   useEffect(() => {
     store.dispatch(getProducts());
@@ -106,13 +105,10 @@ export default function App() {
     fetchUserData();
   }, []);
 
-
-
   // if (!isConnected) {
   //   // Si pas de connexion, afficher l'écran de déconnexion
   //   return <PlashScreenConnexion />;
   // }
-
 
   // initialRouteName={isAuthenticated ? 'Home' : 'Login'}
   return (

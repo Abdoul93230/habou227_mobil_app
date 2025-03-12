@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Page de Paiement</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .payment-container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 400px;
+    }
+    .payment-container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    .form-group input:focus {
+      border-color: #007BFF;
+      outline: none;
+    }
+    .btn {
+      width: 100%;
+      padding: 10px;
+      background-color: #007BFF;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: #0056b3;
+    }
+    .ipaymoney-section {
+      margin-top: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="payment-container">
+    <h2>Informations de Paiement</h2>
+    
+    <button
+      type="button"
+      id="ipay-button"
+      class="ipaymoney-button"
+      data-amount="100"
+      data-environement="live"
+      data-key="pk_f83a240bd0df4393b35a819925863e16"
+      data-transaction-id="sad23es4fw1d4efdw2sw3rtw"
+      data-redirect-url="http://192.168.88.246:5500/src/redux/redirectiohn.html"
+      data-callback-url="https://secoure.onrender.com/payment_callback"
+    > 
+      CheckOut
+    </button>
+  </div>
+  
+  <!-- Intégration du SDK iPaymoney -->
+  <script src="https://i-pay.money/checkout.js"></script>
+
+  <script>
+    
+
+//   Mobile Money
+//     {
+//   status: 'failed',
+//   customerName: 'Abdoul Razak',
+//   msisdn: '22787727501',
+//   reference: 'sdzrbg1pgwbc',
+//   publicReference: '732599945818',
+//   externalReference: 'sad23es4fw1',
+//   amount: 100,
+//   paymentDate: '2024-10-28T11:22:33.014+01:00'
+// }
+
+//  card 
+// {
+//   status: 'failed',
+//   customerName: 'Abdoul Razak  Adamou',
+//   msisdn: 'NE87727501',
+//   reference: 'oy4ijm7rqns1',
+//   publicReference: '931145471473',
+//   externalReference: 'sad23es4fw1d4',
+//   amount: 100,
+//   paymentDate: '2024-10-28T11:32:39.242+01:00'
+// }
+
+
+
+
+
+  </script>
+
+</body>
+</html>

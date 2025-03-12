@@ -1,21 +1,39 @@
-import { Platform,StyleSheet, Text, View, TouchableOpacity, Modal, TextInput, TouchableWithoutFeedback,Linking } from 'react-native';
-import React, { useState } from 'react';
-import { FontAwesome, Ionicons, Entypo, Feather } from '@expo/vector-icons';
-import Toast from 'react-native-toast-message';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Alert } from 'react-native';
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Modal,
+  TextInput,
+  TouchableWithoutFeedback,
+  Linking,
+} from "react-native";
+import React, { useState } from "react";
+import { FontAwesome, Ionicons, Entypo, Feather } from "@expo/vector-icons";
+import Toast from "react-native-toast-message";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Alert } from "react-native";
 
-const DetailProduitFooter = ({produit,color,taille,id,chgNbr}) => {
+const DetailProduitFooter = ({
+  produit,
+  color,
+  taille,
+  id,
+  chgNbr,
+  selectedVariant,
+  selectedSize,
+}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [produitsL, setProduitsL] = useState(0);
   const [nbrCol, setNbrCol] = useState(null);
-
+  const [quantity, setQuantity] = useState(1);
 
   const handleAlert = (message) => {
     Toast.show({
-      type: 'success',
+      type: "success",
       text1: message,
-      position: 'top',
+      position: "top",
       visibilityTime: 3000,
       autoHide: true,
       bottomOffset: 40,
@@ -24,101 +42,156 @@ const DetailProduitFooter = ({produit,color,taille,id,chgNbr}) => {
 
   const handleAlertwar = (message) => {
     Toast.show({
-      type: 'error',
+      type: "error",
       text1: message,
-      position: 'top',
+      position: "top",
       visibilityTime: 3000,
       autoHide: true,
       bottomOffset: 40,
     });
   };
 
-
+  // Calculer le prix et la remise
+  const originalPrice = produit?.prix;
+  const discountedPrice = produit?.prixPromo;
+  const discountPercentage = Math.round(
+    ((originalPrice - discountedPrice) / originalPrice) * 100
+  );
 
   const AddProduct = async () => {
     try {
-      const existingProductsJson = await AsyncStorage.getItem('panier');
-      const existingProducts = existingProductsJson ? JSON.parse(existingProductsJson) : [];
+      const existingProductsJson = await AsyncStorage.getItem("panier");
+      const existingProducts = existingProductsJson
+        ? JSON.parse(existingProductsJson)
+        : [];
 
-      const isProductInCart = existingProducts.some((p) => p.id === id);
-
-      if (isProductInCart) {
-        const updatedProducts = existingProducts.map((p) => {
-          if (p.id === id) {
-            const updatedColors = [...p.colors, color]; // Ajouter la nouvelle couleur
-            const updatedSizes = [...p.sizes, taille]; // Ajouter la nouvelle taille
-
-            return {
-              ...p,
-              colors: updatedColors,
-              sizes: updatedSizes,
-              quantity: p.quantity + 1,
-              id: id,
-            };
-          }
-          return p;
-        });
-
-        await AsyncStorage.setItem('panier', JSON.stringify(updatedProducts));
-        chgNbr()
-        handleAlert("La quantité du produit a été incrémentée dans le panier !");
-        const local = await AsyncStorage.getItem('panier');
-        setProduitsL(local ? JSON.parse(local) : []);
-        return;
-      }
-
-      if (produit?.couleur[0].split(",").length >= 2 && (!color || color===null)) {
-        if (produit?.pictures.length >= 2) {
-          handleAlertwar(
-            `Veuillez choisir un modèle parmi les ${produit?.pictures.length}`
-          );
-        } else {
-          handleAlertwar(
-            `Veuillez choisir une couleur parmi les ${produit?.couleur[0].split(",").length}`
-          );
-        }
-        // chgOption("Details", 0);
-        return;
-      }
-
-      if (produit?.taille[0].split(",").length >= 2 && (!taille || taille===null)) {
+      // Vérification des variantes de couleur
+      if (
+        produit?.variants &&
+        produit.variants.length >= 2 &&
+        !selectedVariant
+      ) {
         handleAlertwar(
-          `Veuillez choisir une taille parmi les ${produit?.taille[0].split(",").length}`
+          `Veuillez choisir un modèle parmi les ${produit.variants.length}`
         );
-        // chgOption("Details", 0);
         return;
       }
 
+      // Vérification des tailles
+      const hasMultipleSizes = produit?.variants?.some(
+        (variant) => variant.sizes && variant.sizes.length >= 2
+      );
 
-      const updatedProducts = [
-        ...existingProducts,
-        {
+      if (hasMultipleSizes && !selectedSize) {
+        handleAlertwar(`Veuillez choisir une taille parmi les disponibles`);
+        return;
+      }
+      /////////////////////////////////////////////////////////////////////
+      // Vérifier si le produit existe déjà dans le panier
+      const existingProductIndex = existingProducts.findIndex((p) => {
+        // Si le produit n'a pas de variantes, on compare simplement l'ID
+        if (!produit.variants || produit.variants.length === 0) {
+          return p?._id === produit?._id;
+        }
+
+        // Si le produit a des variantes, on compare l'ID, la couleur et la taille
+        return (
+          p?._id === produit?._id &&
+          p.colors[0] === selectedVariant?.color &&
+          p.sizes[0] === selectedSize
+        );
+      });
+
+      if (existingProductIndex !== -1) {
+        // Produit existant : incrémenter la quantité
+        const updatedProducts = existingProducts.map((p, index) =>
+          index === existingProductIndex
+            ? { ...p, quantity: p.quantity + 1 }
+            : p
+        );
+
+        AsyncStorage.setItem("panier", JSON.stringify(updatedProducts));
+        handleAlert(
+          "La quantité du produit a été incrémentée dans le panier !"
+        );
+      } else {
+        // Nouveau produit à ajouter
+        const newProduct = {
           ...produit,
-          colors: [color], // Ajouter la couleur sélectionnée comme tableau
-          sizes: [taille], // Ajouter la taille sélectionnée comme tableau
-          quantity: 1,
-          id: id,
-        },
-      ];
+          colors: selectedVariant ? [selectedVariant.color] : [],
+          sizes: selectedSize ? [selectedSize] : [],
+          quantity: quantity,
+          _id: produit?._id,
+          imageUrl: selectedVariant
+            ? selectedVariant.imageUrl
+            : produit?.image1,
+          price:
+            discountedPrice && discountedPrice > 0
+              ? discountedPrice
+              : originalPrice,
+          prixPromo: discountedPrice,
+        };
 
-      await AsyncStorage.setItem('panier', JSON.stringify(updatedProducts));
-      chgNbr()
-      handleAlert("Produit ajouté au panier !");
-      const local = await AsyncStorage.getItem('panier');
+        const updatedProducts = [...existingProducts, newProduct];
+        AsyncStorage.setItem("panier", JSON.stringify(updatedProducts));
+        handleAlert("Produit ajouté au panier !");
+      }
+      /////////////////////////////////////////////////////////////////////
+
+      // const isProductInCart = existingProducts.some((p) => p.id === id);
+
+      // if (isProductInCart) {
+      //   const updatedProducts = existingProducts.map((p) => {
+      //     if (p.id === id) {
+      //       const updatedColors = [...p.colors, color]; // Ajouter la nouvelle couleur
+      //       const updatedSizes = [...p.sizes, taille]; // Ajouter la nouvelle taille
+
+      //       return {
+      //         ...p,
+      //         colors: updatedColors,
+      //         sizes: updatedSizes,
+      //         quantity: p.quantity + 1,
+      //         id: id,
+      //       };
+      //     }
+      //     return p;
+      //   });
+
+      //   await AsyncStorage.setItem("panier", JSON.stringify(updatedProducts));
+      //   chgNbr();
+      //   handleAlert(
+      //     "La quantité du produit a été incrémentée dans le panier !"
+      //   );
+      //   const local = await AsyncStorage.getItem("panier");
+      //   setProduitsL(local ? JSON.parse(local) : []);
+      //   return;
+      // }
+
+      // const updatedProducts = [
+      //   ...existingProducts,
+      //   {
+      //     ...produit,
+      //     colors: [color], // Ajouter la couleur sélectionnée comme tableau
+      //     sizes: [taille], // Ajouter la taille sélectionnée comme tableau
+      //     quantity: 1,
+      //     id: id,
+      //   },
+      // ];
+
+      // await AsyncStorage.setItem("panier", JSON.stringify(updatedProducts));
+      chgNbr();
+      // handleAlert("Produit ajouté au panier !");
+      const local = await AsyncStorage.getItem("panier");
       setProduitsL(local ? JSON.parse(local) : []);
     } catch (error) {
-      console.error('Erreur lors de l\'ajout du produit au panier', error);
+      console.error("Erreur lors de l'ajout du produit au panier", error);
       // Vous pouvez également afficher une alerte ou un message d'erreur ici si nécessaire
     }
   };
 
-
   const toggleModal = () => {
     setModalVisible(!modalVisible);
   };
-
-
-
 
   // Fonction pour gérer le clic sur le bouton de discussion
   const handleChatButtonClick = (
@@ -154,30 +227,32 @@ const DetailProduitFooter = ({produit,color,taille,id,chgNbr}) => {
 
     // Utiliser Linking pour ouvrir WhatsApp
     Linking.openURL(whatsappURL).catch((err) =>
-      console.error("Une erreur s'est produite lors de l'ouverture de WhatsApp:", err)
+      console.error(
+        "Une erreur s'est produite lors de l'ouverture de WhatsApp:",
+        err
+      )
     );
   };
 
   // Exemple d'utilisation dans un composant
   const Discuite = () => {
-    const currentURL = 'lien_a_remplacer_avec_la_valeur_appropriee'; // Remplacez ceci par l'URL actuelle si nécessaire
+    const currentURL = "lien_a_remplacer_avec_la_valeur_appropriee"; // Remplacez ceci par l'URL actuelle si nécessaire
 
     // Appel de la fonction de chat avec les données du produit
     handleChatButtonClick(
       produit?.name ?? "nom",
       currentURL,
-      '22787727501',
+      "22787727501",
       produit?.image1
     );
   };
 
-
-
-
-
-
   return (
-    <View style={Platform.OS === 'ios' ?styles.containerFooter: styles.containerFooter2}>
+    <View
+      style={
+        Platform.OS === "ios" ? styles.containerFooter : styles.containerFooter2
+      }
+    >
       {/* <TouchableOpacity style={styles.button} onPress={toggleModal}>
         <Entypo name="share" size={20} color="#FF6A69" />
         <Text style={styles.buttonText}>Partagez ceci</Text>
@@ -193,7 +268,12 @@ const DetailProduitFooter = ({produit,color,taille,id,chgNbr}) => {
         <Text style={styles.buttonTextAddWhatsp}>Ajouter au panier</Text>
       </TouchableOpacity>
 
-      <Modal animationType='slide' transparent={true} visible={modalVisible} onRequestClose={toggleModal}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={toggleModal}
+      >
         <TouchableWithoutFeedback onPress={toggleModal}>
           <View style={styles.modalContainer}>
             <TouchableWithoutFeedback>
@@ -204,22 +284,25 @@ const DetailProduitFooter = ({produit,color,taille,id,chgNbr}) => {
 
                 <View style={styles.modalBody}>
                   <View style={styles.optionRow}>
-                    <Feather name='copy' size={20} />
+                    <Feather name="copy" size={20} />
                     <Text style={styles.optionText}>Copier</Text>
                   </View>
                   <TextInput
-                    value='https://chatgpt.com/c/5d656f1d-b488-4705-9fa8-e415ffef9719'
+                    value="https://chatgpt.com/c/5d656f1d-b488-4705-9fa8-e415ffef9719"
                     style={styles.textInput}
                     placeholder="Votre texte ici"
                   />
 
                   <View style={styles.optionRow2}>
                     <Text style={styles.optionText}>Via Whatsapp</Text>
-                    <FontAwesome name='whatsapp' size={20} />
+                    <FontAwesome name="whatsapp" size={20} />
                   </View>
                 </View>
 
-                <TouchableOpacity style={styles.closeButton} onPress={toggleModal}>
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={toggleModal}
+                >
                   <Text style={styles.closeButtonText}>Close</Text>
                 </TouchableOpacity>
               </View>
@@ -227,7 +310,7 @@ const DetailProduitFooter = ({produit,color,taille,id,chgNbr}) => {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
-      </View>
+    </View>
   );
 };
 
@@ -236,43 +319,43 @@ export default DetailProduitFooter;
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContent: {
-    width: '80%',
-    backgroundColor: '#fff',
+    width: "80%",
+    backgroundColor: "#fff",
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
   },
   cartTitle: {
-    width: '100%',
+    width: "100%",
     padding: 10,
-    backgroundColor: '#FF6A69',
+    backgroundColor: "#FF6A69",
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: 'white',
+    fontWeight: "bold",
+    color: "white",
   },
   modalBody: {
     marginVertical: 10,
-    width: '100%',
+    width: "100%",
     padding: 20,
   },
   optionRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginVertical: 5,
   },
   optionRow2: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     marginVertical: 5,
   },
   optionText: {
@@ -281,14 +364,14 @@ const styles = StyleSheet.create({
   },
   textInput: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     padding: 10,
     borderRadius: 5,
     marginVertical: 10,
-    width: '100%',
+    width: "100%",
   },
   closeButton: {
-    backgroundColor: '#FF6A69',
+    backgroundColor: "#FF6A69",
     padding: 10,
     borderRadius: 5,
     marginTop: 10,
@@ -296,18 +379,18 @@ const styles = StyleSheet.create({
     width: 100,
   },
   closeButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 14,
-    textAlign: "center"
+    textAlign: "center",
   },
   containerFooter: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
     height: 78,
     paddingHorizontal: 10,
     borderColor: "#ccc",
@@ -315,13 +398,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#F5F6F8",
   },
   containerFooter2: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
     height: 70,
     paddingHorizontal: 10,
     borderColor: "#ccc",
@@ -331,30 +414,30 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: "#B2905F",
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 7,
     borderRadius: 30,
   },
   buttonAddWhatsp: {
     backgroundColor: "rgba(255, 152, 0, 0.2)",
-    flexDirection: 'row',
+    flexDirection: "row",
     justifyContent: "center",
-    alignItems: 'center',
+    alignItems: "center",
     padding: 7,
     borderRadius: 30,
     width: "43%",
   },
   buttonText: {
     textTransform: "uppercase",
-    color: '#30A08B',
+    color: "#30A08B",
     fontSize: 12,
     marginLeft: 5,
   },
   buttonTextAddWhatsp: {
     textTransform: "uppercase",
-    color: '#30A08B',
-    fontWeight:"bold",
+    color: "#30A08B",
+    fontWeight: "bold",
     fontSize: 11,
     marginLeft: 5,
   },

@@ -5,6 +5,7 @@
         "projectId": "85ac32cd-a107-41ab-850a-eb22d50b7d7b"
       }
     },
+    "newArchEnabled": true,
     "name": "IHAM baobab",
     "slug": "iham-baobab",
     "version": "1.0.0",

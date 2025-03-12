@@ -47,16 +47,6 @@ const ProductDet = () => {
     (state) => state.products.products_Commentes
   );
   const scrollViewRef = useRef(null);
-
-  ///////////////////////////////////////////////////////////////////////////////
-  const [selectedVariant, setSelectedVariant] = useState(null);
-  const [selectedSize, setSelectedSize] = useState(null);
-  const handleVariantChange = (variant) => {
-    setSelectedVariant(variant);
-    // Reset size when changing variant
-    setSelectedSize(null);
-  };
-  ///////////////////////////////////////////////////////////////////////////////
   const handleRating = (rate) => {
     setRating(rate);
   };
@@ -231,11 +221,6 @@ const ProductDet = () => {
           produit={VP}
           id={id}
           Allcommente={Allcommente}
-          selectedVariant={selectedVariant}
-          setSelectedVariant={setSelectedVariant}
-          selectedSize={selectedSize}
-          setSelectedSize={setSelectedSize}
-          handleVariantChange={handleVariantChange}
         />
       </ScrollView>
       <DetailProduitFooter
@@ -244,8 +229,6 @@ const ProductDet = () => {
         color={color}
         taille={taille}
         id={id}
-        selectedVariant={selectedVariant}
-        selectedSize={selectedSize}
       />
 
       <TouchableOpacity

@@ -1,114 +1,134 @@
-import React, { useEffect, useState,forwardRef, useImperativeHandle } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Alert, Image, Modal, TextInput, TouchableWithoutFeedback, Platform,ActivityIndicator,KeyboardAvoidingView } from 'react-native';
-import { Feather, EvilIcons, Ionicons } from '@expo/vector-icons';
+import React, {
+  useEffect,
+  useState,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Alert,
+  Image,
+  Modal,
+  TextInput,
+  TouchableWithoutFeedback,
+  Platform,
+  ActivityIndicator,
+  KeyboardAvoidingView,
+} from "react-native";
+import { Feather, EvilIcons, Ionicons } from "@expo/vector-icons";
 import Items from "../../image/macbook cote.png";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation , useNavigationState} from '@react-navigation/native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation, useNavigationState } from "@react-navigation/native";
 import { API_URL } from "@env";
-import axios from 'axios';
-import { useSelector } from 'react-redux';
-import Toast from 'react-native-toast-message';
+import axios from "axios";
+import { useSelector } from "react-redux";
+import Toast from "react-native-toast-message";
 
-const CheckoutMain =  forwardRef(({chgTotal,chgReduction},ref)=>{
-  const [user, setUser] = useState(null);
-  const [codeValide, setCodeValide] = useState(null);
-  const [produits, setProduits] = useState(null);
-  const [produitIds, setProduitIds] = useState(null);
-  const [Vide, setVide] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [promoCode, setPromoCode] = useState('');
-  const [nom, setNom] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [region, setRegion] = useState("");
-  const [Quartier, setQuartier] = useState("");
-  const [plus, setPlus] = useState("");
-  const [choix, setChoix] = useState("");
-  const [numeroCard, setNumeroCard] = useState("");
-  const [cvc, setCvc] = useState("");
-  const [numero, setNumero] = useState("");
-  const [operateur, setOperateur] = useState("");
-  const DATA_Products = useSelector((state) => state.products.data);
-  let total = 0;
-  const navigation = useNavigation();
-  const handleAlert = (message) => {
-    Toast.show({
-      type: 'success',
-      text1: message,
-      position: 'top',
-      visibilityTime: 3000,
-      autoHide: true,
-      bottomOffset: 40,
-    });
-  };
-
-  const handleAlertwar = (message) => {
-    Toast.show({
-      type: 'error',
-      text1: message,
-      position: 'top',
-      visibilityTime: 3000,
-      autoHide: true,
-      bottomOffset: 40,
-    });
-  };
-
-  const handleButtonPress = () => {
-    Alert.alert("Voir les données", "Étudiant\n+227 85822480\nCodeloccol\ndelomodibo@gmail.com\n+227 85822480");
-  };
-
-  const handleApplyPromoCode = () => {
-    // Logic to apply the promo code
-    setLoading(true)
-
-    if (promoCode.length === 0) {
-      setLoading(false)
-      handleAlertwar("code invalide.");
-      setModalVisible(false);
-      return;
-    }
-    // setRond(true)
-    // const encodedHashedCode = encodeURIComponent(codePro);
-    axios
-      .get(`${API_URL}/getCodePromoByHashedCode`, {
-        params: {
-          hashedCode: promoCode,
-        },
-      })
-      .then((code) => {
-        // console.log(code);
-        setLoading(false)
-        if (code.data.data.isValide) {
-          setCodeValide(code.data.data);
-          chgReduction(code.data.data.prixReduiction)
-          setModalVisible(false);
-          handleAlert('Code Appliquer')
-        } else {
-          handleAlertwar("Ce code la est expirer.");
-          setModalVisible(false);
-        }
-      })
-      .catch((error) => {
-        setLoading(false)
-        handleAlertwar("Ce code de promo n'exite pas");
-        setModalVisible(false);
+const CheckoutMain = forwardRef(
+  ({ chgTotal, chgReduction, setMethode, setDeliveryInfo }, ref) => {
+    const [user, setUser] = useState(null);
+    const [codeValide, setCodeValide] = useState(null);
+    const [produits, setProduits] = useState(null);
+    const [produitIds, setProduitIds] = useState(null);
+    const [Vide, setVide] = useState(null);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [promoCode, setPromoCode] = useState("");
+    const [nom, setNom] = useState("");
+    const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
+    const [region, setRegion] = useState("");
+    const [Quartier, setQuartier] = useState("");
+    const [plus, setPlus] = useState("");
+    const [choix, setChoix] = useState("");
+    const [numeroCard, setNumeroCard] = useState("");
+    const [cvc, setCvc] = useState("");
+    const [numero, setNumero] = useState("");
+    const [operateur, setOperateur] = useState("");
+    const DATA_Products = useSelector((state) => state.products.data);
+    let total = 0;
+    const navigation = useNavigation();
+    const handleAlert = (message) => {
+      Toast.show({
+        type: "success",
+        text1: message,
+        position: "top",
+        visibilityTime: 3000,
+        autoHide: true,
+        bottomOffset: 40,
       });
-  };
+    };
 
+    const handleAlertwar = (message) => {
+      Toast.show({
+        type: "error",
+        text1: message,
+        position: "top",
+        visibilityTime: 3000,
+        autoHide: true,
+        bottomOffset: 40,
+      });
+    };
 
+    const handleButtonPress = () => {
+      Alert.alert(
+        "Voir les données",
+        "Étudiant\n+227 85822480\nCodeloccol\ndelomodibo@gmail.com\n+227 85822480"
+      );
+    };
 
-  useEffect(() => {
-    // setLoading(true);
+    const handleApplyPromoCode = () => {
+      // Logic to apply the promo code
+      setLoading(true);
 
-    const fetchData = async () => {
-      try {
-        const jsonValue = await AsyncStorage.getItem('userEcomme');
-        const userData = jsonValue != null ? JSON.parse(jsonValue) : null;
-        setUser(userData)
-        if(userData){
+      if (promoCode.length === 0) {
+        setLoading(false);
+        handleAlertwar("code invalide.");
+        setModalVisible(false);
+        return;
+      }
+      // setRond(true)
+      // const encodedHashedCode = encodeURIComponent(codePro);
+      axios
+        .get(`${API_URL}/getCodePromoByHashedCode`, {
+          params: {
+            hashedCode: promoCode,
+          },
+        })
+        .then((code) => {
+          // console.log(code);
+          setLoading(false);
+          if (code.data.data.isValide) {
+            setCodeValide(code.data.data);
+            chgReduction(code.data.data.prixReduiction);
+            setModalVisible(false);
+            handleAlert("Code Appliquer");
+          } else {
+            handleAlertwar("Ce code la est expirer.");
+            setModalVisible(false);
+          }
+        })
+        .catch((error) => {
+          setLoading(false);
+          handleAlertwar("Ce code de promo n'exite pas");
+          setModalVisible(false);
+        });
+    };
+
+    useEffect(() => {
+      // setLoading(true);
+
+      const fetchData = async () => {
+        try {
+          const jsonValue = await AsyncStorage.getItem("userEcomme");
+          const userData = jsonValue != null ? JSON.parse(jsonValue) : null;
           setUser(userData);
-          axios
+          if (userData) {
+            setUser(userData);
+            axios
               .get(`${API_URL}/getAddressByUserKey/${userData.id}`)
               .then((shippingAd) => {
                 setEmail(shippingAd.data.address.email);
@@ -117,10 +137,19 @@ const CheckoutMain =  forwardRef(({chgTotal,chgReduction},ref)=>{
                 setQuartier(shippingAd.data.address.quartier);
                 setRegion(shippingAd.data.address.region);
                 setPlus(shippingAd.data.address.description);
-                setLoading(false)
+
+                setDeliveryInfo({
+                  name: shippingAd.data.address.name || "",
+                  email: shippingAd.data.address.email || "",
+                  numero: shippingAd.data.address.numero || "",
+                  region: shippingAd.data.address.region || "",
+                  quartier: shippingAd.data.address.quartier || "",
+                  description: shippingAd.data.address.description || "",
+                });
+                setLoading(false);
               })
               .catch((error) => {
-                setLoading(false)
+                setLoading(false);
                 console.log(error.response);
               });
 
@@ -129,6 +158,7 @@ const CheckoutMain =  forwardRef(({chgTotal,chgReduction},ref)=>{
               .then((res) => {
                 if (res.data.paymentMethod.type) {
                   setChoix(res.data.paymentMethod.type);
+                  setMethode(res.data.paymentMethod.type);
                 }
                 if (res.data.paymentMethod.numeroCard) {
                   setNumeroCard(res.data.paymentMethod.numeroCard);
@@ -143,394 +173,408 @@ const CheckoutMain =  forwardRef(({chgTotal,chgReduction},ref)=>{
                   setOperateur(res.data.paymentMethod.operateur);
                 }
               })
-              .catch((error) => {console.log(error.response);});
+              .catch((error) => {
+                console.log(error.response);
+              });
+          }
+        } catch (error) {
+          setLoading(false);
+          console.log(error);
         }
+      };
 
-      } catch (error) {
-        setLoading(false);
-        console.log(error);
+      fetchData();
+    }, []);
+
+    const calculateTotal = (products) => {
+      let total = 0;
+      products.forEach((product) => {
+        const productData = DATA_Products?.find(
+          (item) => item._id === product.id
+        );
+        if (productData) {
+          const price =
+            productData.prixPromo > 0
+              ? productData.prixPromo
+              : productData.prix;
+          total += price * product.quantity;
+        }
+      });
+      chgTotal(total);
+      return total;
+    };
+
+    const incrementQuantity = (index) => {
+      const updatedProducts = [...produits];
+      updatedProducts[index].quantity += 1;
+      setProduits(updatedProducts);
+      AsyncStorage.setItem("panier", JSON.stringify(updatedProducts));
+      // calculateTotal(updatedProducts);
+    };
+
+    const decrementQuantity = (index) => {
+      const updatedProducts = [...produits];
+
+      if (updatedProducts[index].quantity > 1) {
+        updatedProducts[index].quantity -= 1;
+        setProduits(updatedProducts);
+        AsyncStorage.setItem("panier", JSON.stringify(updatedProducts));
+        calculateTotal(updatedProducts);
+      } else {
+        updatedProducts.splice(index, 1); // Supprimer le produit du panier
+        handleAlertwar("Produit supprimé !");
+        setProduits(updatedProducts);
+
+        // Vérifier si le panier est vide après la suppression
+        if (updatedProducts.length === 0) {
+          AsyncStorage.removeItem("panier"); // Supprimer l'objet du localStorage
+        } else {
+          AsyncStorage.setItem("panier", JSON.stringify(updatedProducts));
+        }
+        calculateTotal(updatedProducts);
       }
     };
 
-    fetchData();
-  }, []);
+    useEffect(() => {
+      const getPanier = async () => {
+        try {
+          const local = await AsyncStorage.getItem("panier");
+          if (local && local.length > 0) {
+            const parsedLocal = JSON.parse(local);
+            setProduits(parsedLocal);
+            const a = parsedLocal.map((para) => para.id);
+            setProduitIds(a);
+            // calculateTotal(parsedLocal);
+          } else {
+            setProduits(null);
+            setVide(
+              "Aucune produit sélectionné, veuillez vous rendre dans la section Orders pour vos commandes !"
+            );
+          }
+        } catch (error) {
+          console.error("Error fetching panier from AsyncStorage", error);
+        }
+      };
 
-  const calculateTotal = (products) => {
-    let total = 0;
-    products.forEach((product) => {
-      const productData = DATA_Products?.find((item) => item._id === product.id);
-      if (productData) {
-        const price = productData.prixPromo > 0 ? productData.prixPromo : productData.prix;
-        total += price * product.quantity;
-      }
-    });
-    chgTotal(total);
-    return total;
-  };
+      getPanier();
+    }, []);
 
-
-  const incrementQuantity = (index) => {
-    const updatedProducts = [...produits];
-    updatedProducts[index].quantity += 1;
-    setProduits(updatedProducts);
-    AsyncStorage.setItem('panier', JSON.stringify(updatedProducts));
-    calculateTotal(updatedProducts);
-  };
-
-  const decrementQuantity = (index) => {
-    const updatedProducts = [...produits];
-
-    if (updatedProducts[index].quantity > 1) {
-      updatedProducts[index].quantity -= 1;
-      setProduits(updatedProducts);
-      AsyncStorage.setItem('panier', JSON.stringify(updatedProducts));
-      calculateTotal(updatedProducts);
-    } else {
+    const removeProduct = (index) => {
+      const updatedProducts = [...produits];
       updatedProducts.splice(index, 1); // Supprimer le produit du panier
-      handleAlertwar('Produit supprimé !');
+      handleAlertwar("Produit supprimé !");
       setProduits(updatedProducts);
 
       // Vérifier si le panier est vide après la suppression
       if (updatedProducts.length === 0) {
-        AsyncStorage.removeItem('panier'); // Supprimer l'objet du localStorage
+        AsyncStorage.removeItem("panier"); // Supprimer l'objet du localStorage
       } else {
-        AsyncStorage.setItem('panier', JSON.stringify(updatedProducts));
+        AsyncStorage.setItem("panier", JSON.stringify(updatedProducts));
       }
       calculateTotal(updatedProducts);
+    };
+
+    // //////////////////////////////////////////////////////////////////////////////////////////
+    function generateUniqueID() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, "0"); // Ajoute un zéro au début si le mois est < 10
+      const day = String(now.getDate()).padStart(2, "0"); // Ajoute un zéro au début si le jour est < 10
+      const hours = String(now.getHours()).padStart(2, "0"); // Ajoute un zéro au début si l'heure est < 10
+      const minutes = String(now.getMinutes()).padStart(2, "0"); // Ajoute un zéro au début si la minute est < 10
+      const seconds = String(now.getSeconds()).padStart(2, "0"); // Ajoute un zéro au début si la seconde est < 10
+
+      // Concatène les différentes parties pour former l'identifiant unique
+      const uniqueID = `${year}${month}${day}${hours}${minutes}${seconds}`;
+
+      return uniqueID;
     }
-  };
+    // //////////////////////////////////////////////////////////////////////////////////////////
 
+    const Plasser = async () => {
+      const local = await AsyncStorage.getItem("panier");
 
+      setLoading(true);
+      if (local === null || JSON.parse(local)?.length === 0) {
+        handleAlertwar("Aucun produit n'est selectionner.");
+        setLoading(false);
+        // navigue('/home')
+        navigation.navigate("Home");
+        return;
+      }
+      if (phone?.length <= 0) {
+        setLoading(false);
+        // navigue("/More/shipping_address?fromCart=true");
+        navigation.navigate("Page de livraison", { fromCart: true });
+        return;
+      }
+      if (choix?.length <= 0) {
+        setLoading(false);
+        // navigue("/More/payment_method?fromCart=true");
+        navigation.navigate("Page de paiement", { fromCart: true });
 
+        return;
+      }
 
-  useEffect(() => {
-    const getPanier = async () => {
-      try {
-        const local = await AsyncStorage.getItem("panier");
-        if (local && local.length>0) {
-          const parsedLocal = JSON.parse(local);
-          setProduits(parsedLocal);
-          const a = parsedLocal.map((para) => para.id);
-          setProduitIds(a);
-          calculateTotal(parsedLocal);
-        } else {
-          setProduits(null);
-          setVide("Aucune produit sélectionné, veuillez vous rendre dans la section Orders pour vos commandes !");
+      if (local) {
+        const pane = JSON.parse(local);
+        let prod = [];
+        for (let i = 0; i < produits.length; i++) {
+          let ob = {
+            produit: produits[i]?.id,
+            quantite: produits[i]?.quantity,
+            tailles: produits[i]?.sizes,
+            couleurs: produits[i]?.colors,
+          };
+          prod.push(ob);
         }
-      } catch (error) {
-        console.error("Error fetching panier from AsyncStorage", error);
-      }
-    };
+        let data = {
+          clefUser: user.id,
+          nbrProduits: prod,
+          prix: total,
+        };
+        if (codeValide) {
+          if (codeValide.isValide) {
+            data.codePro = true;
+            data.idCodePro = codeValide?._id;
+          }
+        }
 
-    getPanier();
-  }, []);
+        // console.log(data);
+        if (choix.length > 0) {
+          const uniqueID = generateUniqueID();
+          const dataToSend = {
+            name: user?.name,
+            currency: "XOF",
+            country: "NE",
+            total: total ? total : "",
+            transaction_id: uniqueID,
+            choix: choix,
+            numeroCard: numeroCard,
+            phone: numero,
+          };
+          data.reference = uniqueID;
 
-
-  const removeProduct = (index) => {
-    const updatedProducts = [...produits];
-    updatedProducts.splice(index, 1); // Supprimer le produit du panier
-    handleAlertwar('Produit supprimé !');
-    setProduits(updatedProducts);
-
-    // Vérifier si le panier est vide après la suppression
-    if (updatedProducts.length === 0) {
-      AsyncStorage.removeItem('panier'); // Supprimer l'objet du localStorage
-    } else {
-      AsyncStorage.setItem('panier', JSON.stringify(updatedProducts));
-    }
-    calculateTotal(updatedProducts);
-  };
-
-// //////////////////////////////////////////////////////////////////////////////////////////
-function generateUniqueID() {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, "0"); // Ajoute un zéro au début si le mois est < 10
-  const day = String(now.getDate()).padStart(2, "0"); // Ajoute un zéro au début si le jour est < 10
-  const hours = String(now.getHours()).padStart(2, "0"); // Ajoute un zéro au début si l'heure est < 10
-  const minutes = String(now.getMinutes()).padStart(2, "0"); // Ajoute un zéro au début si la minute est < 10
-  const seconds = String(now.getSeconds()).padStart(2, "0"); // Ajoute un zéro au début si la seconde est < 10
-
-  // Concatène les différentes parties pour former l'identifiant unique
-  const uniqueID = `${year}${month}${day}${hours}${minutes}${seconds}`;
-
-  return uniqueID;
-}
-// //////////////////////////////////////////////////////////////////////////////////////////
-
-const Plasser = async() => {
-
-  const local = await AsyncStorage.getItem("panier");
-
-  setLoading(true);
-  if (local=== null || JSON.parse(local)?.length === 0) {
-    handleAlertwar("Aucun produit n'est selectionner.");
-    setLoading(false);
-    // navigue('/home')
-    navigation.navigate('Home')
-    return;
-  }
-  if (phone?.length <= 0) {
-    setLoading(false);
-    // navigue("/More/shipping_address?fromCart=true");
-    navigation.navigate("Page de livraison",{ fromCart: true })
-    return;
-  }
-  if (choix?.length <= 0) {
-    setLoading(false);
-    // navigue("/More/payment_method?fromCart=true");
-    navigation.navigate("Page de paiement",{ fromCart: true })
-
-    return;
-  }
-
-  if (local) {
-    const pane = JSON.parse(local);
-    let prod = [];
-    for (let i = 0; i < produits.length; i++) {
-      let ob = {
-        produit: produits[i]?.id,
-        quantite: produits[i]?.quantity,
-        tailles: produits[i]?.sizes,
-        couleurs: produits[i]?.colors,
-      };
-      prod.push(ob);
-    }
-    let data = {
-      clefUser: user.id,
-      nbrProduits: prod,
-      prix: total,
-    };
-    if (codeValide) {
-      if (codeValide.isValide) {
-        data.codePro = true;
-        data.idCodePro = codeValide?._id;
-      }
-    }
-
-    // console.log(data);
-    if (choix.length > 0) {
-      const uniqueID = generateUniqueID();
-      const dataToSend = {
-        name: user?.name,
-        currency: "XOF",
-        country: "NE",
-        total: total ? total : "",
-        transaction_id: uniqueID,
-        choix: choix,
-        numeroCard: numeroCard,
-        phone: numero,
-      };
-      data.reference = uniqueID;
-
-      if (
-        choix === "Visa" ||
-        choix === "Master Card" ||
-        choix === "Mobile Money"
-      ) {
-        axios
-          .post(`${API_URL}/payments`, dataToSend)
-          .then((response) => {
-            const ref = response.data.data.reference;
-            handleAlert("success");
+          if (
+            choix === "Visa" ||
+            choix === "Master Card" ||
+            choix === "Mobile Money"
+          ) {
             axios
-              .get(`${API_URL}/payments/`)
-              .then((res) => {
-                // setAllPayment(res.data.data);
-
-                if (
-                  res.data.data.find((item) => item.reference === ref)
-                    .status != "Failed"
-                  // ||
-                  // res.data.data.find((item) => item.reference === ref)
-                  //   .status != "Initiated"
-                ) {
-                  axios
-                    .post(`${API_URL}/createCommande`, data)
-                    .then(async(resp) => {
-                      handleAlert(resp.data.message);
-                      setLoading(false);
-                      // localStorage.removeItem("panier");
-                      await AsyncStorage.removeItem('panier');
-                      if (codeValide) {
-                        if (codeValide.isValide) {
-                          axios
-                            .put(`${API_URL}/updateCodePromo`, {
-                              codePromoId: codeValide._id,
-                              isValide: false,
-                            })
-                            .then(() => {
-                              // console.log("fait")
-                            })
-                            .catch((error) => console.log(error));
-                        }
-                      }
-                      // navigation.navigate("Cart")
-                      navigation.navigate("Succes")
-                    })
-                    .catch((error) => {
-                      setLoading(false);
-                      console.log("errrr", error);
-                    });
-                  console.log("Réponse de l'API:", response);
-                } else {
-                  setLoading(false);
-                  handleAlertwar(
-                    "le payment na pas pu etre effectuer veuiller ressayer !"
-                  );
-                  return;
-                }
-              })
-              .catch((error) => {
-                setLoading(false);
-                console.log(error);
-              });
-          })
-          .catch((error) => {
-            setLoading(false);
-            console.log(
-              "Erreur lors de la requête:",
-              error.response ? error.response.data : error.message,
-              error
-            );
-          });
-      } else if (choix === "Payment a domicile") {
-        axios
-          .post(`${API_URL}/createCommande`, data)
-          .then(async(res) => {
-            handleAlert(res.data.message);
-            setLoading(false);
-            await AsyncStorage.removeItem('panier');
-            if (codeValide) {
-              if (codeValide.isValide) {
+              .post(`${API_URL}/payments`, dataToSend)
+              .then((response) => {
+                const ref = response.data.data.reference;
+                handleAlert("success");
                 axios
-                  .put(`${API_URL}/updateCodePromo`, {
-                    codePromoId: codeValide._id,
-                    isValide: false,
-                  })
-                  .then(() => {
-                    setLoading(false);
-                    // console.log("fait")
+                  .get(`${API_URL}/payments/`)
+                  .then((res) => {
+                    // setAllPayment(res.data.data);
+
+                    if (
+                      res.data.data.find((item) => item.reference === ref)
+                        .status != "Failed"
+                      // ||
+                      // res.data.data.find((item) => item.reference === ref)
+                      //   .status != "Initiated"
+                    ) {
+                      axios
+                        .post(`${API_URL}/createCommande`, data)
+                        .then(async (resp) => {
+                          handleAlert(resp.data.message);
+                          setLoading(false);
+                          // localStorage.removeItem("panier");
+                          await AsyncStorage.removeItem("panier");
+                          if (codeValide) {
+                            if (codeValide.isValide) {
+                              axios
+                                .put(`${API_URL}/updateCodePromo`, {
+                                  codePromoId: codeValide._id,
+                                  isValide: false,
+                                })
+                                .then(() => {
+                                  // console.log("fait")
+                                })
+                                .catch((error) => console.log(error));
+                            }
+                          }
+                          // navigation.navigate("Cart")
+                          navigation.navigate("Succes");
+                        })
+                        .catch((error) => {
+                          setLoading(false);
+                          console.log("errrr", error);
+                        });
+                      console.log("Réponse de l'API:", response);
+                    } else {
+                      setLoading(false);
+                      handleAlertwar(
+                        "le payment na pas pu etre effectuer veuiller ressayer !"
+                      );
+                      return;
+                    }
                   })
                   .catch((error) => {
                     setLoading(false);
                     console.log(error);
                   });
-              }
-            }
-            // navigation.navigate("Cart")
-            navigation.navigate("Succes")
-          })
-          .catch((error) => {
-            setLoading(false);
-            console.log("errrr", error);
-          });
+              })
+              .catch((error) => {
+                setLoading(false);
+                console.log(
+                  "Erreur lors de la requête:",
+                  error.response ? error.response.data : error.message,
+                  error
+                );
+              });
+          } else if (choix === "Payment a domicile") {
+            axios
+              .post(`${API_URL}/createCommande`, data)
+              .then(async (res) => {
+                handleAlert(res.data.message);
+                setLoading(false);
+                await AsyncStorage.removeItem("panier");
+                if (codeValide) {
+                  if (codeValide.isValide) {
+                    axios
+                      .put(`${API_URL}/updateCodePromo`, {
+                        codePromoId: codeValide._id,
+                        isValide: false,
+                      })
+                      .then(() => {
+                        setLoading(false);
+                        // console.log("fait")
+                      })
+                      .catch((error) => {
+                        setLoading(false);
+                        console.log(error);
+                      });
+                  }
+                }
+                // navigation.navigate("Cart")
+                navigation.navigate("Succes");
+              })
+              .catch((error) => {
+                setLoading(false);
+                console.log("errrr", error);
+              });
+          }
+        } else {
+          setLoading(false);
+          handleAlertwar("les infos du payment ne sont pas encore mis");
+          return;
+        }
       }
-    } else {
-      setLoading(false);
-      handleAlertwar("les infos du payment ne sont pas encore mis");
-      return;
+    };
+
+    // //////////////////////////////////////////////////////////////////////////////////////////
+    // //////////////////////////////////////////////////////////////////////////////////////////
+
+    useImperativeHandle(ref, () => ({
+      Plasser,
+    }));
+
+    if (loading) {
+      return (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator
+            style={styles.loadingText}
+            size="large"
+            color="#30A08B"
+          />
+          <Text>Chargement...</Text>
+        </View>
+      );
     }
-  }
-}
 
-
-// //////////////////////////////////////////////////////////////////////////////////////////
-// //////////////////////////////////////////////////////////////////////////////////////////
-
-
-useImperativeHandle(ref, () => ({
-  Plasser
-}));
-
-if (loading) {
-  return (
-    <View style={styles.loadingContainer}>
-      <ActivityIndicator style={styles.loadingText} size="large" color="#30A08B" />
-      <Text>Chargement...</Text>
-    </View>
-  );
-}
-
-
-
-  return (
-    <View style={styles.CheckoutMain}>
-      <Text style={styles.title}>Vérification</Text>
-      <Text style={styles.paraMain}>Adresse de livraison</Text>
-      <View style={styles.card}>
-        <View style={styles.donner}>
-          <Text style={styles.para}>Name :  </Text>
-          <Text style={{color:"#B2905F"}}>{nom}</Text>
-        </View>
-        <View style={styles.donner}>
-          <Text style={styles.para}>Region :  </Text>
-          <Text style={{color:"#B2905F"}}>{region}</Text>
-        </View>
-        <View style={styles.donner}>
-          <Text style={styles.para}>Quartier :  </Text>
-          <Text style={{color:"#B2905F"}}>{Quartier}</Text>
-        </View>
-        <View style={styles.donner}>
-          <Text style={styles.para}>Email : </Text>
-          <Text style={{color:"#B2905F"}}>{email}</Text>
-        </View>
-        <View style={styles.donner}>
-          <Text style={styles.para}>Tel :  </Text>
-          <Text style={{color:"#B2905F"}}>{phone}</Text>
-        </View>
-      </View>
-      <TouchableOpacity style={styles.button} onPress={()=>navigation.navigate("Page de livraison",{ fromCart: true })}>
-        <Text style={styles.buttonText}>Modifier les informations</Text>
-      </TouchableOpacity>
-
-      <View style={styles.paymentContainer}>
-      <Text style={styles.paymentText}>Mode de paiement</Text>
-      <TouchableOpacity onPress={()=> navigation.navigate("Page de paiement",{ fromCart: true })} >
-        <View style={styles.cardMoney}>
-          <Feather name="credit-card" size={24} color="#B2905F" />
-          <Text style={styles.paraMoney}>
-            {choix}
-            {choix === "Mobile Money" ? ` ${numero}` : ""}
-            {choix === "master Card" || choix === "Visa"
-              ? ` ending **${String(numeroCard).slice(-2)}`
-              : ""}
-            {choix.length <= 0
-              ? " veuillez configurer votre moyen de paiement"
-              : ""}
-          </Text>
-          <View style={Platform.OS === 'ios' ? styles.IconCircle : styles.IconCircle2}>
-            <EvilIcons name="arrow-right" size={30} color="#fff" />
+    return (
+      <View style={styles.CheckoutMain}>
+        <Text style={styles.title}>Vérification</Text>
+        <Text style={styles.paraMain}>Adresse de livraison</Text>
+        <View style={styles.card}>
+          <View style={styles.donner}>
+            <Text style={styles.para}>Name : </Text>
+            <Text style={{ color: "#B2905F" }}>{nom}</Text>
+          </View>
+          <View style={styles.donner}>
+            <Text style={styles.para}>Region : </Text>
+            <Text style={{ color: "#B2905F" }}>{region}</Text>
+          </View>
+          <View style={styles.donner}>
+            <Text style={styles.para}>Quartier : </Text>
+            <Text style={{ color: "#B2905F" }}>{Quartier}</Text>
+          </View>
+          <View style={styles.donner}>
+            <Text style={styles.para}>Email : </Text>
+            <Text style={{ color: "#B2905F" }}>{email}</Text>
+          </View>
+          <View style={styles.donner}>
+            <Text style={styles.para}>Tel : </Text>
+            <Text style={{ color: "#B2905F" }}>{phone}</Text>
           </View>
         </View>
-      </TouchableOpacity>
-    </View>
-{/* {console.log(produits.length)} */}
-      {produits?.map((item, index) => {
-        if (item.quantity === 0) {
-          return null; // Ne pas afficher le produit si la quantité est 0
-        }
-        const product = DATA_Products?.find((iteme) => iteme._id === item.id);
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() =>
+            navigation.navigate("Page de livraison", { fromCart: true })
+          }
+        >
+          <Text style={styles.buttonText}>Modifier les informations</Text>
+        </TouchableOpacity>
 
-        if (!product) {
-          return null; // Ne pas afficher le produit si les données sont manquantes
-        }
+        <View style={styles.paymentContainer}>
+          <Text style={styles.paymentText}>Mode de paiement</Text>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("Page de paiement", { fromCart: true })
+            }
+          >
+            <View style={styles.cardMoney}>
+              <Feather name="credit-card" size={24} color="#B2905F" />
+              <Text style={styles.paraMoney}>
+                {choix}
+                {choix === "Mobile Money" ? ` ${numero}` : ""}
+                {choix === "master Card" || choix === "Visa"
+                  ? ` ending **${String(numeroCard).slice(-2)}`
+                  : ""}
+                {choix.length <= 0
+                  ? " veuillez configurer votre moyen de paiement"
+                  : ""}
+              </Text>
+              <View
+                style={
+                  Platform.OS === "ios" ? styles.IconCircle : styles.IconCircle2
+                }
+              >
+                <EvilIcons name="arrow-right" size={30} color="#fff" />
+              </View>
+            </View>
+          </TouchableOpacity>
+        </View>
+        {/* {console.log(produits.length)} */}
+        {produits?.map((item, index) => {
+          if (item.quantity === 0) {
+            return null; // Ne pas afficher le produit si la quantité est 0
+          }
+          const product = DATA_Products?.find((iteme) => iteme._id === item.id);
 
-        const price = product.prixPromo > 0 ? product.prixPromo : product.prix;
-        total += price * item.quantity;
+          if (!product) {
+            return null; // Ne pas afficher le produit si les données sont manquantes
+          }
 
-        return (
-          <View key={index} style={styles.cardItem}>
-          <View style={styles.cardItemContainer}>
+          const price =
+            product.prixPromo > 0 ? product.prixPromo : product.prix;
+          total += price * item.quantity;
+
+          return (
+            <View key={index} style={styles.cardItem}>
+              {/* <View style={styles.cardItemContainer}>
             <View style={styles.circleItem}>
               <Image source={{uri: product.image1}} style={styles.image} />
             </View>
             <View style={styles.itemInfo}>
               <Text style={styles.nike}>{product.name.slice(0, 20)}...</Text>
-              {/* <Text style={styles.CFAPrix}>CFA 11000</Text> */}
               {product.prixPromo > 0 ? (
                 <>
-                  {/* <Text style={styles.panierText33}>cfa {product.prix}</Text> */}
                   <Text style={styles.CFAPrix}>CFA {product.prixPromo}</Text>
                 </>
               ) : (
@@ -549,71 +593,82 @@ if (loading) {
               </View>
 
 
-          </View>
-        </View>
-        )
-      }
-      )}
+          </View> */}
+            </View>
+          );
+        })}
 
-      <TouchableOpacity style={styles.proMo} onPress={() => setModalVisible(true)}>
-        <View style={styles.cardMoney}>
-          <Feather name="credit-card" size={24} color="#B17236" />
-          <Text style={styles.paraMoney}>Ajouter un code promotionnel</Text>
-          <View style={styles.IconCircle}>
-            <EvilIcons name="arrow-right" size={30} color="#FFF" style={Platform.OS === 'ios' ? styles.iOS : styles.android}/>
+        <TouchableOpacity
+          style={styles.proMo}
+          onPress={() => setModalVisible(true)}
+        >
+          <View style={styles.cardMoney}>
+            <Feather name="credit-card" size={24} color="#B17236" />
+            <Text style={styles.paraMoney}>Ajouter un code promotionnel</Text>
+            <View style={styles.IconCircle}>
+              <EvilIcons
+                name="arrow-right"
+                size={30}
+                color="#FFF"
+                style={Platform.OS === "ios" ? styles.iOS : styles.android}
+              />
+            </View>
           </View>
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
 
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-       <TouchableWithoutFeedback onPress={handleApplyPromoCode}>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(false)}
+        >
+          <TouchableWithoutFeedback onPress={handleApplyPromoCode}>
             <View style={styles.modalContainer}>
-          <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0} // Ajustez la valeur si nécessaire
-    >
-          <View style={styles.modalContent}>
-
-            <Text style={styles.modalTitle}>Ajouter un code promotionnel</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Entrer le code"
-              value={promoCode}
-              onChangeText={setPromoCode}
-            />
-            <TouchableOpacity style={styles.modalButton} onPress={handleApplyPromoCode}>
-              <Text style={styles.modalButtonText}>Appliquer</Text>
-            </TouchableOpacity>
-          </View>
-    </KeyboardAvoidingView>
-        </View>
-        </TouchableWithoutFeedback>
-
-      </Modal>
-    </View>
-  );
-})
+              <KeyboardAvoidingView
+                style={styles.container}
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+                keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0} // Ajustez la valeur si nécessaire
+              >
+                <View style={styles.modalContent}>
+                  <Text style={styles.modalTitle}>
+                    Ajouter un code promotionnel
+                  </Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Entrer le code"
+                    value={promoCode}
+                    onChangeText={setPromoCode}
+                  />
+                  <TouchableOpacity
+                    style={styles.modalButton}
+                    onPress={handleApplyPromoCode}
+                  >
+                    <Text style={styles.modalButtonText}>Appliquer</Text>
+                  </TouchableOpacity>
+                </View>
+              </KeyboardAvoidingView>
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
+      </View>
+    );
+  }
+);
 
 export default CheckoutMain;
 
 const styles = StyleSheet.create({
   CheckoutMain: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     padding: 7,
-    justifyContent: 'flex-start',
+    justifyContent: "flex-start",
   },
   title: {
     marginHorizontal: 1,
     fontSize: 26,
-    fontWeight: 'bold',
-    color: '#B17236',
+    fontWeight: "bold",
+    color: "#B17236",
   },
   paraMain: {
     marginHorizontal: 1,
@@ -621,7 +676,6 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     color: "#B2905F",
     marginBottom: 20,
-
   },
   card: {
     width: "100%",
@@ -645,30 +699,30 @@ const styles = StyleSheet.create({
   },
   para: {
     color: "#B17236",
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   button: {
-    backgroundColor: '#30A08B',
+    backgroundColor: "#30A08B",
     padding: 15,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 20,
   },
   buttonText: {
-    color: '#FFF',
+    color: "#FFF",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   paymentContainer: {
     marginTop: 20,
     borderRadius: 10,
-    backgroundColor: '#f2f2f2',
+    backgroundColor: "#f2f2f2",
     padding: 10,
   },
   paymentText: {
     fontSize: 16,
     color: "#B17236",
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
   },
   cardMoney: {
@@ -680,10 +734,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
     borderRadius: 10,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: Platform.OS == 'ios' ? 1 : 1 },
+    shadowOffset: { width: 0, height: Platform.OS == "ios" ? 1 : 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2.5,
-    elevation: Platform.OS === 'ios' ?  2 : 1,
+    elevation: Platform.OS === "ios" ? 2 : 1,
   },
   paraMoney: {
     fontSize: 16,
@@ -706,19 +760,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#30A08B",
     borderRadius: 15,
-    position: 'relative',
+    position: "relative",
   },
   android: {
     bottom: 3,
     position: "absolute",
   },
   cardItem: {
-    backgroundColor: '#FFFF',
+    backgroundColor: "#FFFF",
     padding: 15,
     height: 120,
     borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginTop: 20,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
@@ -727,17 +781,17 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   cardItemContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
   },
   circleItem: {
     width: 90,
     height: 90,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#30A08B',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#30A08B",
     borderRadius: 50,
     elevation: 2,
   },
@@ -749,92 +803,92 @@ const styles = StyleSheet.create({
   itemInfo: {
     flex: 1,
     alignItems: "flex-start",
-    marginLeft: 20
+    marginLeft: 20,
   },
   nike: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: "#B2905F"
+    fontWeight: "bold",
+    color: "#B2905F",
   },
   CFAPrix: {
     fontSize: 16,
-    color: '#30A08B',
+    color: "#30A08B",
   },
   quantityContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 5,
     padding: 5,
   },
   quantityText: {
     marginHorizontal: 10,
     fontSize: 16,
-    fontWeight: 'bold',
-    color: "#B2905F"
+    fontWeight: "bold",
+    color: "#B2905F",
   },
   proMo: {
-    marginTop: 20
+    marginTop: 20,
   },
   trash: {
-    position: 'absolute',
+    position: "absolute",
     right: 0,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     justifyContent: "space-between",
     width: 150,
     height: 50,
   },
   modalContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
   },
   modalContent: {
     width: 300,
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     borderRadius: 10,
     padding: 20,
-    alignItems: 'center',
+    alignItems: "center",
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
-    color: "#30A08B"
+    color: "#30A08B",
   },
   input: {
-    width: '100%',
+    width: "100%",
     height: 40,
-    borderColor: '#30A08B',
+    borderColor: "#30A08B",
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
     marginBottom: 20,
-    color: "#515C70"
+    color: "#515C70",
   },
   modalButton: {
-    backgroundColor: '#B2905F',
+    backgroundColor: "#B2905F",
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
   },
   modalButtonText: {
-    color: '#FFF',
+    color: "#FFF",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   loadingContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff', // Fond de la page de chargement
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff", // Fond de la page de chargement
     // height:500,
   },
-  loadingText:{
-    marginTop:250
-  }
+  loadingText: {
+    marginTop: 250,
+  },
 });

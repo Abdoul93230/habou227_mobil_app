@@ -1,0 +1,27 @@
+# Ignorer les modules node
+
+node_modules/
+
+# Ignorer les fichiers de logs
+
+\*.log
+
+# Ignorer les fichiers temporaires
+
+\*.tmp
+
+# Ignorer les dossiers de build
+
+build/
+dist/
+
+# Ignorer les fichiers d'environnement
+
+# Ignorer les tests
+
+src/tests/
+src/**tests**/
+
+# Ignorer les configurations spécifiques à la machine
+
+\*.local
